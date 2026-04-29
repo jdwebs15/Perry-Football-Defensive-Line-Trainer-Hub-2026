@@ -625,17 +625,17 @@ const BANK = [
   },
   {
     mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'MIX', activePlayer: 'E',
-    title: 'UNDER RIP — Power Strong. You are the End to the call side. Click the fit you must close/spill.',
-    detail: 'Puller is coming to you. Do not run around it. Wrong arm it and close the gap.',
-    answer: 'RC',
-    coaching: 'Power to you: squeeze, wrong arm, spill the kickout, and close the gap the scrape linebacker is vacating.'
+    title: 'UNDER RIP — Power Strong. You are the End to the call side. Click the B gap you must close after spill.',
+    detail: 'Puller is coming to you. Wrong arm it, spill it, and close the B gap the scrape linebacker is leaving.',
+    answer: 'RB',
+    coaching: 'Correct. Spill creates the gap exchange. The linebacker becomes the new C-gap player; you close B.'
   },
   {
     mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'MIX', activePlayer: 'E',
-    title: 'UNDER LIZ — Power Strong. You are the End to the call side. Click the fit you must close/spill.',
-    detail: 'Puller is coming to you. Do not run around it. Wrong arm it and close the gap.',
-    answer: 'LC',
-    coaching: 'Power to you: squeeze, wrong arm, spill the kickout, and close the gap the scrape linebacker is vacating.'
+    title: 'UNDER LIZ — Power Strong. You are the End to the call side. Click the B gap you must close after spill.',
+    detail: 'Puller is coming to you. Wrong arm it, spill it, and close the B gap the scrape linebacker is leaving.',
+    answer: 'LB',
+    coaching: 'Correct. Spill creates the gap exchange. The linebacker becomes the new C-gap player; you close B.'
   },
   {
     mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'T',
@@ -854,7 +854,13 @@ function selectGap(gap) {
   } else {
     missCount += 1;
     if (zone) zone.classList.add('wrong-zone');
-    showFeedback('Not it.', 'Do not click where the ball looks pretty. Click your responsibility from the call, front, and player.', false);
+
+    let missMessage = 'Do not click where the ball looks pretty. Click your responsibility from the call, front, and player.';
+    if ((q.title || '').includes('close after spill') && (selectedGap === 'RC' || selectedGap === 'LC')) {
+      missMessage = 'That is where the linebacker replaces you. Spill creates the gap exchange: LB becomes the new C-gap player, and you close B.';
+    }
+
+    showFeedback('Not it.', missMessage, false);
     updateHud();
   }
 }
