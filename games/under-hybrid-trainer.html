@@ -39,103 +39,124 @@
 
     .front-board {
       position: relative;
-      min-height: 540px;
+      min-height: 640px;
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.16);
       overflow: hidden;
       background:
-        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 10% 100%,
-        radial-gradient(circle at center, rgba(78,162,255,0.12), transparent 62%),
-        linear-gradient(180deg, #12233d 0%, #0c1729 100%);
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0 / 10% 100%,
+        linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 100% 16.66%,
+        radial-gradient(circle at 50% 46%, rgba(78,162,255,0.14), transparent 60%),
+        linear-gradient(180deg, #142744 0%, #0b1628 100%);
     }
 
     .field-label {
       position: absolute;
-      color: #b7c6e6;
-      font-weight: 900;
-      letter-spacing: 0.06em;
+      color: #d9e7ff;
+      font-weight: 950;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-size: 0.72rem;
-      z-index: 4;
+      font-size: 0.75rem;
+      z-index: 8;
+      background: rgba(0,0,0,0.42);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      padding: 5px 9px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
     }
 
     .offense-label { left: 14px; top: 12px; }
-    .defense-label { left: 14px; bottom: 12px; }
+    .defense-label { left: 14px; bottom: 14px; }
 
     .def-perspective {
       position: absolute;
       right: 14px;
-      bottom: 12px;
+      bottom: 14px;
       color: #ffd166;
-      font-weight: 900;
-      font-size: 0.78rem;
+      font-weight: 950;
+      font-size: 0.82rem;
       text-align: right;
-      z-index: 4;
+      z-index: 8;
+      background: rgba(0,0,0,0.48);
+      border: 1px solid rgba(255,209,102,0.30);
+      border-radius: 999px;
+      padding: 6px 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
     }
 
     .strength-tag {
       position: absolute;
       right: 14px;
       top: 12px;
-      color: #d7fff0;
-      border: 1px solid rgba(52,211,153,0.38);
-      background: rgba(52,211,153,0.13);
+      color: #eafff7;
+      border: 1px solid rgba(52,211,153,0.46);
+      background: rgba(13,64,50,0.76);
       border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 0.78rem;
-      font-weight: 900;
-      z-index: 4;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-weight: 950;
+      z-index: 8;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
     }
 
     .los {
       position: absolute;
-      left: 6%;
-      right: 6%;
-      top: 54%;
-      height: 3px;
-      background: rgba(255,255,255,0.42);
-      box-shadow: 0 0 14px rgba(255,255,255,0.18);
-      z-index: 1;
+      left: 5%;
+      right: 5%;
+      top: 50%;
+      height: 4px;
+      background: rgba(255,255,255,0.76);
+      box-shadow: 0 0 16px rgba(255,255,255,0.22);
+      z-index: 3;
     }
 
     .football-label {
       position: absolute;
       left: 50%;
-      top: calc(54% + 10px);
+      top: calc(50% + 10px);
       transform: translateX(-50%);
-      color: #b7c6e6;
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      z-index: 2;
+      color: #eef4ff;
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      z-index: 7;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      padding: 4px 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
     }
 
     .ol, .skill {
       position: absolute;
       transform: translate(-50%, -50%);
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.23);
+      border: 1px solid rgba(255,255,255,0.28);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #eef4ff;
-      font-weight: 900;
-      z-index: 3;
+      font-weight: 950;
+      z-index: 5;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.26);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.55);
     }
 
     .ol {
-      top: 45%;
+      top: 42%;
       width: 54px;
       height: 38px;
-      background: rgba(255,255,255,0.13);
+      background: rgba(225,235,255,0.18);
     }
 
     .skill {
       width: 50px;
       height: 34px;
-      background: rgba(255,209,102,0.13);
-      border-color: rgba(255,209,102,0.35);
-      color: #ffedbf;
+      background: rgba(255,209,102,0.18);
+      border-color: rgba(255,209,102,0.42);
+      color: #fff2c7;
       font-size: 0.84rem;
     }
 
@@ -144,112 +165,149 @@
     .oc { left: 50%; }
     .rg { left: 64%; }
     .rt { left: 78%; }
-    .qb { left: 50%; top: 34%; }
-    .rb { left: 50%; top: 25%; }
+    .qb { left: 50%; top: 31%; }
+    .rb { left: 50%; top: 22%; }
 
-    .wr-left-1 { left: 7%; top: 35%; }
-    .wr-left-2 { left: 17%; top: 30%; }
-    .wr-right-1 { left: 93%; top: 35%; }
-    .wr-right-2 { left: 83%; top: 30%; }
-    .te-left { left: 16%; top: 45%; }
-    .te-right { left: 84%; top: 45%; }
+    .wr-left-1 { left: 7%; top: 32%; }
+    .wr-left-2 { left: 17%; top: 27%; }
+    .wr-right-1 { left: 93%; top: 32%; }
+    .wr-right-2 { left: 83%; top: 27%; }
+    .te-left { left: 16%; top: 42%; }
+    .te-right { left: 84%; top: 42%; }
 
     .strong-side {
       position: absolute;
-      top: 4%;
-      bottom: 54%;
+      top: 6%;
+      bottom: 52%;
       width: 34%;
-      border: 2px solid rgba(52,211,153,0.38);
-      background: rgba(52,211,153,0.06);
+      border: 2px solid rgba(52,211,153,0.45);
+      background: rgba(52,211,153,0.075);
       border-radius: 18px;
-      z-index: 0;
+      z-index: 1;
       pointer-events: none;
+      box-shadow: inset 0 0 20px rgba(52,211,153,0.08);
     }
     .strong-left { left: 3%; }
     .strong-right { right: 3%; }
 
     .gap-zone {
       position: absolute;
-      top: 57%;
-      height: 142px;
-      border-radius: 14px;
-      border: 1px dashed rgba(123,193,255,0.38);
-      background: rgba(78,162,255,0.08);
+      top: 56%;
+      height: 86px;
+      border-radius: 16px;
+      border: 2px solid rgba(123,193,255,0.42);
+      background: rgba(8,18,32,0.64);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #d9ecff;
-      font-size: 1rem;
-      font-weight: 900;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 950;
       cursor: pointer;
       transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
-      z-index: 2;
+      z-index: 4;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.05);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+      line-height: 1.05;
+    }
+
+    .gap-zone span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.58);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.28);
     }
 
     .gap-zone:hover,
     .drop-zone:hover {
       transform: translateY(-2px);
-      border-color: rgba(255,209,102,0.8);
-      background: rgba(255,209,102,0.12);
+      border-color: rgba(255,209,102,0.9);
+      background: rgba(255,209,102,0.16);
     }
 
     .gap-zone.correct-zone {
-      background: rgba(52,211,153,0.22);
-      border-color: rgba(52,211,153,0.9);
+      background: rgba(52,211,153,0.25);
+      border-color: rgba(52,211,153,0.95);
     }
 
     .gap-zone.wrong-zone {
-      background: rgba(255,107,107,0.18);
-      border-color: rgba(255,107,107,0.8);
+      background: rgba(255,107,107,0.20);
+      border-color: rgba(255,107,107,0.9);
     }
 
-    .gap-left-c { left: 8%; width: 14%; }
+    .gap-left-c { left: 7%; width: 15%; }
     .gap-left-b { left: 23%; width: 12%; }
     .gap-left-a { left: 38%; width: 10%; }
     .gap-right-a { left: 52%; width: 10%; }
     .gap-right-b { left: 65%; width: 12%; }
-    .gap-right-c { left: 78%; width: 14%; }
+    .gap-right-c { left: 78%; width: 15%; }
 
     .drop-zone {
       position: absolute;
-      width: 76px;
-      height: 58px;
+      width: 82px;
+      height: 56px;
       border-radius: 16px;
-      border: 2px dashed rgba(255,255,255,0.24);
-      background: rgba(255,255,255,0.045);
+      border: 2px dashed rgba(255,255,255,0.32);
+      background: rgba(255,255,255,0.06);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #b7c6e6;
-      font-weight: 900;
-      font-size: 0.88rem;
+      color: #e0ecff;
+      font-weight: 950;
+      font-size: 0.86rem;
       text-align: center;
       transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
-      z-index: 3;
+      z-index: 5;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.24);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
     }
 
     .drop-zone.filled {
       border-style: solid;
-      color: #eef4ff;
-      background: rgba(78,162,255,0.16);
+      color: #ffffff;
+      background: rgba(78,162,255,0.22);
     }
 
     .drop-zone.correct-drop {
-      background: rgba(52,211,153,0.22);
-      border-color: rgba(52,211,153,0.9);
+      background: rgba(52,211,153,0.24);
+      border-color: rgba(52,211,153,0.95);
     }
 
     .drop-zone.wrong-drop {
-      background: rgba(255,107,107,0.18);
-      border-color: rgba(255,107,107,0.8);
+      background: rgba(255,107,107,0.20);
+      border-color: rgba(255,107,107,0.9);
     }
 
-    .left-5 { left: 15%; top: 65%; }
-    .left-3 { left: 31%; top: 65%; }
-    .left-1 { left: 42%; top: 65%; }
-    .right-1 { left: 50%; top: 65%; }
-    .right-3 { left: 60%; top: 65%; }
-    .right-5 { left: 75%; top: 65%; }
+    .left-5 { left: 15%; top: 76%; }
+    .left-3 { left: 31%; top: 76%; }
+    .left-1 { left: 42%; top: 76%; }
+    .right-1 { left: 50%; top: 76%; }
+    .right-3 { left: 60%; top: 76%; }
+    .right-5 { left: 75%; top: 76%; }
+
+    .board-section-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 7;
+      color: #cfe0ff;
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.50);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      padding: 4px 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+    }
+    .gap-row-title { top: 52.5%; }
+    .alignment-row-title { top: 70%; }
 
     .player-tray {
       display: grid;
@@ -413,13 +471,15 @@
             <div class="ol rt">OT</div>
             <div class="los"></div>
             <div class="football-label">Line of Scrimmage</div>
+            <div class="board-section-title gap-row-title">Click Responsibility Gap</div>
+            <div class="board-section-title alignment-row-title">Drag Defensive Alignment</div>
 
-            <button class="gap-zone gap-left-c" data-gap="LC" onclick="selectGap('LC')">Left C</button>
-            <button class="gap-zone gap-left-b" data-gap="LB" onclick="selectGap('LB')">Left B</button>
-            <button class="gap-zone gap-left-a" data-gap="LA" onclick="selectGap('LA')">Left A</button>
-            <button class="gap-zone gap-right-a" data-gap="RA" onclick="selectGap('RA')">Right A</button>
-            <button class="gap-zone gap-right-b" data-gap="RB" onclick="selectGap('RB')">Right B</button>
-            <button class="gap-zone gap-right-c" data-gap="RC" onclick="selectGap('RC')">Right C</button>
+            <button class="gap-zone gap-left-c" data-gap="LC" onclick="selectGap('LC')"><span>Left C</span></button>
+            <button class="gap-zone gap-left-b" data-gap="LB" onclick="selectGap('LB')"><span>Left B</span></button>
+            <button class="gap-zone gap-left-a" data-gap="LA" onclick="selectGap('LA')"><span>Left A</span></button>
+            <button class="gap-zone gap-right-a" data-gap="RA" onclick="selectGap('RA')"><span>Right A</span></button>
+            <button class="gap-zone gap-right-b" data-gap="RB" onclick="selectGap('RB')"><span>Right B</span></button>
+            <button class="gap-zone gap-right-c" data-gap="RC" onclick="selectGap('RC')"><span>Right C</span></button>
 
             <div class="drop-zone left-5" data-spot="L5">Left 5</div>
             <div class="drop-zone left-3" data-spot="L3">Left 3</div>
