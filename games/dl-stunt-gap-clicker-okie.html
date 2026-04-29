@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Game 13 — DL Stunt Gap Clicker (OKIE)</title>
+
+<style>
+body {
+  margin:0;
+  font-family: system-ui, sans-serif;
+  background: linear-gradient(180deg,#0a0f1c,#111c3a);
+  color:#fff;
+}
+
+.wrap {
+  max-width:1100px;
+  margin:0 auto;
+  padding:20px;
+}
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:15px;
+}
+
+.badge {
+  background:#0f2a4a;
+  padding:6px 10px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns: 2fr 1fr;
+  gap:20px;
+}
+
+.field {
+  background:rgba(255,255,255,0.04);
+  border-radius:16px;
+  padding:20px;
+  position:relative;
+}
+
+.line {
+  height:2px;
+  background:#fff;
+  margin:40px 0;
+}
+
+.dropzones {
+  display:flex;
+  justify-content:center;
+  gap:20px;
+}
+
+.zone {
+  width:70px;
+  height:70px;
+  border:2px dashed rgba(255,255,255,0.3);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.zone:hover {
+  background:rgba(0,200,255,0.3);
+}
+
+.panel {
+  background:rgba(255,255,255,0.05);
+  padding:20px;
+  border-radius:16px;
+}
+
+button {
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#0af;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.feedback {
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="topbar">
+  <div class="badge">GAME 13</div>
+  <div class="badge">OKIE STUNT</div>
+</div>
+
+<div class="grid">
+
+<!-- FIELD -->
+<div class="field">
+
+<div>DEFENSE (4i - 0 - 4i)</div>
+
+<div class="line"></div>
+
+<div class="dropzones">
+  <div class="zone" data-gap="LC">LC</div>
+  <div class="zone" data-gap="LB">LB</div>
+  <div class="zone" data-gap="LA">LA</div>
+  <div class="zone" data-gap="RA">RA</div>
+  <div class="zone" data-gap="RB">RB</div>
+  <div class="zone" data-gap="RC">RC</div>
+</div>
+
+</div>
+
+<!-- PANEL -->
+<div class="panel">
+
+<div id="question"></div>
+
+<div class="feedback" id="feedback"></div>
+
+<button onclick="nextQuestion()">Next</button>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+let questions = [
+  {
+    q: "OKIE RIP — New England. You are End CALL SIDE.",
+    answer: "LA",
+    explain: "Long stick = cross face → A gap."
+  },
+  {
+    q: "OKIE RIP — Tomahawk. You are End CALL SIDE.",
+    answer: "LC",
+    explain: "Contain rush = stay outside (C gap)."
+  },
+  {
+    q: "OKIE LIZ — Slice. You are End AWAY SIDE.",
+    answer: "RB",
+    explain: "BB = vertical B gap."
+  },
+  {
+    q: "OKIE LIZ — Patriot. You are Tackle CALL SIDE.",
+    answer: "RA",
+    explain: "Long stick to A."
+  }
+];
+
+let current = 0;
+
+function showQuestion() {
+  document.getElementById("question").innerText = questions[current].q;
+  document.getElementById("feedback").innerText = "";
+}
+
+document.querySelectorAll(".zone").forEach(z=>{
+  z.onclick = ()=>{
+    let pick = z.dataset.gap;
+    if(pick === questions[current].answer){
+      document.getElementById("feedback").innerText = "Correct — " + questions[current].explain;
+    } else {
+      document.getElementById("feedback").innerText = "Not it. Think your assignment.";
+    }
+  }
+});
+
+function nextQuestion(){
+  current = (current + 1) % questions.length;
+  showQuestion();
+}
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
