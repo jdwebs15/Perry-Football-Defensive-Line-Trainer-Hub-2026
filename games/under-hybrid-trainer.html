@@ -39,124 +39,103 @@
 
     .front-board {
       position: relative;
-      min-height: 640px;
+      min-height: 540px;
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.14);
       overflow: hidden;
       background:
-        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0 / 10% 100%,
-        linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 100% 16.66%,
-        radial-gradient(circle at 50% 46%, rgba(78,162,255,0.14), transparent 60%),
-        linear-gradient(180deg, #142744 0%, #0b1628 100%);
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 10% 100%,
+        radial-gradient(circle at center, rgba(78,162,255,0.12), transparent 62%),
+        linear-gradient(180deg, #12233d 0%, #0c1729 100%);
     }
 
     .field-label {
       position: absolute;
-      color: #d9e7ff;
-      font-weight: 950;
-      letter-spacing: 0.08em;
+      color: #b7c6e6;
+      font-weight: 900;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      font-size: 0.75rem;
-      z-index: 8;
-      background: rgba(0,0,0,0.42);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      padding: 5px 9px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+      font-size: 0.72rem;
+      z-index: 4;
     }
 
     .offense-label { left: 14px; top: 12px; }
-    .defense-label { left: 14px; bottom: 14px; }
+    .defense-label { left: 14px; bottom: 12px; }
 
     .def-perspective {
       position: absolute;
       right: 14px;
-      bottom: 14px;
+      bottom: 12px;
       color: #ffd166;
-      font-weight: 950;
-      font-size: 0.82rem;
+      font-weight: 900;
+      font-size: 0.78rem;
       text-align: right;
-      z-index: 8;
-      background: rgba(0,0,0,0.48);
-      border: 1px solid rgba(255,209,102,0.30);
-      border-radius: 999px;
-      padding: 6px 10px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+      z-index: 4;
     }
 
     .strength-tag {
       position: absolute;
       right: 14px;
       top: 12px;
-      color: #eafff7;
-      border: 1px solid rgba(52,211,153,0.46);
-      background: rgba(13,64,50,0.76);
+      color: #d7fff0;
+      border: 1px solid rgba(52,211,153,0.38);
+      background: rgba(52,211,153,0.13);
       border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 0.82rem;
-      font-weight: 950;
-      z-index: 8;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.28);
-      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      z-index: 4;
     }
 
     .los {
       position: absolute;
-      left: 5%;
-      right: 5%;
-      top: 50%;
-      height: 4px;
-      background: rgba(255,255,255,0.76);
-      box-shadow: 0 0 16px rgba(255,255,255,0.22);
-      z-index: 3;
+      left: 6%;
+      right: 6%;
+      top: 54%;
+      height: 3px;
+      background: rgba(255,255,255,0.42);
+      box-shadow: 0 0 14px rgba(255,255,255,0.18);
+      z-index: 1;
     }
 
     .football-label {
       position: absolute;
       left: 50%;
-      top: calc(50% + 10px);
+      top: calc(54% + 10px);
       transform: translateX(-50%);
-      color: #eef4ff;
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      z-index: 7;
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      padding: 4px 10px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+      color: #b7c6e6;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      z-index: 2;
     }
 
     .ol, .skill {
       position: absolute;
       transform: translate(-50%, -50%);
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.28);
+      border: 1px solid rgba(255,255,255,0.23);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #eef4ff;
-      font-weight: 950;
-      z-index: 5;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.26);
-      text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+      font-weight: 900;
+      z-index: 3;
     }
 
     .ol {
-      top: 42%;
+      top: 45%;
       width: 54px;
       height: 38px;
-      background: rgba(225,235,255,0.18);
+      background: rgba(255,255,255,0.13);
     }
 
     .skill {
       width: 50px;
       height: 34px;
-      background: rgba(255,209,102,0.18);
-      border-color: rgba(255,209,102,0.42);
-      color: #fff2c7;
+      background: rgba(255,209,102,0.13);
+      border-color: rgba(255,209,102,0.35);
+      color: #ffedbf;
       font-size: 0.84rem;
     }
 
@@ -165,149 +144,112 @@
     .oc { left: 50%; }
     .rg { left: 64%; }
     .rt { left: 78%; }
-    .qb { left: 50%; top: 31%; }
-    .rb { left: 50%; top: 22%; }
+    .qb { left: 50%; top: 34%; }
+    .rb { left: 50%; top: 25%; }
 
-    .wr-left-1 { left: 7%; top: 32%; }
-    .wr-left-2 { left: 17%; top: 27%; }
-    .wr-right-1 { left: 93%; top: 32%; }
-    .wr-right-2 { left: 83%; top: 27%; }
-    .te-left { left: 16%; top: 42%; }
-    .te-right { left: 84%; top: 42%; }
+    .wr-left-1 { left: 7%; top: 35%; }
+    .wr-left-2 { left: 17%; top: 30%; }
+    .wr-right-1 { left: 93%; top: 35%; }
+    .wr-right-2 { left: 83%; top: 30%; }
+    .te-left { left: 16%; top: 45%; }
+    .te-right { left: 84%; top: 45%; }
 
     .strong-side {
       position: absolute;
-      top: 6%;
-      bottom: 52%;
+      top: 4%;
+      bottom: 54%;
       width: 34%;
-      border: 2px solid rgba(52,211,153,0.45);
-      background: rgba(52,211,153,0.075);
+      border: 2px solid rgba(52,211,153,0.38);
+      background: rgba(52,211,153,0.06);
       border-radius: 18px;
-      z-index: 1;
+      z-index: 0;
       pointer-events: none;
-      box-shadow: inset 0 0 20px rgba(52,211,153,0.08);
     }
     .strong-left { left: 3%; }
     .strong-right { right: 3%; }
 
     .gap-zone {
       position: absolute;
-      top: 56%;
-      height: 86px;
-      border-radius: 16px;
-      border: 2px solid rgba(123,193,255,0.42);
-      background: rgba(8,18,32,0.64);
+      top: 57%;
+      height: 142px;
+      border-radius: 14px;
+      border: 1px dashed rgba(123,193,255,0.38);
+      background: rgba(78,162,255,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #ffffff;
-      font-size: 0.95rem;
-      font-weight: 950;
+      color: #d9ecff;
+      font-size: 1rem;
+      font-weight: 900;
       cursor: pointer;
       transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
-      z-index: 4;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.05);
-      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
-      line-height: 1.05;
-    }
-
-    .gap-zone span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 52px;
-      padding: 6px 8px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.58);
-      border: 1px solid rgba(255,255,255,0.22);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+      z-index: 2;
     }
 
     .gap-zone:hover,
     .drop-zone:hover {
       transform: translateY(-2px);
-      border-color: rgba(255,209,102,0.9);
-      background: rgba(255,209,102,0.16);
+      border-color: rgba(255,209,102,0.8);
+      background: rgba(255,209,102,0.12);
     }
 
     .gap-zone.correct-zone {
-      background: rgba(52,211,153,0.25);
-      border-color: rgba(52,211,153,0.95);
+      background: rgba(52,211,153,0.22);
+      border-color: rgba(52,211,153,0.9);
     }
 
     .gap-zone.wrong-zone {
-      background: rgba(255,107,107,0.20);
-      border-color: rgba(255,107,107,0.9);
+      background: rgba(255,107,107,0.18);
+      border-color: rgba(255,107,107,0.8);
     }
 
-    .gap-left-c { left: 7%; width: 15%; }
+    .gap-left-c { left: 8%; width: 14%; }
     .gap-left-b { left: 23%; width: 12%; }
     .gap-left-a { left: 38%; width: 10%; }
     .gap-right-a { left: 52%; width: 10%; }
     .gap-right-b { left: 65%; width: 12%; }
-    .gap-right-c { left: 78%; width: 15%; }
+    .gap-right-c { left: 78%; width: 14%; }
 
     .drop-zone {
       position: absolute;
-      width: 82px;
-      height: 56px;
+      width: 76px;
+      height: 58px;
       border-radius: 16px;
-      border: 2px dashed rgba(255,255,255,0.32);
-      background: rgba(255,255,255,0.06);
+      border: 2px dashed rgba(255,255,255,0.24);
+      background: rgba(255,255,255,0.045);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #e0ecff;
-      font-weight: 950;
-      font-size: 0.86rem;
+      color: #b7c6e6;
+      font-weight: 900;
+      font-size: 0.88rem;
       text-align: center;
       transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
-      z-index: 5;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.24);
-      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+      z-index: 3;
     }
 
     .drop-zone.filled {
       border-style: solid;
-      color: #ffffff;
-      background: rgba(78,162,255,0.22);
+      color: #eef4ff;
+      background: rgba(78,162,255,0.16);
     }
 
     .drop-zone.correct-drop {
-      background: rgba(52,211,153,0.24);
-      border-color: rgba(52,211,153,0.95);
+      background: rgba(52,211,153,0.22);
+      border-color: rgba(52,211,153,0.9);
     }
 
     .drop-zone.wrong-drop {
-      background: rgba(255,107,107,0.20);
-      border-color: rgba(255,107,107,0.9);
+      background: rgba(255,107,107,0.18);
+      border-color: rgba(255,107,107,0.8);
     }
 
-    .left-5 { left: 15%; top: 76%; }
-    .left-3 { left: 31%; top: 76%; }
-    .left-1 { left: 42%; top: 76%; }
-    .right-1 { left: 50%; top: 76%; }
-    .right-3 { left: 60%; top: 76%; }
-    .right-5 { left: 75%; top: 76%; }
-
-    .board-section-title {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 7;
-      color: #cfe0ff;
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(0,0,0,0.50);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      padding: 4px 10px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.75);
-    }
-    .gap-row-title { top: 52.5%; }
-    .alignment-row-title { top: 70%; }
+    .left-5 { left: 15%; top: 65%; }
+    .left-3 { left: 31%; top: 65%; }
+    .left-1 { left: 42%; top: 65%; }
+    .right-1 { left: 50%; top: 65%; }
+    .right-3 { left: 60%; top: 65%; }
+    .right-5 { left: 75%; top: 65%; }
 
     .player-tray {
       display: grid;
@@ -367,6 +309,56 @@
       background: rgba(255,255,255,0.04);
     }
 
+
+    /* GAME BOARD POLISH: wider alignment lane, clear labels, snap-style tiles */
+    .front-board::after {
+      content: "";
+      position: absolute;
+      left: 4%; right: 4%; bottom: 9%; height: 136px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(6,14,28,0.42), rgba(6,14,28,0.76));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: inset 0 0 28px rgba(0,0,0,0.35);
+      z-index: 2; pointer-events: none;
+    }
+    .drop-zone {
+      width: 76px; height: 72px; border-radius: 18px;
+      border: 2px dashed rgba(122, 184, 255, 0.58);
+      background: radial-gradient(circle at 50% 0%, rgba(78,162,255,0.16), transparent 58%), rgba(6,14,28,0.86);
+      color: #f5f8ff; font-size: 0.72rem; letter-spacing: 0.04em; line-height: 1.05;
+      z-index: 6; box-shadow: 0 12px 26px rgba(0,0,0,0.38), inset 0 0 0 1px rgba(255,255,255,0.07);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.82);
+    }
+    .drop-zone:hover {
+      transform: translateY(-4px) scale(1.03);
+      border-color: rgba(255,209,102,0.95);
+      background: radial-gradient(circle at 50% 0%, rgba(255,209,102,0.20), transparent 58%), rgba(23,24,31,0.92);
+    }
+    .tech-label { display: grid; gap: 3px; place-items: center; width: 100%; }
+    .tech-side { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; padding: 2px 7px; border-radius: 999px; font-size: 0.62rem; font-weight: 1000; letter-spacing: 0.09em; background: rgba(255,255,255,0.11); border: 1px solid rgba(255,255,255,0.16); }
+    .tech-num { font-size: 1.18rem; font-weight: 1000; letter-spacing: 0.02em; }
+    .tech-word { font-size: 0.56rem; font-weight: 1000; letter-spacing: 0.10em; opacity: 0.86; }
+    .left-5, .left-3, .left-1 { border-color: rgba(96,190,255,0.70); }
+    .right-1, .right-3, .right-5 { border-color: rgba(255,172,86,0.70); }
+    .left-5 { left: 5%; top: 76%; }
+    .left-3 { left: 21%; top: 76%; }
+    .left-1 { left: 37%; top: 76%; }
+    .right-1 { left: 53%; top: 76%; }
+    .right-3 { left: 69%; top: 76%; }
+    .right-5 { left: 85%; top: 76%; }
+    .drop-zone.filled {
+      border-style: solid; border-color: rgba(255,209,102,0.96);
+      background: radial-gradient(circle at 50% 0%, rgba(255,209,102,0.26), transparent 58%), rgba(38,34,17,0.95);
+      box-shadow: 0 0 0 2px rgba(255,209,102,0.10), 0 14px 30px rgba(0,0,0,0.44), inset 0 0 0 1px rgba(255,255,255,0.10);
+    }
+    .placed-player { display:flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:999px; background:linear-gradient(180deg,#4ea2ff,#2f6fd0); border:2px solid rgba(255,255,255,0.72); color:#fff; font-size:1.25rem; font-weight:1000; box-shadow:0 10px 18px rgba(0,0,0,0.34); }
+    .placed-role { display:block; margin-top:3px; color:#ffedbf; font-size:0.58rem; font-weight:1000; letter-spacing:0.08em; text-transform:uppercase; }
+    .player-chip { position:relative; overflow:hidden; min-height:50px; border-color:rgba(122,184,255,0.34); background:linear-gradient(180deg, rgba(78,162,255,0.24), rgba(78,162,255,0.11)); box-shadow:0 10px 20px rgba(0,0,0,0.22); transition:transform 0.14s ease, border-color 0.14s ease, background 0.14s ease; }
+    .player-chip::before { content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); transform:translateX(-120%); transition:transform 0.35s ease; }
+    .player-chip:hover { transform:translateY(-2px); border-color:rgba(255,209,102,0.75); background:linear-gradient(180deg, rgba(255,209,102,0.18), rgba(78,162,255,0.12)); }
+    .player-chip:hover::before { transform: translateX(120%); }
+    .player-chip.selected { outline: 2px solid rgba(255,209,102,0.95); outline-offset: 2px; }
+    .alignment-row-title { top: 68.8%; color:#fff; background:rgba(0,0,0,0.68); border-color:rgba(255,209,102,0.32); }
     @media (max-width: 980px) {
       .under-layout { grid-template-columns: 1fr; }
       .front-board { min-height: 520px; }
@@ -471,15 +463,13 @@
             <div class="ol rt">OT</div>
             <div class="los"></div>
             <div class="football-label">Line of Scrimmage</div>
-            <div class="board-section-title gap-row-title">Click Responsibility Gap</div>
-            <div class="board-section-title alignment-row-title">Drag Defensive Alignment</div>
 
-            <button class="gap-zone gap-left-c" data-gap="LC" onclick="selectGap('LC')"><span>Left C</span></button>
-            <button class="gap-zone gap-left-b" data-gap="LB" onclick="selectGap('LB')"><span>Left B</span></button>
-            <button class="gap-zone gap-left-a" data-gap="LA" onclick="selectGap('LA')"><span>Left A</span></button>
-            <button class="gap-zone gap-right-a" data-gap="RA" onclick="selectGap('RA')"><span>Right A</span></button>
-            <button class="gap-zone gap-right-b" data-gap="RB" onclick="selectGap('RB')"><span>Right B</span></button>
-            <button class="gap-zone gap-right-c" data-gap="RC" onclick="selectGap('RC')"><span>Right C</span></button>
+            <button class="gap-zone gap-left-c" data-gap="LC" onclick="selectGap('LC')">Left C</button>
+            <button class="gap-zone gap-left-b" data-gap="LB" onclick="selectGap('LB')">Left B</button>
+            <button class="gap-zone gap-left-a" data-gap="LA" onclick="selectGap('LA')">Left A</button>
+            <button class="gap-zone gap-right-a" data-gap="RA" onclick="selectGap('RA')">Right A</button>
+            <button class="gap-zone gap-right-b" data-gap="RB" onclick="selectGap('RB')">Right B</button>
+            <button class="gap-zone gap-right-c" data-gap="RC" onclick="selectGap('RC')">Right C</button>
 
             <div class="drop-zone left-5" data-spot="L5">Left 5</div>
             <div class="drop-zone left-3" data-spot="L3">Left 3</div>
@@ -809,8 +799,8 @@ function setupPlayerTray(players) {
     });
     chip.addEventListener('click', function() {
       draggedPlayer = player;
-      document.querySelectorAll('.player-chip').forEach(c => c.style.outline = 'none');
-      chip.style.outline = '2px solid rgba(255,209,102,0.8)';
+      document.querySelectorAll('.player-chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
     });
     tray.appendChild(chip);
   });
@@ -818,7 +808,7 @@ function setupPlayerTray(players) {
 
 function enableDropZones() {
   document.querySelectorAll('.drop-zone').forEach(function(zone) {
-    zone.textContent = readableSpot(zone.dataset.spot);
+    zone.innerHTML = readableSpot(zone.dataset.spot);
     zone.classList.remove('filled');
     zone.ondragover = function(event) { event.preventDefault(); };
     zone.ondrop = function(event) {
@@ -837,7 +827,7 @@ function disableDropZones() {
     zone.ondragover = null;
     zone.ondrop = null;
     zone.onclick = null;
-    zone.textContent = readableSpot(zone.dataset.spot);
+    zone.innerHTML = readableSpot(zone.dataset.spot);
     zone.classList.remove('filled');
   });
 }
@@ -850,7 +840,7 @@ function placePlayer(player, zone) {
       delete placed[spot];
       const oldZone = document.querySelector('.drop-zone[data-spot="' + spot + '"]');
       if (oldZone) {
-        oldZone.textContent = readableSpot(spot);
+        oldZone.innerHTML = readableSpot(spot);
         oldZone.classList.remove('filled');
       }
     }
@@ -863,12 +853,12 @@ function placePlayer(player, zone) {
   }
 
   placed[zone.dataset.spot] = player;
-  zone.textContent = player;
+  zone.innerHTML = placedPlayerMarkup(player);
   zone.classList.add('filled');
 
   document.querySelectorAll('.player-chip').forEach(function(chip) {
     chip.classList.toggle('used', Object.values(placed).includes(chip.dataset.player));
-    chip.style.outline = 'none';
+    chip.classList.remove('selected');
   });
 
   draggedPlayer = null;
@@ -1034,10 +1024,20 @@ function clearBoardFeedback() {
 
 function readableSpot(spot) {
   const map = {
-    L5: 'Left 5', L3: 'Left 3', L1: 'Left 1',
-    R1: 'Right 1', R3: 'Right 3', R5: 'Right 5'
+    L5: ['LEFT', '5', 'TECH'],
+    L3: ['LEFT', '3', 'TECH'],
+    L1: ['LEFT', '1', 'SHADE'],
+    R1: ['RIGHT', '1', 'SHADE'],
+    R3: ['RIGHT', '3', 'TECH'],
+    R5: ['RIGHT', '5', 'TECH']
   };
-  return map[spot] || spot;
+  const item = map[spot];
+  if (!item) return spot;
+  return '<span class="tech-label"><span class="tech-side">' + item[0] + '</span><span class="tech-num">' + item[1] + '</span><span class="tech-word">' + item[2] + '</span></span>';
+}
+
+function placedPlayerMarkup(player) {
+  return '<span class="placed-player">' + player + '</span><span class="placed-role">' + PLAYER_LABELS[player] + '</span>';
 }
 </script>
 </body>
