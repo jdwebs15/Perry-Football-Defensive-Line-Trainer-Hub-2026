@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game 6 — Pass Rush Discipline Simulator</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero compact-hero">
+      <div class="hero-top">
+        <span class="brand-badge">Perry Panther Football</span>
+        <span class="brand-badge muted-badge">Game 6 — Pass Rush Discipline Simulator</span>
+      </div>
+      <h1>Pass Rush Discipline Simulator</h1>
+      <p class="hero-copy">
+        High Hat means pass rush, but rush has rules. Rush through your gap, contain rush outside, gap-side shoulder inside, squeeze to the ball, and never go past the depth of the Quarterback.
+      </p>
+      <div class="pill-row">
+        <span class="pill">High Hat = Pass Rush</span>
+        <span class="pill">Rush Through YOUR Gap</span>
+        <span class="pill">Contain Rush Always</span>
+        <span class="pill">Never Cross QB Face</span>
+        <span class="pill">Never Past QB Depth</span>
+      </div>
+      <div class="btn-row" style="margin-top:16px;">
+        <a class="secondary-btn" href="../index.html">Back to Hub</a>
+      </div>
+    </header>
+
+    <section id="startScreen" class="section-card start-card">
+      <div class="section-heading">
+        <h2>Start the Drill</h2>
+        <p>
+          This game trains disciplined pass rush. Once you recognize High Hat, you engage fully in pass rush, but you still rush with responsibility. Outside rushers are contain rush always. Inside rushers work the gap-side shoulder of the QB and never cross his face.
+        </p>
+      </div>
+      <div class="start-grid">
+        <label class="input-group">
+          <span>Player Name</span>
+          <input id="playerName" type="text" placeholder="Enter player name" autocomplete="off" />
+        </label>
+      </div>
+      <div class="btn-row" style="margin-top:16px;">
+        <button id="startBtn" class="btn">Start Game 6</button>
+      </div>
+      <div class="rules-grid" style="margin-top:18px;">
+        <div class="rule-box">
+          <h4>High Hat</h4>
+          <p>Recognize the pass set and immediately engage fully in pass rush.</p>
+        </div>
+        <div class="rule-box">
+          <h4>Rush Through YOUR Gap</h4>
+          <p>As the hat and numbers of your key come at you, shoot your hands inside and tight just like any base block.</p>
+        </div>
+        <div class="rule-box">
+          <h4>QB Depth Rule</h4>
+          <p>Never go past the depth of the Quarterback. Squeeze and constrict his area of operation.</p>
+        </div>
+      </div>
+      <div id="startError" class="error-box hidden"></div>
+    </section>
+
+    <section id="gameScreen" class="section-card hidden">
+      <div class="hud-grid">
+        <div class="hud-box"><span class="hud-label">Player</span><span id="hudPlayer" class="hud-value">—</span></div>
+        <div class="hud-box"><span class="hud-label">Question</span><span id="hudProgress" class="hud-value">1 / 18</span></div>
+        <div class="hud-box"><span class="hud-label">Accuracy</span><span id="hudAccuracy" class="hud-value">100%</span></div>
+        <div class="hud-box"><span class="hud-label">Misses</span><span id="hudMisses" class="hud-value">0</span></div>
+        <div class="hud-box"><span class="hud-label">Runtime</span><span id="hudRuntime" class="hud-value">00:00</span></div>
+        <div class="hud-box"><span class="hud-label">Start Time</span><span id="hudStartTime" class="hud-value">—</span></div>
+      </div>
+
+      <div class="question-panel">
+        <div class="question-title-row">
+          <span class="question-kicker">Pass Rush Discipline</span>
+          <span id="timerPill" class="pill">High Hat. Gap. QB Depth.</span>
+        </div>
+        <h2 id="questionStem" class="question-stem"></h2>
+        <p id="questionCopy" class="question-copy"></p>
+        <div id="answerGrid" class="answer-grid"></div>
+        <div id="feedbackBox" class="feedback-box hidden">
+          <h3 id="feedbackTitle" class="feedback-title"></h3>
+          <p id="feedbackCopy" class="feedback-copy"></p>
+        </div>
+        <div id="gameError" class="error-box hidden"></div>
+      </div>
+    </section>
+
+    <section id="finishScreen" class="hidden">
+      <div class="ticket-box">
+        <h2>Completion Ticket</h2>
+        <p>Screenshot this ticket after a perfect run. Any miss means the player finished the rep work, but has to run it back clean.</p>
+        <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">End Time</span><span id="ticketEnd" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Runtime</span><span id="ticketRuntime" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Accuracy</span><span id="ticketAccuracy" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Misses</span><span id="ticketMisses" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
+        </div>
+        <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+        <div class="btn-row" style="margin-top:16px;">
+          <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
+          <a class="btn" href="../index.html">Back to Hub</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const EXPLANATION_DELAY_MS = 5000;
+
+    const QUESTION_BANK = [
+      {
+        id: 1,
+        stem: 'What does High Hat trigger for a Defensive Lineman?',
+        copy: 'Your key shows a pass set. The reaction must be immediate.',
+        correct: 'Immediately engage fully in pass rush',
+        hint: 'High Hat is not a pause-and-peek read.',
+        explanation: 'Correct. As we recognize a High Hat pass set, we immediately engage fully in our pass rush.'
+      },
+      {
+        id: 2,
+        stem: 'What is the first pass rush rule for every rusher?',
+        copy: 'Before moves, counters, and effort, the rush has a rule.',
+        correct: 'Rush through YOUR gap',
+        hint: 'Your rush is tied to your assigned lane.',
+        explanation: 'Correct. Rush through YOUR gap.'
+      },
+      {
+        id: 3,
+        stem: 'Outside rushers are what kind of rushers in this system?',
+        copy: 'This is the rule Coach emphasizes in all caps.',
+        correct: 'Contain rush, ALWAYS',
+        hint: 'Do not trade a sack attempt for losing the edge.',
+        explanation: 'Correct. Outside rushers are contain rush, ALWAYS.'
+      },
+      {
+        id: 4,
+        stem: 'An outside rusher gets an overset. What is the warning if he takes the inside gap?',
+        copy: 'There is a hard correction attached to this temptation.',
+        correct: 'He better be able to get back to the outside shoulder of the QB',
+        hint: 'The outside shoulder is the rescue point if he violates contain.',
+        explanation: 'Correct. If you are getting an overset and take the inside gap, you better be able to get back to the outside shoulder of the QB.'
+      },
+      {
+        id: 5,
+        stem: 'Inside rushers are aiming for what on the Quarterback?',
+        copy: 'Inside rush is still gap-disciplined.',
+        correct: 'Gap-side shoulder of the QB',
+        hint: 'Inside rushers are not free to cross the QB face.',
+        explanation: 'Correct. Inside rushers are gap-side shoulder of the QB.'
+      },
+      {
+        id: 6,
+        stem: 'What should an inside rusher NEVER do?',
+        copy: 'This protects rush-lane integrity and keeps the QB boxed in.',
+        correct: 'Cross the QB’s face',
+        hint: 'Do not chase across his body and open an escape lane.',
+        explanation: 'Correct. Inside rushers NEVER cross the QB’s face.'
+      },
+      {
+        id: 7,
+        stem: 'On a twist stunt, what becomes your aiming-point rush rule?',
+        copy: 'After movement, the final gap determines the rush responsibility.',
+        correct: 'The gap you end up in',
+        hint: 'Where you finish on the stunt tells you the rule.',
+        explanation: 'Correct. On twist stunts, the gap you end up in is the aiming point rush rule for that gap.'
+      },
+      {
+        id: 8,
+        stem: 'What is the squeeze rule once the ball declares?',
+        copy: 'Pass rush does not mean running past the play.',
+        correct: 'Squeeze to the ball',
+        hint: 'Close space. Do not widen the escape lane.',
+        explanation: 'Correct. Squeeze to the ball.'
+      },
+      {
+        id: 9,
+        stem: 'What depth must a pass rusher NEVER go past?',
+        copy: 'This is one of the biggest discipline rules in the rush.',
+        correct: 'The depth of the Quarterback',
+        hint: 'Going deeper than the QB helps him escape.',
+        explanation: 'Correct. NEVER go past the depth of the Quarterback.'
+      },
+      {
+        id: 10,
+        stem: 'You are within about 2 yards of QB depth and can no longer turn the corner. What should you do?',
+        copy: 'The rush is not dead just because you cannot win the edge clean.',
+        correct: 'Drive your blocker into the QB and constrict his area of operation',
+        hint: 'Turn the blocker into the pressure.',
+        explanation: 'Correct. When you get within 2 yards of the depth of the QB and know you can no longer turn the corner, drive your blocker into the QB and constrict his area of operation.'
+      },
+      {
+        id: 11,
+        stem: 'What happens when a rusher goes past the QB’s depth?',
+        copy: 'Coach gives the consequence clearly.',
+        correct: 'He loses contain and gives an up-and-out escape',
+        hint: 'You gave the QB a way to extend the play.',
+        explanation: 'Correct. When you go past his depth, you lose contain and give an up and out, allowing the play to be extended.'
+      },
+      {
+        id: 12,
+        stem: 'A player wins upfield, but runs behind the QB. What is the correction?',
+        copy: 'A pretty rush that opens the escape lane is not disciplined rush.',
+        correct: 'Do not go past QB depth; squeeze and constrict the pocket',
+        hint: 'Pressure must close the QB’s space, not run out of it.',
+        explanation: 'Correct. Never go past QB depth. If you cannot turn the corner, drive the blocker into the QB and constrict his area of operation.'
+      },
+      {
+        id: 13,
+        stem: 'Why is an outside rusher not allowed to take the inside gap just because it opens?',
+        copy: 'The open door can be a trap if it breaks the rush rule.',
+        correct: 'Because he is responsible for contain and the outside shoulder of the QB',
+        hint: 'The QB escape lane matters more than the tempting inside flash.',
+        explanation: 'Correct. Outside rushers are contain rush always. If they take an inside gap, they must get back to the outside shoulder of the QB.'
+      },
+      {
+        id: 14,
+        stem: 'What kind of pass rush moves should players use?',
+        copy: 'Coach does not force one universal move on every player.',
+        correct: 'Moves organic to what each player does best to get to the QB',
+        hint: 'The move fits the player, but the rush rules still apply.',
+        explanation: 'Correct. The pass rush moves are organic to what each player does best to get to the Quarterback.'
+      },
+      {
+        id: 15,
+        stem: 'A twist stunt puts you in a new gap. What rule now controls your rush?',
+        copy: 'Do not rush like your original alignment if the stunt changes your final gap.',
+        correct: 'The aiming-point rush rule for the gap you ended in',
+        hint: 'Final gap equals final responsibility.',
+        explanation: 'Correct. On twist stunts, the gap you end up in is the aiming point rush rule for that gap.'
+      },
+      {
+        id: 16,
+        stem: 'A contain rusher is upfield and feels the QB step up. What should he do?',
+        copy: 'The answer is not to keep running around the edge.',
+        correct: 'Squeeze to the ball while keeping contain leverage',
+        hint: 'Close the pocket without giving the outside escape.',
+        explanation: 'Correct. Squeeze to the ball, but outside rushers must remain contain rushers.'
+      },
+      {
+        id: 17,
+        stem: 'What is the disciplined picture when the rusher cannot turn the corner?',
+        copy: 'This turns a stalled rush into useful pressure.',
+        correct: 'Drive the blocker back into the QB instead of running past the pocket',
+        hint: 'Create pressure through the blocker and shrink the QB’s space.',
+        explanation: 'Correct. Drive your blocker into the QB and constrict his area of operation.'
+      },
+      {
+        id: 18,
+        stem: 'What is the full pass rush discipline picture?',
+        copy: 'Put the entire High Hat rush progression together.',
+        correct: 'High Hat, rush your gap, honor contain or gap-side shoulder, squeeze, and never pass QB depth',
+        hint: 'Recognition, lane, aiming point, squeeze, depth.',
+        explanation: 'Correct. High Hat triggers pass rush, but the rush stays disciplined: rush through your gap, outside contain always, inside gap-side shoulder, squeeze to the ball, and never go past QB depth.'
+      }
+    ];
+
+    const state = {
+      playerName: '',
+      startDate: null,
+      endDate: null,
+      currentIndex: 0,
+      questions: [],
+      misses: 0,
+      correctFirstTry: 0,
+      answered: false,
+      started: false,
+      runtimeSeconds: 0,
+      timerId: null
+    };
+
+    const els = {
+      startScreen: document.getElementById('startScreen'),
+      gameScreen: document.getElementById('gameScreen'),
+      finishScreen: document.getElementById('finishScreen'),
+      playerName: document.getElementById('playerName'),
+      startBtn: document.getElementById('startBtn'),
+      restartBtn: document.getElementById('restartBtn'),
+      startError: document.getElementById('startError'),
+      gameError: document.getElementById('gameError'),
+      hudPlayer: document.getElementById('hudPlayer'),
+      hudProgress: document.getElementById('hudProgress'),
+      hudAccuracy: document.getElementById('hudAccuracy'),
+      hudMisses: document.getElementById('hudMisses'),
+      hudRuntime: document.getElementById('hudRuntime'),
+      hudStartTime: document.getElementById('hudStartTime'),
+      timerPill: document.getElementById('timerPill'),
+      questionStem: document.getElementById('questionStem'),
+      questionCopy: document.getElementById('questionCopy'),
+      answerGrid: document.getElementById('answerGrid'),
+      feedbackBox: document.getElementById('feedbackBox'),
+      feedbackTitle: document.getElementById('feedbackTitle'),
+      feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketName: document.getElementById('ticketName'),
+      ticketDate: document.getElementById('ticketDate'),
+      ticketStart: document.getElementById('ticketStart'),
+      ticketEnd: document.getElementById('ticketEnd'),
+      ticketRuntime: document.getElementById('ticketRuntime'),
+      ticketAccuracy: document.getElementById('ticketAccuracy'),
+      ticketMisses: document.getElementById('ticketMisses'),
+      ticketResult: document.getElementById('ticketResult'),
+      finishMessage: document.getElementById('finishMessage')
+    };
+
+    function formatDate(date) {
+      return date.toLocaleDateString();
+    }
+
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function formatRuntime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const secs = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function shuffle(array) {
+      const clone = [...array];
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone;
+    }
+
+    function buildQuestions() {
+      return QUESTION_BANK.map(q => {
+        const distractors = [
+          'Take the cleanest path even if it opens the contain lane',
+          'Run past the Quarterback to get a deeper angle',
+          'Cross the QB’s face to chase the quickest pressure',
+          'Abandon the assigned gap once the blocker oversets',
+          'Peek into the backfield before reacting to High Hat',
+          'Rush wide with no squeeze once the QB steps up',
+          'Stop your feet and mirror the blocker at the line',
+          'Spin out of the gap even if it creates an escape lane',
+          'Let the QB step up and out by rushing behind him',
+          'Treat every pass rush move as more important than lane discipline'
+        ];
+        const options = shuffle([q.correct, ...shuffle(distractors).filter(d => d !== q.correct).slice(0, 3)]);
+        return { ...q, options };
+      });
+    }
+
+    function setError(target, message) {
+      target.textContent = message;
+      target.classList.remove('hidden');
+    }
+
+    function clearError(target) {
+      target.textContent = '';
+      target.classList.add('hidden');
+    }
+
+    function startRuntimeClock() {
+      clearInterval(state.timerId);
+      state.timerId = setInterval(() => {
+        state.runtimeSeconds += 1;
+        els.hudRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      }, 1000);
+    }
+
+    function stopRuntimeClock() {
+      clearInterval(state.timerId);
+      state.timerId = null;
+    }
+
+    function updateHud() {
+      const attempted = state.currentIndex;
+      const accuracy = attempted === 0 ? 100 : Math.round((state.correctFirstTry / attempted) * 100);
+      els.hudPlayer.textContent = state.playerName;
+      els.hudProgress.textContent = `${Math.min(state.currentIndex + 1, state.questions.length)} / ${state.questions.length}`;
+      els.hudAccuracy.textContent = `${accuracy}%`;
+      els.hudMisses.textContent = String(state.misses);
+      els.hudRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      els.hudStartTime.textContent = formatTime(state.startDate);
+    }
+
+    function showFeedback(title, copy) {
+      els.feedbackTitle.textContent = title;
+      els.feedbackCopy.textContent = copy;
+      els.feedbackBox.classList.remove('hidden');
+    }
+
+    function clearFeedback() {
+      els.feedbackTitle.textContent = '';
+      els.feedbackCopy.textContent = '';
+      els.feedbackBox.classList.add('hidden');
+    }
+
+    function renderQuestion() {
+      clearError(els.gameError);
+      clearFeedback();
+      const q = state.questions[state.currentIndex];
+      state.answered = false;
+      updateHud();
+      els.questionStem.textContent = q.stem;
+      els.questionCopy.textContent = q.copy;
+      els.timerPill.textContent = 'High Hat. Gap. QB Depth.';
+      els.answerGrid.innerHTML = '';
+      q.options.forEach((option, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + idx)}</span><span>${option}</span>`;
+        btn.addEventListener('click', () => handleAnswer(option, btn));
+        els.answerGrid.appendChild(btn);
+      });
+    }
+
+    function enableRemainingAnswers() {
+      [...els.answerGrid.querySelectorAll('.answer-btn')].forEach(btn => {
+        if (!btn.classList.contains('correct')) {
+          btn.disabled = false;
+          btn.classList.remove('disabled');
+        }
+      });
+    }
+
+    function handleAnswer(option, btnEl) {
+      try {
+        if (!state.started) return;
+        const q = state.questions[state.currentIndex];
+        const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
+        if (option === q.correct) {
+          if (!state.answered) state.correctFirstTry += 1;
+          state.answered = true;
+          btnEl.classList.add('correct');
+          buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+          });
+          showFeedback('Correct — disciplined rush.', q.explanation);
+          updateHud();
+          setTimeout(() => {
+            state.currentIndex += 1;
+            if (state.currentIndex >= state.questions.length) finishGame();
+            else renderQuestion();
+          }, EXPLANATION_DELAY_MS);
+        } else {
+          if (!state.answered) {
+            state.answered = true;
+            state.misses += 1;
+          }
+          btnEl.classList.add('incorrect');
+          btnEl.disabled = true;
+          btnEl.classList.add('disabled');
+          showFeedback('Miss — fix the rush lane.', `${q.hint} You still must choose the correct answer to move on.`);
+          updateHud();
+          enableRemainingAnswers();
+        }
+      } catch (err) {
+        setError(els.gameError, `Game error: ${err.message}`);
+      }
+    }
+
+    function finishGame() {
+      stopRuntimeClock();
+      state.endDate = new Date();
+      const attempted = state.questions.length;
+      const accuracy = Math.round((state.correctFirstTry / attempted) * 100);
+      const perfect = state.misses === 0;
+      els.gameScreen.classList.add('hidden');
+      els.finishScreen.classList.remove('hidden');
+      els.ticketName.textContent = state.playerName;
+      els.ticketDate.textContent = formatDate(state.endDate);
+      els.ticketStart.textContent = formatTime(state.startDate);
+      els.ticketEnd.textContent = formatTime(state.endDate);
+      els.ticketRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      els.ticketAccuracy.textContent = `${accuracy}%`;
+      els.ticketMisses.textContent = String(state.misses);
+      els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
+      els.finishMessage.innerHTML = perfect
+        ? `<h3 class="feedback-title">Perfect. Pass rush discipline is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+    }
+
+    function hardReset() {
+      stopRuntimeClock();
+      state.playerName = '';
+      state.startDate = null;
+      state.endDate = null;
+      state.currentIndex = 0;
+      state.questions = [];
+      state.misses = 0;
+      state.correctFirstTry = 0;
+      state.answered = false;
+      state.started = false;
+      state.runtimeSeconds = 0;
+      els.playerName.value = '';
+      clearError(els.startError);
+      clearError(els.gameError);
+      clearFeedback();
+      els.finishScreen.classList.add('hidden');
+      els.gameScreen.classList.add('hidden');
+      els.startScreen.classList.remove('hidden');
+    }
+
+    function startGame() {
+      const name = els.playerName.value.trim();
+      clearError(els.startError);
+      if (!name) {
+        setError(els.startError, 'Enter a player name before starting.');
+        return;
+      }
+      state.playerName = name;
+      state.startDate = new Date();
+      state.endDate = null;
+      state.currentIndex = 0;
+      state.questions = buildQuestions();
+      state.misses = 0;
+      state.correctFirstTry = 0;
+      state.answered = false;
+      state.started = true;
+      state.runtimeSeconds = 0;
+      els.startScreen.classList.add('hidden');
+      els.finishScreen.classList.add('hidden');
+      els.gameScreen.classList.remove('hidden');
+      startRuntimeClock();
+      renderQuestion();
+    }
+
+    window.addEventListener('error', (event) => {
+      const msg = event?.error?.message || event.message || 'Unknown error';
+      setError(els.gameError, `Unhandled error: ${msg}`);
+    });
+
+    els.startBtn.addEventListener('click', startGame);
+    els.restartBtn.addEventListener('click', hardReset);
+    els.playerName.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startGame();
+    });
+  </script>
+</body>
+</html>
