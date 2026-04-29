@@ -121,7 +121,7 @@
         copy: 'Call the helmet key immediately.',
         correct: 'Down',
         hint: 'He is going down inside. Do not overcomplicate it.',
-        explanation: 'That is a Down key. Down means the offensive lineman’s helmet and shoulders move down inside at the snap.'
+        explanation: 'That is Down. Down means the offensive lineman’s helmet and shoulders move down inside at the snap.'
       },
       {
         id: 2,
@@ -143,9 +143,9 @@
         id: 4,
         stem: 'The hat and numbers come directly toward you.',
         copy: 'What is the helmet key?',
-        correct: 'Out',
-        hint: 'Think outside hat and numbers coming at you.',
-        explanation: 'That is Base. The offensive lineman is working out toward you rather than going down or showing pass.'
+        correct: 'Base',
+        hint: 'The blocker is coming directly at you. This is not lateral zone movement.',
+        explanation: 'That is Base. Hat and numbers coming directly toward you is a base block look.'
       },
       {
         id: 5,
@@ -176,16 +176,16 @@
         stem: 'The blocker works laterally toward you, attempting to gain leverage.',
         copy: 'Identify the helmet key.',
         correct: 'Zone',
-        hint: 'This is the outside zone hat look.',
-        explanation: 'That is Zone. This is the family of looks where outside hat pressure is coming at you.'
+        hint: 'This is a lateral stretch look. The blocker is trying to reach or gain leverage.',
+        explanation: 'That is Zone. Lateral movement toward you is a zone look, not base.'
       },
       {
         id: 9,
-        stem: 'The key’s helmet and shoulders vanishes down inside right off the snap.',
+        stem: 'The key’s helmet and shoulders vanish down inside right off the snap.',
         copy: 'Which read is that?',
         correct: 'Down',
         hint: 'Down inside equals one answer.',
-        explanation: 'That is Down. This is one of the four core helmet keys in the system.'
+        explanation: 'That is Down. This is one of the core helmet keys in the system.'
       },
       {
         id: 10,
@@ -208,12 +208,12 @@
         stem: 'The key widens and brings outside hat pressure into your leverage space.',
         copy: 'What helmet key is it?',
         correct: 'Zone',
-        hint: 'Outside hat pressure.',
+        hint: 'Outside hat pressure with lateral movement is zone.',
         explanation: 'That is Zone. Recognize it fast so your body can get to the right block reaction mechanics.'
       }
     ];
 
-    const ANSWER_OPTIONS = ['Down', 'Out', 'Pull', 'High Hat'];
+    const ANSWER_OPTIONS = ['Down', 'Base', 'Zone', 'Pull', 'High Hat'];
     const EXPLANATION_DELAY_MS = 4200;
 
     const state = {
@@ -295,7 +295,7 @@
     }
 
     function buildQuestions() {
-      return QUESTION_BANK.map(q => ({
+      return shuffle(QUESTION_BANK).map(q => ({
         ...q,
         options: shuffle(ANSWER_OPTIONS)
       }));
@@ -365,13 +365,6 @@
         btn.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + idx)}</span><span>${option}</span>`;
         btn.addEventListener('click', () => handleAnswer(option, btn));
         els.answerGrid.appendChild(btn);
-      });
-    }
-
-    function disableAnswers() {
-      [...els.answerGrid.querySelectorAll('.answer-btn')].forEach(btn => {
-        btn.disabled = true;
-        btn.classList.add('disabled');
       });
     }
 
