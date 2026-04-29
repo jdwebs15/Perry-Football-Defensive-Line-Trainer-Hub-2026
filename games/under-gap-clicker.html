@@ -3,134 +3,951 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Perry Defensive Line — Reaction Mastery System</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Game 10 — UNDER Gap Clicker</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    :root {
+      --board-blue: #10213a;
+      --panel-blue: #152744;
+      --line: rgba(255,255,255,0.22);
+      --gold: #ffd166;
+      --green: #34d399;
+      --red: #ff6b6b;
+      --text: #f8fafc;
+      --muted: #b7c6e6;
+    }
+
+    .game-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .mini-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      font-weight: 800;
+    }
+
+    .badge-stack { display: flex; gap: 8px; flex-wrap: wrap; }
+    .small-badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.07);
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .small-badge.live { color: #d7fff0; background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.42); }
+
+    .start-card, .ticket-card {
+      max-width: 880px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, rgba(21,39,68,0.96), rgba(11,19,34,0.96));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+    }
+
+    .start-card h1, .ticket-card h1 { margin-bottom: 10px; }
+    .start-card p, .ticket-card p { color: var(--muted); line-height: 1.55; }
+    .name-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+    .name-row input {
+      flex: 1 1 280px;
+      min-width: 240px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      font-weight: 800;
+      outline: none;
+    }
+    .coach-note {
+      margin-top: 18px;
+      border-left: 4px solid var(--gold);
+      background: rgba(255,209,102,0.09);
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: #ffe7a6;
+      font-weight: 750;
+    }
+
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .hud-box {
+      background: rgba(21,39,68,0.92);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 66px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+    .hud-box span { display: block; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; font-weight: 900; letter-spacing: 0.06em; }
+    .hud-box strong { display: block; margin-top: 4px; font-size: 1.25rem; color: white; }
+
+    .gap-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .field-card, .question-card {
+      background: linear-gradient(180deg, rgba(21,39,68,0.97), rgba(13,24,41,0.97));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+      padding: 16px;
+    }
+
+    .call-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .call-banner strong { font-size: 1.1rem; color: white; }
+    .call-note { color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+
+    .game-board {
+      position: relative;
+      min-height: 570px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.16);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 10% 100%,
+        linear-gradient(180deg, rgba(36,66,113,0.35), rgba(4,10,21,0.3)),
+        radial-gradient(circle at 50% 52%, rgba(78,162,255,0.16), transparent 64%),
+        #0d1b30;
+    }
+
+    .field-title {
+      position: absolute;
+      z-index: 5;
+      top: 13px;
+      left: 14px;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .strength-box {
+      position: absolute;
+      z-index: 6;
+      top: 12px;
+      right: 12px;
+      border-radius: 999px;
+      color: #d7fff0;
+      border: 1px solid rgba(52,211,153,0.46);
+      background: rgba(52,211,153,0.16);
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .strong-area {
+      position: absolute;
+      top: 48px;
+      width: 30%;
+      height: 148px;
+      border-radius: 18px;
+      border: 2px solid rgba(52,211,153,0.36);
+      background: rgba(52,211,153,0.06);
+      box-shadow: inset 0 0 24px rgba(52,211,153,0.08);
+      z-index: 1;
+    }
+    .strong-area.left { left: 6%; }
+    .strong-area.right { right: 6%; }
+
+    .hash-line {
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      z-index: 1;
+    }
+    .hash-1 { top: 31%; }
+    .hash-2 { top: 74%; }
+
+    .los {
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      top: 54%;
+      height: 4px;
+      background: rgba(255,255,255,0.42);
+      box-shadow: 0 0 18px rgba(255,255,255,0.18);
+      z-index: 2;
+    }
+    .los-label {
+      position: absolute;
+      top: calc(54% + 9px);
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      z-index: 4;
+    }
+
+    .def-left-right {
+      position: absolute;
+      right: 15px;
+      bottom: 13px;
+      z-index: 5;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      text-align: right;
+    }
+    .def-label {
+      position: absolute;
+      left: 15px;
+      bottom: 13px;
+      z-index: 5;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .ol, .skill, .dl-token {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-weight: 950;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+      z-index: 5;
+    }
+    .ol {
+      width: 46px;
+      height: 34px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #f8fafc;
+      font-size: 0.8rem;
+    }
+    .skill {
+      width: 42px;
+      height: 30px;
+      background: rgba(255,209,102,0.25);
+      border: 1px solid rgba(255,209,102,0.45);
+      color: #fff4ca;
+      font-size: 0.75rem;
+    }
+    .dl-token {
+      width: 43px;
+      height: 34px;
+      background: linear-gradient(180deg, #f8fafc, #cbd5e1);
+      border: 2px solid rgba(255,255,255,0.85);
+      color: #0f172a;
+      font-size: 0.9rem;
+    }
+    .dl-token.active-player {
+      background: linear-gradient(180deg, #ffd166, #f59e0b);
+      color: #111827;
+      transform: translate(-50%, -50%) scale(1.12);
+      box-shadow: 0 0 0 6px rgba(255,209,102,0.18), 0 16px 28px rgba(0,0,0,0.34);
+      z-index: 8;
+    }
+
+    .wr-left-1 { left: 11%; top: 23%; }
+    .wr-left-2 { left: 23%; top: 19%; }
+    .wr-right-1 { left: 89%; top: 23%; }
+    .wr-right-2 { left: 77%; top: 19%; }
+    .rb { left: 50%; top: 18%; }
+    .qb { left: 50%; top: 28%; }
+
+    .ot-l { left: 30%; top: 39%; }
+    .g-l { left: 40%; top: 39%; }
+    .c { left: 50%; top: 39%; }
+    .g-r { left: 60%; top: 39%; }
+    .ot-r { left: 70%; top: 39%; }
+
+    .e-left { left: 26%; top: 63%; }
+    .n-left { left: 46%; top: 63%; }
+    .t-right { left: 64%; top: 63%; }
+    .j-right { left: 74%; top: 63%; }
+    .e-right { left: 74%; top: 63%; }
+    .n-right { left: 54%; top: 63%; }
+    .t-left { left: 36%; top: 63%; }
+    .j-left { left: 26%; top: 63%; }
+
+    .hidden-token { display: none; }
+
+    .gap-row {
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      top: 71%;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(64px, 1fr));
+      gap: 10px;
+      z-index: 6;
+    }
+    .gap-zone {
+      min-height: 72px;
+      border-radius: 16px;
+      border: 2px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .gap-zone:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,209,102,0.72);
+      background: rgba(255,209,102,0.13);
+      box-shadow: 0 0 0 4px rgba(255,209,102,0.08);
+    }
+    .gap-zone strong { font-size: 1rem; letter-spacing: 0.02em; }
+    .gap-zone span { font-size: 0.7rem; color: var(--muted); font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em; }
+    .gap-zone.correct-zone {
+      border-color: rgba(52,211,153,0.9);
+      background: rgba(52,211,153,0.22);
+      box-shadow: 0 0 0 5px rgba(52,211,153,0.12), inset 0 0 22px rgba(52,211,153,0.1);
+    }
+    .gap-zone.wrong-zone {
+      border-color: rgba(255,107,107,0.92);
+      background: rgba(255,107,107,0.2);
+      animation: shake 0.22s linear 2;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      50% { transform: translateX(3px); }
+      75% { transform: translateX(-2px); }
+      100% { transform: translateX(0); }
+    }
+
+    .question-kicker {
+      color: var(--gold);
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+    }
+    .question-card h2 { font-size: 1.42rem; margin-bottom: 8px; color: white; }
+    .question-card p { color: var(--muted); line-height: 1.5; }
+    .responsibility-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      font-weight: 760;
+      line-height: 1.45;
+    }
+    .answer-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .answer-btn {
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      text-align: left;
+      padding: 13px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 800;
+      line-height: 1.35;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .answer-btn:hover { transform: translateY(-2px); border-color: rgba(255,209,102,0.5); }
+    .answer-btn.correct { border-color: rgba(52,211,153,0.85); background: rgba(52,211,153,0.2); }
+    .answer-btn.incorrect { border-color: rgba(255,107,107,0.85); background: rgba(255,107,107,0.18); }
+    .answer-btn.disabled { pointer-events: none; opacity: 0.78; }
+    .choice-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      margin-right: 10px;
+      background: rgba(255,255,255,0.12);
+      color: var(--gold);
+      font-weight: 950;
+    }
+
+    .feedback-box {
+      margin-top: 14px;
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
+    }
+    .feedback-box h3 { margin-bottom: 4px; color: white; }
+    .feedback-box p { color: var(--muted); }
+
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .ticket-item {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .ticket-item .label { display: block; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 900; letter-spacing: 0.06em; }
+    .ticket-item .value { display: block; color: white; font-weight: 900; margin-top: 4px; }
+
+    .btn { border: 0; }
+    .secondary-btn {
+      background: rgba(255,255,255,0.1) !important;
+      border: 1px solid rgba(255,255,255,0.14) !important;
+    }
+    .hidden { display: none !important; }
+
+    @media (max-width: 980px) {
+      .hud-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .gap-layout { grid-template-columns: 1fr; }
+      .game-board { min-height: 530px; }
+    }
+    @media (max-width: 640px) {
+      .hud-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .gap-row { gap: 6px; grid-template-columns: repeat(3, minmax(72px, 1fr)); top: 69%; }
+      .gap-zone { min-height: 62px; }
+      .ticket-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
   <div class="page-shell">
-    <header class="hero">
-      <div class="hero-top">
-        <span class="brand-badge">Perry Panther Football</span>
-        <span class="brand-badge muted-badge">Coach Weber Defensive Line</span>
+    <div class="game-topbar">
+      <a class="mini-link" href="../index.html">← Back to Hub</a>
+      <div class="badge-stack">
+        <span class="small-badge live">● Live</span>
+        <span class="small-badge">Game 10</span>
+        <span class="small-badge">UNDER Gap Clicker</span>
       </div>
-      <h1>Perry Defensive Line — Reaction Mastery System</h1>
-      <p class="hero-copy">
-        Train the eyes. Train the reaction. Train the body to respond at game speed.
-        Built directly from Coach Weber’s terminology and Defensive Line Trainer system.
+    </div>
+
+    <section id="startScreen" class="start-card">
+      <h1>Game 10 — UNDER Gap Clicker</h1>
+      <p>
+        This one teaches responsibility. Read the formation strength, apply RIP/LIZ from the defensive perspective,
+        identify your player, and click the post-snap gap or fit. Do not click where you hope the ball goes. Click your job.
       </p>
-      <div class="pill-row">
-        <span class="pill">Eyes on the Helmet</span>
-        <span class="pill">Don’t Think. React.</span>
-        <span class="pill">First Two Steps Never Change</span>
-        <span class="pill">Maintain Your Gap</span>
-        <span class="pill">Spill It Right</span>
-        <span class="pill">Rush with Discipline</span>
+      <div class="coach-note">
+        Shuffle is built in: question order changes every run, and any multiple-choice answers shuffle every time they appear.
       </div>
-    </header>
+      <div class="name-row">
+        <input id="playerName" type="text" placeholder="Player name" autocomplete="off" />
+        <button class="btn" onclick="startGame()">Start Game</button>
+      </div>
+    </section>
 
-    <main>
-      <section class="section-card">
-        <div class="section-heading">
-          <h2>Trainer Path</h2>
-          <p>Games are ordered to match how the technique system builds on the field.</p>
+    <section id="gameScreen" class="hidden">
+      <div class="hud-grid">
+        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div>
+        <div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div>
+        <div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div>
+        <div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div>
+        <div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div>
+        <div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
+      </div>
+
+      <div class="gap-layout">
+        <div class="field-card">
+          <div class="call-banner">
+            <strong id="callTitle">UNDER RIP</strong>
+            <span class="call-note">Offense is on top. Defense is on bottom. RIP/LIZ is called from your defensive perspective.</span>
+          </div>
+          <div class="game-board">
+            <div class="field-title">Offense</div>
+            <div id="strengthTag" class="strength-box">Strength: defensive right</div>
+            <div id="strongArea" class="strong-area right"></div>
+            <div class="hash-line hash-1"></div>
+            <div class="hash-line hash-2"></div>
+
+            <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div>
+            <div id="wrL2" class="skill wr-left-2 hidden-token">WR</div>
+            <div id="wrR1" class="skill wr-right-1">WR</div>
+            <div id="wrR2" class="skill wr-right-2">WR</div>
+            <div class="skill rb">RB</div>
+            <div class="skill qb">QB</div>
+
+            <div class="ol ot-l">OT</div>
+            <div class="ol g-l">G</div>
+            <div class="ol c">C</div>
+            <div class="ol g-r">G</div>
+            <div class="ol ot-r">OT</div>
+
+            <div class="los"></div>
+            <div class="los-label">Line of Scrimmage</div>
+
+            <div id="dlE" class="dl-token e-right">E</div>
+            <div id="dlN" class="dl-token n-right">N</div>
+            <div id="dlT" class="dl-token t-left">T</div>
+            <div id="dlJ" class="dl-token j-left">J</div>
+
+            <div class="gap-row">
+              <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div>
+              <div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div>
+              <div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
+            </div>
+
+            <div class="def-label">Defense</div>
+            <div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
+          </div>
         </div>
 
-        <div class="repo-grid">
+        <aside class="question-card">
+          <div id="questionKicker" class="question-kicker">UNDER RIP • Strength: defensive right</div>
+          <h2 id="questionStem">Click your responsibility.</h2>
+          <p id="questionCopy">Read the call and click the correct gap.</p>
+          <div id="responsibilityBox" class="responsibility-box"></div>
+          <div id="mcAnswers" class="answer-grid hidden"></div>
+          <div id="feedbackBox" class="feedback-box hidden">
+            <h3 id="feedbackTitle">Correct</h3>
+            <p id="feedbackCopy">Good rep.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
 
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Foundation</span></div>
-            <h3><a href="games/helmet-key-trainer.html">Game 1 — Helmet Key Reaction Trainer</a></h3>
-            <p class="muted">The foundation game. Read the helmet action fast and react: Down, Out, Pull, or High Hat. Built to train instant recognition and remove hesitation.</p>
-            <div class="tag-row"><span class="tag">Key Reads</span><span class="tag">Reaction Speed</span><span class="tag">Mastery</span></div>
-            <div class="btn-row"><a class="btn" href="games/helmet-key-trainer.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Technique</span></div>
-            <h3><a href="games/first-step-mastery-trainer.html">Game 2 — First Step Mastery Trainer</a></h3>
-            <p class="muted">Reinforces that the first two steps never change. Near foot to the pre-snap V of the neck or center of the numbers.</p>
-            <div class="tag-row"><span class="tag">Footwork</span><span class="tag">Landmarks</span><span class="tag">Consistency</span></div>
-            <div class="btn-row"><a class="btn" href="games/first-step-mastery-trainer.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Reaction</span></div>
-            <h3><a href="games/down-block-trainer.html">Game 3 — Down Block Trainer</a></h3>
-            <p class="muted">Split between down with puller and down without puller. Wrong arm, spill, close the gap, or square for the QB read.</p>
-            <div class="tag-row"><span class="tag">Wrong Arm</span><span class="tag">Spill</span><span class="tag">Close the Gap</span></div>
-            <div class="btn-row"><a class="btn" href="games/down-block-trainer.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Block Reaction</span></div>
-            <h3><a href="games/zone-base-block-trainer.html">Game 4 — Zone / Base Block Trainer</a></h3>
-            <p class="muted">Outside hat, hand placement, lockout, half-man leverage, and edge-setting reactions versus base and zone looks.</p>
-            <div class="tag-row"><span class="tag">Outside Hat</span><span class="tag">Lockout</span><span class="tag">Edge Set</span></div>
-            <div class="btn-row"><a class="btn" href="games/zone-base-block-trainer.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Interior</span></div>
-            <h3><a href="games/combo-block-survival-trainer.html">Game 5 — Combo Block Survival Trainer</a></h3>
-            <p class="muted">Keep the combo block intact on you, hold your gap, and fight vertical movement without losing leverage.</p>
-            <div class="tag-row"><span class="tag">Combo Block</span><span class="tag">Gap Integrity</span><span class="tag">Anchor</span></div>
-            <div class="btn-row"><a class="btn" href="games/combo-block-survival-trainer.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Pass Rush</span></div>
-            <h3><a href="games/pass-rush-discipline-simulator.html">Game 6 — Pass Rush Discipline Simulator</a></h3>
-            <p class="muted">Train contain rush rules, gap rush rules, squeeze to the ball, and never go past QB depth.</p>
-            <div class="tag-row"><span class="tag">Contain</span><span class="tag">Rush Lane</span><span class="tag">QB Depth</span></div>
-            <div class="btn-row"><a class="btn" href="games/pass-rush-discipline-simulator.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Advanced</span></div>
-            <h3><a href="games/screen-recognition-trainer.html">Game 7 — Screen Recognition Trainer</a></h3>
-            <p class="muted">Don’t read the screen. Feel the blocker disappear, stick the foot, retrace, and find the football.</p>
-            <div class="tag-row"><span class="tag">Feel Screen</span><span class="tag">Retrace</span><span class="tag">Redirect</span></div>
-            <div class="btn-row"><a class="btn" href="games/screen-recognition-trainer.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Full System</span></div>
-            <h3><a href="games/full-play-recognition-simulator.html">Game 8 — Full Play Recognition Simulator</a></h3>
-            <p class="muted">Full-sequence recognition and assignment execution. Helmet key, first step, gap responsibility, and finish all tied together.</p>
-            <div class="tag-row"><span class="tag">Full Speed</span><span class="tag">Recognition</span><span class="tag">Assignment Finish</span></div>
-            <div class="btn-row"><a class="btn" href="games/full-play-recognition-simulator.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Graphic Trainer</span></div>
-            <h3><a href="games/under-hybrid-trainer.html">Game 9 — UNDER Hybrid Trainer</a></h3>
-            <p class="muted">Graphic-based UNDER trainer. Offense is shown on top, defense on bottom. Players read formation strength, apply RIP/LIZ from the defensive perspective, drag the front, and click final gap responsibility.</p>
-            <div class="tag-row"><span class="tag">UNDER</span><span class="tag">RIP / LIZ</span><span class="tag">Drag + Click</span></div>
-            <div class="btn-row"><a class="btn" href="games/under-hybrid-trainer.html">Open Game</a></div>
-          </article>
-
-          <article class="repo-card live-card">
-            <div class="card-status-row"><span class="status-chip live"><span class="status-dot"></span>LIVE</span><span class="status-chip">Graphic Trainer</span></div>
-            <h3><a href="games/under-gap-clicker.html">Game 10 — UNDER Gap Clicker</a></h3>
-            <p class="muted">Graphic-based UNDER responsibility trainer. Players read offensive strength, apply RIP/LIZ from the defensive perspective, identify End, Nose, Tackle, or Jack, and click the correct final gap or fit responsibility.</p>
-            <div class="tag-row"><span class="tag">UNDER</span><span class="tag">Gap Responsibility</span><span class="tag">Click Trainer</span></div>
-            <div class="btn-row"><a class="btn" href="games/under-gap-clicker.html">Open Game</a></div>
-          </article>
-
-        </div>
-      </section>
-
-      <section class="section-card compact-section">
-        <div class="section-heading">
-          <h2>System Rules</h2>
-        </div>
-        <div class="rules-grid">
-          <div class="rule-box"><h4>Mastery Standard</h4><p>Players must finish with a perfect run to earn the completion ticket.</p></div>
-          <div class="rule-box"><h4>Coaching Language</h4><p>Terminology stays as close to Coach Weber’s field language as possible.</p></div>
-          <div class="rule-box"><h4>Built for Reps</h4><p>Fast decisions, clear feedback, and repetition that trains reaction.</p></div>
-        </div>
-      </section>
-    </main>
+    <section id="ticketScreen" class="ticket-card hidden">
+      <h1>UNDER Gap Clicker Ticket</h1>
+      <p id="ticketMessage">Perfect run earned.</p>
+      <div id="ticketGrid" class="ticket-grid"></div>
+      <div class="name-row">
+        <button class="btn" onclick="restartGame()">Restart for Another Attempt</button>
+        <a class="btn secondary-btn" href="../index.html">Back to Hub</a>
+      </div>
+    </section>
   </div>
+
+<script>
+const PLAYER_LABELS = { E: 'End', N: 'Nose', T: 'Tackle', J: 'Jack' };
+
+const BANK = [
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'E',
+    title: 'UNDER RIP — You are the End. Click your base run gap responsibility.',
+    detail: 'Two detached receivers make the right side strong. RIP sends Nose and End to defensive right.',
+    answer: 'RC',
+    coaching: 'End is on the call side in a 5 technique. Own C gap and spill kickouts.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'E',
+    title: 'UNDER LIZ — You are the End. Click your base run gap responsibility.',
+    detail: 'Two detached receivers make the left side strong. LIZ sends Nose and End to defensive left.',
+    answer: 'LC',
+    coaching: 'End is on the call side in a 5 technique. Own C gap and spill kickouts.'
+  },
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'N',
+    title: 'UNDER RIP — You are the Nose. Click your primary gap.',
+    detail: 'Nose travels with the End to the RIP side.',
+    answer: 'RA',
+    coaching: 'Nose is a 1 shade to the call side. Primary job is strong-side A gap control.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'N',
+    title: 'UNDER LIZ — You are the Nose. Click your primary gap.',
+    detail: 'Nose travels with the End to the LIZ side.',
+    answer: 'LA',
+    coaching: 'Nose is a 1 shade to the call side. Primary job is strong-side A gap control.'
+  },
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'T',
+    title: 'UNDER RIP — You are the Tackle. Click your base run gap.',
+    detail: 'Tackle goes opposite the Nose and End.',
+    answer: 'LB',
+    coaching: 'Tackle is the 3 technique away from the call. That is defensive left B gap.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'T',
+    title: 'UNDER LIZ — You are the Tackle. Click your base run gap.',
+    detail: 'Tackle goes opposite the Nose and End.',
+    answer: 'RB',
+    coaching: 'Tackle is the 3 technique away from the call. That is defensive right B gap.'
+  },
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'J',
+    title: 'UNDER RIP — You are the Jack. Click your base run gap.',
+    detail: 'Jack aligns opposite the End in UNDER.',
+    answer: 'LC',
+    coaching: 'Jack is the opposite 5 technique. In UNDER RIP, that is defensive left C gap.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'J',
+    title: 'UNDER LIZ — You are the Jack. Click your base run gap.',
+    detail: 'Jack aligns opposite the End in UNDER.',
+    answer: 'RC',
+    coaching: 'Jack is the opposite 5 technique. In UNDER LIZ, that is defensive right C gap.'
+  },
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'MIX', activePlayer: 'E',
+    title: 'UNDER RIP — Power Strong. You are the End to the call side. Click the fit you must close/spill.',
+    detail: 'Puller is coming to you. Do not run around it. Wrong arm it and close the gap.',
+    answer: 'RC',
+    coaching: 'Power to you: squeeze, wrong arm, spill the kickout, and close the gap the scrape linebacker is vacating.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'MIX', activePlayer: 'E',
+    title: 'UNDER LIZ — Power Strong. You are the End to the call side. Click the fit you must close/spill.',
+    detail: 'Puller is coming to you. Do not run around it. Wrong arm it and close the gap.',
+    answer: 'LC',
+    coaching: 'Power to you: squeeze, wrong arm, spill the kickout, and close the gap the scrape linebacker is vacating.'
+  },
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'T',
+    title: 'UNDER RIP — Power Strong flows away from you. Click the backside gap you must condense.',
+    detail: 'Flow is away. You are not running upfield. You are closing space from the backside.',
+    answer: 'LA',
+    coaching: 'Backside interior: condense the backside A gap. Do not run upfield and open the defense.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'T',
+    title: 'UNDER LIZ — Power Strong flows away from you. Click the backside gap you must condense.',
+    detail: 'Flow is away. You are not running upfield. You are closing space from the backside.',
+    answer: 'RA',
+    coaching: 'Backside interior: condense the backside A gap. Do not run upfield and open the defense.'
+  },
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'J',
+    title: 'UNDER RIP — Zone Read away from you. You are read side. Click the QB-side C gap responsibility.',
+    detail: 'Make him give the ball or be there if he keeps it. Do not be a hero and chase the zone give.',
+    answer: 'LC',
+    coaching: 'Read side edge: maintain outside leverage on the QB. Do not chase the give and give up the keep.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'J',
+    title: 'UNDER LIZ — Zone Read away from you. You are read side. Click the QB-side C gap responsibility.',
+    detail: 'Make him give the ball or be there if he keeps it. Do not be a hero and chase the zone give.',
+    answer: 'RC',
+    coaching: 'Read side edge: maintain outside leverage on the QB. Do not chase the give and give up the keep.'
+  },
+  {
+    mode: 'gap', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'N',
+    title: 'UNDER RIP — Zone to you. You are the Nose. Click your pressure/control gap.',
+    detail: 'Zone to you. Push vertically through combo pressure and control the gap.',
+    answer: 'RA',
+    coaching: 'Nose: control gap and push vertically through combo pressure. Fight pressure. Maintain your gap.'
+  },
+  {
+    mode: 'gap', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'N',
+    title: 'UNDER LIZ — Zone to you. You are the Nose. Click your pressure/control gap.',
+    detail: 'Zone to you. Push vertically through combo pressure and control the gap.',
+    answer: 'LA',
+    coaching: 'Nose: control gap and push vertically through combo pressure. Fight pressure. Maintain your gap.'
+  },
+  {
+    mode: 'choice', formation: 'rightTwoDetached', strength: 'defensive right', call: 'UNDER RIP', player: 'E',
+    title: 'UNDER RIP — End gets a down block with a puller coming. What is the responsibility?',
+    detail: 'This is a decision rep, not a gap click. Answers shuffle every time.',
+    answers: [
+      { text: 'Wrong arm it, spill the puller, throw the back hip through, and close the gap.', correct: true },
+      { text: 'Run past the gap to make the tackle in the backfield.', correct: false },
+      { text: 'Sit in C gap and wait for the back to bounce.', correct: false },
+      { text: 'Chase the zone give immediately.', correct: false }
+    ],
+    coaching: 'Down with puller: wrong arm, spill, close the gap. Do not reopen it by running past it.'
+  },
+  {
+    mode: 'choice', formation: 'leftTwoDetached', strength: 'defensive left', call: 'UNDER LIZ', player: 'N',
+    title: 'UNDER LIZ — Nose feels a combo block. What is the job?',
+    detail: 'This is a decision rep, not a gap click. Answers shuffle every time.',
+    answers: [
+      { text: 'Keep the combo block intact on you, fight vertical push, and maintain the gap.', correct: true },
+      { text: 'Turn your shoulders and escape outside.', correct: false },
+      { text: 'Peek into the backfield and give ground.', correct: false },
+      { text: 'Split the combo even if it opens your gap.', correct: false }
+    ],
+    coaching: 'Combo rule: keep the combo intact on you. Always maintain your gap.'
+  }
+];
+
+let QUESTIONS = [];
+let playerName = '';
+let currentIndex = 0;
+let correctCount = 0;
+let missCount = 0;
+let totalAttempts = 0;
+let attemptNumber = Number(localStorage.getItem('underGapClickerAttempt') || '1');
+let startTime = null;
+let locked = false;
+
+function byId(id) { return document.getElementById(id); }
+function currentQuestion() { return QUESTIONS[currentIndex]; }
+
+function shuffleArray(array) {
+  const copy = array.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function buildQuestionSet() {
+  const shuffled = shuffleArray(BANK);
+  const selected = [];
+  let lastKey = '';
+
+  shuffled.forEach(function(q) {
+    const key = q.call + '-' + (q.player || q.activePlayer || '');
+    if (key !== lastKey) {
+      selected.push(q);
+      lastKey = key;
+    }
+  });
+
+  // Keep the run short enough for reps, but varied enough to prevent pattern learning.
+  return selected.slice(0, 14);
+}
+
+function startGame() {
+  playerName = byId('playerName').value.trim();
+  if (!playerName) { alert('Type your name first.'); return; }
+
+  QUESTIONS = buildQuestionSet();
+  startTime = new Date();
+  currentIndex = 0;
+  correctCount = 0;
+  missCount = 0;
+  totalAttempts = 0;
+  locked = false;
+
+  byId('hudName').textContent = playerName;
+  byId('hudAttempt').textContent = attemptNumber;
+  byId('startScreen').classList.add('hidden');
+  byId('ticketScreen').classList.add('hidden');
+  byId('gameScreen').classList.remove('hidden');
+  loadQuestion();
+}
+
+function restartGame() {
+  attemptNumber += 1;
+  localStorage.setItem('underGapClickerAttempt', String(attemptNumber));
+  byId('ticketScreen').classList.add('hidden');
+  byId('startScreen').classList.remove('hidden');
+  byId('gameScreen').classList.add('hidden');
+}
+
+function updateHud() {
+  byId('hudQuestion').textContent = (currentIndex + 1) + ' / ' + QUESTIONS.length;
+  byId('hudCorrect').textContent = correctCount;
+  byId('hudMisses').textContent = missCount;
+  const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+  byId('hudAccuracy').textContent = accuracy + '%';
+  byId('hudAttempt').textContent = attemptNumber;
+}
+
+function loadQuestion() {
+  locked = false;
+  clearFeedback();
+  const q = currentQuestion();
+
+  applyFormation(q.formation, q.call, q.strength);
+  showFront(q.call);
+  highlightPlayer(q.activePlayer || q.player);
+
+  byId('callTitle').textContent = q.call + ' — ' + ((q.activePlayer || q.player) === 'MIX' ? 'Front Fit' : PLAYER_LABELS[q.activePlayer || q.player]);
+  byId('questionKicker').textContent = q.call + ' • Strength: ' + q.strength;
+  byId('questionStem').textContent = q.title;
+  byId('questionCopy').textContent = q.detail;
+  byId('responsibilityBox').textContent = q.mode === 'gap'
+    ? 'Click the correct final responsibility on the board. This is from the defense’s perspective.'
+    : 'Choose the correct coaching response. Answers are shuffled.';
+
+  if (q.mode === 'choice') renderChoices(q.answers);
+  else byId('mcAnswers').classList.add('hidden');
+
+  updateHud();
+}
+
+function applyFormation(formation, call, strength) {
+  const leftStrong = formation === 'leftTwoDetached';
+  byId('strongArea').className = 'strong-area ' + (leftStrong ? 'left' : 'right');
+  byId('strengthTag').textContent = 'Strength: ' + strength;
+
+  byId('wrL1').classList.toggle('hidden-token', !leftStrong);
+  byId('wrL2').classList.toggle('hidden-token', !leftStrong);
+  byId('wrR1').classList.toggle('hidden-token', leftStrong);
+  byId('wrR2').classList.toggle('hidden-token', leftStrong);
+}
+
+function showFront(call) {
+  const rip = call.includes('RIP');
+  const e = byId('dlE');
+  const n = byId('dlN');
+  const t = byId('dlT');
+  const j = byId('dlJ');
+
+  e.className = 'dl-token ' + (rip ? 'e-right' : 'e-left');
+  n.className = 'dl-token ' + (rip ? 'n-right' : 'n-left');
+  t.className = 'dl-token ' + (rip ? 't-left' : 't-right');
+  j.className = 'dl-token ' + (rip ? 'j-left' : 'j-right');
+}
+
+function highlightPlayer(player) {
+  ['dlE','dlN','dlT','dlJ'].forEach(id => byId(id).classList.remove('active-player'));
+  if (player === 'E') byId('dlE').classList.add('active-player');
+  if (player === 'N') byId('dlN').classList.add('active-player');
+  if (player === 'T') byId('dlT').classList.add('active-player');
+  if (player === 'J') byId('dlJ').classList.add('active-player');
+}
+
+function selectGap(gap) {
+  if (locked) return;
+  const q = currentQuestion();
+  if (q.mode !== 'gap') return;
+
+  totalAttempts += 1;
+  const zone = document.querySelector('.gap-zone[data-gap="' + gap + '"]');
+
+  if (gap === q.answer) {
+    correctCount += 1;
+    locked = true;
+    if (zone) zone.classList.add('correct-zone');
+    showFeedback('Correct — that is your job.', q.coaching, true);
+    updateHud();
+    setTimeout(nextQuestion, 5000);
+  } else {
+    missCount += 1;
+    if (zone) zone.classList.add('wrong-zone');
+    showFeedback('Not it.', 'Do not click where the ball looks pretty. Click your responsibility from the call, front, and player.', false);
+    updateHud();
+  }
+}
+
+function renderChoices(answers) {
+  const grid = byId('mcAnswers');
+  grid.innerHTML = '';
+  grid.classList.remove('hidden');
+  shuffleArray(answers).forEach(function(answer, index) {
+    const button = document.createElement('button');
+    button.className = 'answer-btn';
+    button.innerHTML = '<span class="choice-letter">' + String.fromCharCode(65 + index) + '</span>' + answer.text;
+    button.onclick = function() { chooseAnswer(button, answer); };
+    grid.appendChild(button);
+  });
+}
+
+function chooseAnswer(button, answer) {
+  if (locked) return;
+  const q = currentQuestion();
+  totalAttempts += 1;
+
+  if (answer.correct) {
+    correctCount += 1;
+    locked = true;
+    button.classList.add('correct');
+    document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
+    showFeedback('Correct — that is the reaction.', q.coaching, true);
+    updateHud();
+    setTimeout(nextQuestion, 5000);
+  } else {
+    missCount += 1;
+    button.classList.add('incorrect');
+    button.classList.add('disabled');
+    showFeedback('Not it.', 'Use the same language we use on the field: maintain your gap, spill when the read tells you, and do not run yourself out of the defense.', false);
+    updateHud();
+  }
+}
+
+function showFeedback(title, copy, isCorrect) {
+  byId('feedbackTitle').textContent = title;
+  byId('feedbackCopy').textContent = copy;
+  byId('feedbackBox').classList.remove('hidden');
+  byId('feedbackBox').style.borderColor = isCorrect ? 'rgba(52,211,153,0.6)' : 'rgba(255,107,107,0.6)';
+}
+
+function clearFeedback() {
+  byId('feedbackBox').classList.add('hidden');
+  byId('mcAnswers').classList.add('hidden');
+  document.querySelectorAll('.gap-zone').forEach(function(zone) {
+    zone.classList.remove('correct-zone', 'wrong-zone');
+  });
+}
+
+function nextQuestion() {
+  currentIndex += 1;
+  if (currentIndex >= QUESTIONS.length) finishGame();
+  else loadQuestion();
+}
+
+function finishGame() {
+  byId('gameScreen').classList.add('hidden');
+  byId('ticketScreen').classList.remove('hidden');
+
+  if (missCount > 0) {
+    byId('ticketMessage').textContent = 'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.';
+  } else {
+    byId('ticketMessage').textContent = 'Perfect run earned. Screenshot or print this ticket.';
+  }
+
+  const endTime = new Date();
+  const elapsedSeconds = Math.round((endTime - startTime) / 1000);
+  const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+  const result = missCount === 0 ? 'TICKET EARNED' : 'REPLAY REQUIRED';
+
+  const items = [
+    ['Player', playerName],
+    ['Game', 'Game 10 — UNDER Gap Clicker'],
+    ['Date', endTime.toLocaleDateString()],
+    ['Start Time', startTime.toLocaleTimeString()],
+    ['End Time', endTime.toLocaleTimeString()],
+    ['Runtime', elapsedSeconds + ' seconds'],
+    ['Correct First-Time Answers', correctCount + ' / ' + QUESTIONS.length],
+    ['Misses', missCount],
+    ['Accuracy', accuracy + '%'],
+    ['Attempt', attemptNumber],
+    ['Result', result]
+  ];
+
+  byId('ticketGrid').innerHTML = items.map(function(item) {
+    return '<div class="ticket-item"><span class="label">' + item[0] + '</span><span class="value">' + item[1] + '</span></div>';
+  }).join('');
+}
+</script>
 </body>
 </html>
