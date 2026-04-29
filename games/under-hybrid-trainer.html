@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game 9 — UNDER Hybrid Trainer</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .under-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .field-card {
+      background: linear-gradient(180deg, rgba(21,37,64,0.96), rgba(13,24,41,0.96));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.32);
+      padding: 16px;
+    }
+
+    .call-banner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .call-banner strong { font-size: 1.1rem; }
+    .call-note {
+      color: #b7c6e6;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .front-board {
+      position: relative;
+      min-height: 540px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.14);
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 10% 100%,
+        radial-gradient(circle at center, rgba(78,162,255,0.12), transparent 62%),
+        linear-gradient(180deg, #12233d 0%, #0c1729 100%);
+    }
+
+    .field-label {
+      position: absolute;
+      color: #b7c6e6;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      z-index: 4;
+    }
+
+    .offense-label { left: 14px; top: 12px; }
+    .defense-label { left: 14px; bottom: 12px; }
+
+    .def-perspective {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      color: #ffd166;
+      font-weight: 900;
+      font-size: 0.78rem;
+      text-align: right;
+      z-index: 4;
+    }
+
+    .strength-tag {
+      position: absolute;
+      right: 14px;
+      top: 12px;
+      color: #d7fff0;
+      border: 1px solid rgba(52,211,153,0.38);
+      background: rgba(52,211,153,0.13);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      z-index: 4;
+    }
+
+    .los {
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      top: 54%;
+      height: 3px;
+      background: rgba(255,255,255,0.42);
+      box-shadow: 0 0 14px rgba(255,255,255,0.18);
+      z-index: 1;
+    }
+
+    .football-label {
+      position: absolute;
+      left: 50%;
+      top: calc(54% + 10px);
+      transform: translateX(-50%);
+      color: #b7c6e6;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      z-index: 2;
+    }
+
+    .ol, .skill {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.23);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #eef4ff;
+      font-weight: 900;
+      z-index: 3;
+    }
+
+    .ol {
+      top: 45%;
+      width: 54px;
+      height: 38px;
+      background: rgba(255,255,255,0.13);
+    }
+
+    .skill {
+      width: 50px;
+      height: 34px;
+      background: rgba(255,209,102,0.13);
+      border-color: rgba(255,209,102,0.35);
+      color: #ffedbf;
+      font-size: 0.84rem;
+    }
+
+    .lt { left: 22%; }
+    .lg { left: 36%; }
+    .oc { left: 50%; }
+    .rg { left: 64%; }
+    .rt { left: 78%; }
+    .qb { left: 50%; top: 34%; }
+    .rb { left: 50%; top: 25%; }
+
+    .wr-left-1 { left: 7%; top: 35%; }
+    .wr-left-2 { left: 17%; top: 30%; }
+    .wr-right-1 { left: 93%; top: 35%; }
+    .wr-right-2 { left: 83%; top: 30%; }
+    .te-left { left: 16%; top: 45%; }
+    .te-right { left: 84%; top: 45%; }
+
+    .strong-side {
+      position: absolute;
+      top: 4%;
+      bottom: 54%;
+      width: 34%;
+      border: 2px solid rgba(52,211,153,0.38);
+      background: rgba(52,211,153,0.06);
+      border-radius: 18px;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .strong-left { left: 3%; }
+    .strong-right { right: 3%; }
+
+    .gap-zone {
+      position: absolute;
+      top: 57%;
+      height: 142px;
+      border-radius: 14px;
+      border: 1px dashed rgba(123,193,255,0.38);
+      background: rgba(78,162,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d9ecff;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+      z-index: 2;
+    }
+
+    .gap-zone:hover,
+    .drop-zone:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,209,102,0.8);
+      background: rgba(255,209,102,0.12);
+    }
+
+    .gap-zone.correct-zone {
+      background: rgba(52,211,153,0.22);
+      border-color: rgba(52,211,153,0.9);
+    }
+
+    .gap-zone.wrong-zone {
+      background: rgba(255,107,107,0.18);
+      border-color: rgba(255,107,107,0.8);
+    }
+
+    .gap-left-c { left: 8%; width: 14%; }
+    .gap-left-b { left: 23%; width: 12%; }
+    .gap-left-a { left: 38%; width: 10%; }
+    .gap-right-a { left: 52%; width: 10%; }
+    .gap-right-b { left: 65%; width: 12%; }
+    .gap-right-c { left: 78%; width: 14%; }
+
+    .drop-zone {
+      position: absolute;
+      width: 76px;
+      height: 58px;
+      border-radius: 16px;
+      border: 2px dashed rgba(255,255,255,0.24);
+      background: rgba(255,255,255,0.045);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b7c6e6;
+      font-weight: 900;
+      font-size: 0.88rem;
+      text-align: center;
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+      z-index: 3;
+    }
+
+    .drop-zone.filled {
+      border-style: solid;
+      color: #eef4ff;
+      background: rgba(78,162,255,0.16);
+    }
+
+    .drop-zone.correct-drop {
+      background: rgba(52,211,153,0.22);
+      border-color: rgba(52,211,153,0.9);
+    }
+
+    .drop-zone.wrong-drop {
+      background: rgba(255,107,107,0.18);
+      border-color: rgba(255,107,107,0.8);
+    }
+
+    .left-5 { left: 15%; top: 65%; }
+    .left-3 { left: 31%; top: 65%; }
+    .left-1 { left: 42%; top: 65%; }
+    .right-1 { left: 50%; top: 65%; }
+    .right-3 { left: 60%; top: 65%; }
+    .right-5 { left: 75%; top: 65%; }
+
+    .player-tray {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .player-chip {
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 14px;
+      padding: 12px 10px;
+      background: rgba(78,162,255,0.15);
+      color: #eef4ff;
+      font-weight: 900;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .player-chip:active { cursor: grabbing; }
+    .player-chip.used { opacity: 0.36; cursor: default; }
+
+    .control-panel .answer-grid { grid-template-columns: 1fr; }
+
+    .coach-point {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,209,102,0.32);
+      background: rgba(255,209,102,0.08);
+      color: #ffedbf;
+      line-height: 1.45;
+    }
+
+    .check-btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .diagram-key {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+      color: #b7c6e6;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .diagram-key div {
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 10px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    @media (max-width: 980px) {
+      .under-layout { grid-template-columns: 1fr; }
+      .front-board { min-height: 520px; }
+    }
+
+    @media (max-width: 640px) {
+      .ol { width: 44px; height: 34px; font-size: 0.84rem; }
+      .skill { width: 42px; height: 30px; font-size: 0.74rem; }
+      .drop-zone { width: 60px; height: 52px; font-size: 0.78rem; }
+      .gap-zone { font-size: 0.82rem; }
+      .player-tray { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .diagram-key { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-shell">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="ghost-btn" href="../index.html">← Back to Hub</a>
+      </div>
+      <div class="topbar-right">
+        <span class="status-chip live"><span class="status-dot"></span>LIVE</span>
+        <span class="status-chip">Game 9</span>
+        <span class="status-chip">UNDER Hybrid</span>
+      </div>
+    </div>
+
+    <section id="startScreen" class="start-grid">
+      <div class="start-card">
+        <div class="question-kicker">Perry Defensive Line — Graphic Trainer</div>
+        <h2>Game 9 — UNDER Hybrid Trainer</h2>
+        <p>
+          This game combines formation strength, RIP/LIZ calls, UNDER alignment, and post-snap gap responsibility.
+          Offense is on top. Defense is on bottom. Calls are made from the defensive perspective.
+        </p>
+
+        <div class="coach-point">
+          <strong>RIP / LIZ rule:</strong> RIP means the Nose and End go to the defensive right.
+          Tackle and Jack go opposite. LIZ means the Nose and End go to the defensive left.
+          Two detached receivers set the formation strength.
+        </div>
+
+        <label class="input-label" for="playerName">Player name</label>
+        <input id="playerName" class="text-input" type="text" placeholder="Type your name" />
+
+        <div class="btn-row">
+          <button class="btn" onclick="startGame()">Start Game</button>
+        </div>
+      </div>
+
+      <div class="start-card">
+        <h2>Rules</h2>
+        <ul class="instructions">
+          <li>UNDER only: End, Nose, Tackle, Jack.</li>
+          <li>Offense is shown across from the defense: offense on top, defense on bottom.</li>
+          <li>RIP/LIZ is called to the offensive formation strength.</li>
+          <li>Two detached receivers make that side strong.</li>
+          <li>Drag the front when asked. Click the final responsibility when asked.</li>
+          <li>Misses count. Perfect run earns the ticket.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="hidden">
+      <div class="hud-grid">
+        <div class="hud-box"><span class="hud-label">Player</span><span id="hudName" class="hud-value">—</span></div>
+        <div class="hud-box"><span class="hud-label">Question</span><span id="hudQuestion" class="hud-value">—</span></div>
+        <div class="hud-box"><span class="hud-label">Correct</span><span id="hudCorrect" class="hud-value">0</span></div>
+        <div class="hud-box"><span class="hud-label">Misses</span><span id="hudMisses" class="hud-value">0</span></div>
+        <div class="hud-box"><span class="hud-label">Accuracy</span><span id="hudAccuracy" class="hud-value">100%</span></div>
+        <div class="hud-box"><span class="hud-label">Attempt</span><span id="hudAttempt" class="hud-value">1</span></div>
+      </div>
+
+      <div class="under-layout">
+        <div class="field-card">
+          <div class="call-banner">
+            <strong id="callTitle">UNDER</strong>
+            <span class="call-note">Read strength first. Then apply RIP/LIZ from your defensive perspective.</span>
+          </div>
+
+          <div id="frontBoard" class="front-board">
+            <div class="field-label offense-label">OFFENSE</div>
+            <div class="field-label defense-label">DEFENSE</div>
+            <div id="strengthTag" class="strength-tag">Strength: —</div>
+            <div id="strongSideBox" class="strong-side strong-right"></div>
+            <div class="def-perspective">DEFENSIVE LEFT ← &nbsp;&nbsp; → DEFENSIVE RIGHT</div>
+
+            <div class="skill qb">QB</div>
+            <div class="skill rb">RB</div>
+            <div id="wrL1" class="skill wr-left-1">WR</div>
+            <div id="wrL2" class="skill wr-left-2">WR</div>
+            <div id="wrR1" class="skill wr-right-1">WR</div>
+            <div id="wrR2" class="skill wr-right-2">WR</div>
+            <div id="teL" class="skill te-left hidden">TE</div>
+            <div id="teR" class="skill te-right hidden">TE</div>
+
+            <div class="ol lt">OT</div>
+            <div class="ol lg">G</div>
+            <div class="ol oc">C</div>
+            <div class="ol rg">G</div>
+            <div class="ol rt">OT</div>
+            <div class="los"></div>
+            <div class="football-label">Line of Scrimmage</div>
+
+            <button class="gap-zone gap-left-c" data-gap="LC" onclick="selectGap('LC')">Left C</button>
+            <button class="gap-zone gap-left-b" data-gap="LB" onclick="selectGap('LB')">Left B</button>
+            <button class="gap-zone gap-left-a" data-gap="LA" onclick="selectGap('LA')">Left A</button>
+            <button class="gap-zone gap-right-a" data-gap="RA" onclick="selectGap('RA')">Right A</button>
+            <button class="gap-zone gap-right-b" data-gap="RB" onclick="selectGap('RB')">Right B</button>
+            <button class="gap-zone gap-right-c" data-gap="RC" onclick="selectGap('RC')">Right C</button>
+
+            <div class="drop-zone left-5" data-spot="L5">Left 5</div>
+            <div class="drop-zone left-3" data-spot="L3">Left 3</div>
+            <div class="drop-zone left-1" data-spot="L1">Left 1</div>
+            <div class="drop-zone right-1" data-spot="R1">Right 1</div>
+            <div class="drop-zone right-3" data-spot="R3">Right 3</div>
+            <div class="drop-zone right-5" data-spot="R5">Right 5</div>
+          </div>
+
+          <div id="playerTray" class="player-tray"></div>
+
+          <div class="diagram-key">
+            <div><strong>RIP:</strong> Call to defensive right. Nose and End go right. Tackle and Jack opposite.</div>
+            <div><strong>LIZ:</strong> Call to defensive left. Nose and End go left. Tackle and Jack opposite.</div>
+          </div>
+        </div>
+
+        <div class="question-panel control-panel">
+          <div class="question-title-row">
+            <span id="questionKicker" class="question-kicker">Alignment</span>
+            <span id="questionType" class="status-chip">Drag</span>
+          </div>
+          <h2 id="questionStem" class="question-stem">Question stem</h2>
+          <p id="questionCopy" class="question-copy">Question detail</p>
+
+          <div id="checkControls" class="check-btn-row hidden">
+            <button class="btn" onclick="checkAlignment()">Check Alignment</button>
+            <button class="secondary-btn" onclick="resetDragQuestion()">Reset Drag</button>
+          </div>
+
+          <div id="mcAnswers" class="answer-grid hidden"></div>
+
+          <div id="feedbackBox" class="feedback-box hidden">
+            <h3 id="feedbackTitle" class="feedback-title">Feedback</h3>
+            <p id="feedbackCopy" class="feedback-copy"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ticketScreen" class="ticket-box hidden">
+      <h2>Completion Ticket</h2>
+      <p id="ticketMessage">Perfect run earned.</p>
+      <div class="ticket-grid" id="ticketGrid"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="window.print()">Print / Save Ticket</button>
+        <button class="secondary-btn" onclick="restartGame()">Run It Again</button>
+        <a class="ghost-btn" href="../index.html">Back to Hub</a>
+      </div>
+    </section>
+
+    <div id="errorBox" class="error-box hidden"></div>
+  </div>
+
+<script>
+'use strict';
+
+window.addEventListener('error', function(event) {
+  const box = document.getElementById('errorBox');
+  box.classList.remove('hidden');
+  box.textContent = 'Runtime error: ' + event.message + '\nLine: ' + event.lineno;
+});
+
+const PLAYER_LABELS = { E: 'End', N: 'Nose', T: 'Tackle', J: 'Jack' };
+
+const QUESTIONS = [
+  {
+    mode: 'drag',
+    formation: 'rightTwoDetached',
+    strength: 'defensive right',
+    call: 'UNDER RIP',
+    title: 'Two detached receivers are to your defensive right. Build the UNDER RIP front.',
+    detail: 'The call goes to offensive formation strength. Two detached receivers make the right side strong, so the call is RIP.',
+    correctDrops: { E: 'R5', N: 'R1', T: 'L3', J: 'L5' },
+    coaching: 'RIP = Nose and End to the defensive right. Tackle and Jack opposite. UNDER puts End and Jack in 5 techniques, Nose in a shade, Tackle in a 3.'
+  },
+  {
+    mode: 'drag',
+    formation: 'leftTwoDetached',
+    strength: 'defensive left',
+    call: 'UNDER LIZ',
+    title: 'Two detached receivers are to your defensive left. Build the UNDER LIZ front.',
+    detail: 'The call goes to offensive formation strength. Two detached receivers make the left side strong, so the call is LIZ.',
+    correctDrops: { E: 'L5', N: 'L1', T: 'R3', J: 'R5' },
+    coaching: 'LIZ = Nose and End to the defensive left. Tackle and Jack opposite. Do not flip it from the offense’s perspective.'
+  },
+  {
+    mode: 'gap',
+    formation: 'rightTwoDetached',
+    strength: 'defensive right',
+    call: 'UNDER RIP',
+    player: 'E',
+    title: 'UNDER RIP. You are the End. Click your base run gap responsibility.',
+    detail: 'Two detached receivers are right, so RIP is called. End travels with the Nose to the call side.',
+    answer: 'RC',
+    coaching: 'End is to the RIP side with the Nose. In UNDER RIP, that is defensive right C gap. Control C and spill kickouts.'
+  },
+  {
+    mode: 'gap',
+    formation: 'leftTwoDetached',
+    strength: 'defensive left',
+    call: 'UNDER LIZ',
+    player: 'E',
+    title: 'UNDER LIZ. You are the End. Click your base run gap responsibility.',
+    detail: 'Two detached receivers are left, so LIZ is called. End travels with the Nose to the call side.',
+    answer: 'LC',
+    coaching: 'End is to the LIZ side with the Nose. In UNDER LIZ, that is defensive left C gap.'
+  },
+  {
+    mode: 'gap',
+    formation: 'rightTwoDetached',
+    strength: 'defensive right',
+    call: 'UNDER RIP',
+    player: 'N',
+    title: 'UNDER RIP. You are the Nose. Click your primary run gap.',
+    detail: 'The Nose is the 1 shade to the RIP side.',
+    answer: 'RA',
+    coaching: 'RIP puts the Nose to the defensive right shade. Primary job is strong-side A gap control.'
+  },
+  {
+    mode: 'gap',
+    formation: 'leftTwoDetached',
+    strength: 'defensive left',
+    call: 'UNDER LIZ',
+    player: 'N',
+    title: 'UNDER LIZ. You are the Nose. Click your primary run gap.',
+    detail: 'The Nose is the 1 shade to the LIZ side.',
+    answer: 'LA',
+    coaching: 'LIZ puts the Nose to the defensive left shade. Primary job is that side A gap.'
+  },
+  {
+    mode: 'gap',
+    formation: 'rightTwoDetached',
+    strength: 'defensive right',
+    call: 'UNDER RIP',
+    player: 'T',
+    title: 'UNDER RIP. You are the Tackle. Click your base run gap responsibility.',
+    detail: 'Tackle goes opposite the Nose and End.',
+    answer: 'LB',
+    coaching: 'In UNDER RIP, Tackle goes opposite the call in a 3 technique. That puts him in defensive left B gap.'
+  },
+  {
+    mode: 'gap',
+    formation: 'leftTwoDetached',
+    strength: 'defensive left',
+    call: 'UNDER LIZ',
+    player: 'T',
+    title: 'UNDER LIZ. You are the Tackle. Click your base run gap responsibility.',
+    detail: 'Tackle goes opposite the Nose and End.',
+    answer: 'RB',
+    coaching: 'In UNDER LIZ, Tackle goes opposite the call in a 3 technique. That puts him in defensive right B gap.'
+  },
+  {
+    mode: 'gap',
+    formation: 'rightTwoDetached',
+    strength: 'defensive right',
+    call: 'UNDER RIP',
+    player: 'J',
+    title: 'UNDER RIP. You are the Jack. Click your base run gap responsibility.',
+    detail: 'Jack goes opposite the End in UNDER.',
+    answer: 'LC',
+    coaching: 'In UNDER RIP, Jack is opposite the End. That puts Jack in defensive left C gap.'
+  },
+  {
+    mode: 'gap',
+    formation: 'leftTwoDetached',
+    strength: 'defensive left',
+    call: 'UNDER LIZ',
+    player: 'J',
+    title: 'UNDER LIZ. You are the Jack. Click your base run gap responsibility.',
+    detail: 'Jack goes opposite the End in UNDER.',
+    answer: 'RC',
+    coaching: 'In UNDER LIZ, Jack is opposite the End. That puts Jack in defensive right C gap.'
+  },
+  {
+    mode: 'choice',
+    formation: 'rightTwoDetached',
+    strength: 'defensive right',
+    call: 'UNDER RIP',
+    player: 'E',
+    title: 'UNDER RIP. End gets a down block and a puller is coming. What is the reaction?',
+    detail: 'Use the DL Trainer language. First two steps do not change, then the read tells you the reaction.',
+    answers: [
+      { text: 'Wrong arm it, spill the puller, and close the gap the scrape linebacker is vacating.', correct: true },
+      { text: 'Run past the gap and chase the ball from behind.', correct: false },
+      { text: 'Sit flat on the line and wait for the back to declare.', correct: false },
+      { text: 'Cross face immediately and chase the zone give.', correct: false }
+    ],
+    coaching: 'Down with puller: wrong arm, spill, back hip through it, and close the gap. Do not run past the gap and reopen it.'
+  },
+  {
+    mode: 'choice',
+    formation: 'leftTwoDetached',
+    strength: 'defensive left',
+    call: 'UNDER LIZ',
+    player: 'N',
+    title: 'UNDER LIZ. Nose feels combo pressure. What is the job?',
+    detail: 'This is not hero ball. This is gap integrity.',
+    answers: [
+      { text: 'Push vertically, fight pressure, keep the combo on you, and maintain the gap.', correct: true },
+      { text: 'Turn your shoulders and run around the combo.', correct: false },
+      { text: 'Split immediately even if it opens your gap.', correct: false },
+      { text: 'Peek into the backfield and give ground.', correct: false }
+    ],
+    coaching: 'Combo block rule: keep the combo intact on you, fight vertical push, and always maintain your gap.'
+  }
+];
+
+let playerName = '';
+let currentIndex = 0;
+let correctCount = 0;
+let missCount = 0;
+let totalAttempts = 0;
+let attemptNumber = Number(localStorage.getItem('underHybridAttempt') || '1');
+let startTime = null;
+let locked = false;
+let draggedPlayer = null;
+let placed = {};
+
+function byId(id) { return document.getElementById(id); }
+function currentQuestion() { return QUESTIONS[currentIndex]; }
+
+function startGame() {
+  playerName = byId('playerName').value.trim();
+  if (!playerName) {
+    alert('Type your name first.');
+    return;
+  }
+
+  startTime = new Date();
+  currentIndex = 0;
+  correctCount = 0;
+  missCount = 0;
+  totalAttempts = 0;
+  locked = false;
+
+  byId('hudName').textContent = playerName;
+  byId('hudAttempt').textContent = attemptNumber;
+  byId('startScreen').classList.add('hidden');
+  byId('ticketScreen').classList.add('hidden');
+  byId('gameScreen').classList.remove('hidden');
+  loadQuestion();
+}
+
+function restartGame() {
+  attemptNumber += 1;
+  localStorage.setItem('underHybridAttempt', String(attemptNumber));
+  byId('ticketScreen').classList.add('hidden');
+  byId('startScreen').classList.remove('hidden');
+  byId('gameScreen').classList.add('hidden');
+}
+
+function updateHud() {
+  byId('hudQuestion').textContent = (currentIndex + 1) + ' / ' + QUESTIONS.length;
+  byId('hudCorrect').textContent = correctCount;
+  byId('hudMisses').textContent = missCount;
+  const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+  byId('hudAccuracy').textContent = accuracy + '%';
+  byId('hudAttempt').textContent = attemptNumber;
+}
+
+function loadQuestion() {
+  locked = false;
+  placed = {};
+  clearBoardFeedback();
+  byId('feedbackBox').classList.add('hidden');
+  byId('mcAnswers').classList.add('hidden');
+  byId('checkControls').classList.add('hidden');
+
+  const q = currentQuestion();
+  applyFormation(q.formation, q.strength);
+
+  byId('callTitle').textContent = q.call + (q.player ? ' — ' + PLAYER_LABELS[q.player] : '');
+  byId('questionStem').textContent = q.title;
+  byId('questionCopy').textContent = q.detail;
+  byId('questionKicker').textContent = q.call + ' • Strength: ' + q.strength;
+
+  if (q.mode === 'drag') {
+    byId('questionType').textContent = 'Drag Alignment';
+    byId('checkControls').classList.remove('hidden');
+    setupPlayerTray(['E', 'N', 'T', 'J']);
+    enableDropZones();
+  } else if (q.mode === 'gap') {
+    byId('questionType').textContent = 'Click Gap';
+    setupPlayerTray([]);
+    disableDropZones();
+  } else {
+    byId('questionType').textContent = 'Decision';
+    setupPlayerTray([]);
+    disableDropZones();
+    renderChoices(q.answers);
+  }
+
+  updateHud();
+}
+
+function applyFormation(formation, strength) {
+  const strongBox = byId('strongSideBox');
+  byId('strengthTag').textContent = 'Strength: ' + strength;
+
+  const leftStrong = formation === 'leftTwoDetached';
+  strongBox.classList.toggle('strong-left', leftStrong);
+  strongBox.classList.toggle('strong-right', !leftStrong);
+
+  byId('wrL1').classList.toggle('hidden', !leftStrong);
+  byId('wrL2').classList.toggle('hidden', !leftStrong);
+  byId('wrR1').classList.toggle('hidden', leftStrong);
+  byId('wrR2').classList.toggle('hidden', leftStrong);
+
+  byId('teL').classList.add('hidden');
+  byId('teR').classList.add('hidden');
+}
+
+function setupPlayerTray(players) {
+  const tray = byId('playerTray');
+  tray.innerHTML = '';
+
+  players.forEach(function(player) {
+    const chip = document.createElement('div');
+    chip.className = 'player-chip';
+    chip.draggable = true;
+    chip.dataset.player = player;
+    chip.textContent = player + ' — ' + PLAYER_LABELS[player];
+    chip.addEventListener('dragstart', function(event) {
+      draggedPlayer = player;
+      event.dataTransfer.setData('text/plain', player);
+    });
+    chip.addEventListener('click', function() {
+      draggedPlayer = player;
+      document.querySelectorAll('.player-chip').forEach(c => c.style.outline = 'none');
+      chip.style.outline = '2px solid rgba(255,209,102,0.8)';
+    });
+    tray.appendChild(chip);
+  });
+}
+
+function enableDropZones() {
+  document.querySelectorAll('.drop-zone').forEach(function(zone) {
+    zone.textContent = readableSpot(zone.dataset.spot);
+    zone.classList.remove('filled');
+    zone.ondragover = function(event) { event.preventDefault(); };
+    zone.ondrop = function(event) {
+      event.preventDefault();
+      const player = event.dataTransfer.getData('text/plain') || draggedPlayer;
+      placePlayer(player, zone);
+    };
+    zone.onclick = function() {
+      if (draggedPlayer) placePlayer(draggedPlayer, zone);
+    };
+  });
+}
+
+function disableDropZones() {
+  document.querySelectorAll('.drop-zone').forEach(function(zone) {
+    zone.ondragover = null;
+    zone.ondrop = null;
+    zone.onclick = null;
+    zone.textContent = readableSpot(zone.dataset.spot);
+    zone.classList.remove('filled');
+  });
+}
+
+function placePlayer(player, zone) {
+  if (!player || locked) return;
+
+  Object.keys(placed).forEach(function(spot) {
+    if (placed[spot] === player) {
+      delete placed[spot];
+      const oldZone = document.querySelector('.drop-zone[data-spot="' + spot + '"]');
+      if (oldZone) {
+        oldZone.textContent = readableSpot(spot);
+        oldZone.classList.remove('filled');
+      }
+    }
+  });
+
+  const existingPlayer = placed[zone.dataset.spot];
+  if (existingPlayer) {
+    const existingChip = document.querySelector('.player-chip[data-player="' + existingPlayer + '"]');
+    if (existingChip) existingChip.classList.remove('used');
+  }
+
+  placed[zone.dataset.spot] = player;
+  zone.textContent = player;
+  zone.classList.add('filled');
+
+  document.querySelectorAll('.player-chip').forEach(function(chip) {
+    chip.classList.toggle('used', Object.values(placed).includes(chip.dataset.player));
+    chip.style.outline = 'none';
+  });
+
+  draggedPlayer = null;
+}
+
+function resetDragQuestion() {
+  if (locked) return;
+  placed = {};
+  clearBoardFeedback();
+  enableDropZones();
+  setupPlayerTray(['E', 'N', 'T', 'J']);
+  byId('feedbackBox').classList.add('hidden');
+}
+
+function checkAlignment() {
+  if (locked) return;
+  const q = currentQuestion();
+  const expected = q.correctDrops;
+  const reversePlaced = {};
+
+  Object.keys(placed).forEach(function(spot) {
+    reversePlaced[placed[spot]] = spot;
+  });
+
+  let allCorrect = true;
+  Object.keys(expected).forEach(function(player) {
+    const expectedSpot = expected[player];
+    const actualSpot = reversePlaced[player];
+    if (actualSpot !== expectedSpot) allCorrect = false;
+
+    const zoneToMark = actualSpot || expectedSpot;
+    const zone = document.querySelector('.drop-zone[data-spot="' + zoneToMark + '"]');
+    if (zone) zone.classList.add(actualSpot === expectedSpot ? 'correct-drop' : 'wrong-drop');
+  });
+
+  totalAttempts += 1;
+  if (allCorrect) {
+    correctCount += 1;
+    locked = true;
+    showFeedback('Correct — that is the front.', q.coaching, true);
+    updateHud();
+    setTimeout(nextQuestion, 5000);
+  } else {
+    missCount += 1;
+    showFeedback('Not yet.', 'Read the offensive strength first. Two detached receivers set the strength. Then apply RIP/LIZ from the defense’s perspective.', false);
+    updateHud();
+  }
+}
+
+function selectGap(gap) {
+  if (locked) return;
+  const q = currentQuestion();
+  if (q.mode !== 'gap') return;
+
+  totalAttempts += 1;
+  const zone = document.querySelector('.gap-zone[data-gap="' + gap + '"]');
+
+  if (gap === q.answer) {
+    correctCount += 1;
+    locked = true;
+    if (zone) zone.classList.add('correct-zone');
+    showFeedback('Correct — finish your job.', q.coaching, true);
+    updateHud();
+    setTimeout(nextQuestion, 5000);
+  } else {
+    missCount += 1;
+    if (zone) zone.classList.add('wrong-zone');
+    showFeedback('Not it.', 'Click the final responsibility from the defensive perspective. Ask yourself: where is strength, what is the call, and which player am I?', false);
+    updateHud();
+  }
+}
+
+function renderChoices(answers) {
+  const grid = byId('mcAnswers');
+  grid.innerHTML = '';
+  grid.classList.remove('hidden');
+  answers.forEach(function(answer, index) {
+    const button = document.createElement('button');
+    button.className = 'answer-btn';
+    button.innerHTML = '<span class="choice-letter">' + String.fromCharCode(65 + index) + '</span>' + answer.text;
+    button.onclick = function() { chooseAnswer(button, answer); };
+    grid.appendChild(button);
+  });
+}
+
+function chooseAnswer(button, answer) {
+  if (locked) return;
+  const q = currentQuestion();
+  totalAttempts += 1;
+
+  if (answer.correct) {
+    correctCount += 1;
+    locked = true;
+    button.classList.add('correct');
+    document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
+    showFeedback('Correct — that is the reaction.', q.coaching, true);
+    updateHud();
+    setTimeout(nextQuestion, 5000);
+  } else {
+    missCount += 1;
+    button.classList.add('incorrect');
+    button.classList.add('disabled');
+    showFeedback('Not it.', 'Use Coach Weber language: maintain your gap, spill when the read tells you, and never chase yourself out of the defense.', false);
+    updateHud();
+  }
+}
+
+function showFeedback(title, copy, isCorrect) {
+  byId('feedbackTitle').textContent = title;
+  byId('feedbackCopy').textContent = copy;
+  byId('feedbackBox').classList.remove('hidden');
+  byId('feedbackBox').style.borderColor = isCorrect ? 'rgba(52,211,153,0.55)' : 'rgba(255,107,107,0.55)';
+}
+
+function nextQuestion() {
+  currentIndex += 1;
+  if (currentIndex >= QUESTIONS.length) finishGame();
+  else loadQuestion();
+}
+
+function finishGame() {
+  byId('gameScreen').classList.add('hidden');
+  byId('ticketScreen').classList.remove('hidden');
+
+  if (missCount > 0) {
+    byId('ticketMessage').textContent = 'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.';
+  } else {
+    byId('ticketMessage').textContent = 'Perfect run earned. Screenshot or print this ticket.';
+  }
+
+  const endTime = new Date();
+  const elapsedSeconds = Math.round((endTime - startTime) / 1000);
+  const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+  const result = missCount === 0 ? 'TICKET EARNED' : 'REPLAY REQUIRED';
+
+  const items = [
+    ['Player', playerName],
+    ['Game', 'Game 9 — UNDER Hybrid Trainer'],
+    ['Date', endTime.toLocaleDateString()],
+    ['Start Time', startTime.toLocaleTimeString()],
+    ['End Time', endTime.toLocaleTimeString()],
+    ['Runtime', elapsedSeconds + ' seconds'],
+    ['Correct First-Time Answers', correctCount + ' / ' + QUESTIONS.length],
+    ['Misses', missCount],
+    ['Accuracy', accuracy + '%'],
+    ['Attempt', attemptNumber],
+    ['Result', result]
+  ];
+
+  byId('ticketGrid').innerHTML = items.map(function(item) {
+    return '<div class="ticket-item"><span class="label">' + item[0] + '</span><span class="value">' + item[1] + '</span></div>';
+  }).join('');
+}
+
+function clearBoardFeedback() {
+  document.querySelectorAll('.gap-zone').forEach(function(zone) {
+    zone.classList.remove('correct-zone', 'wrong-zone');
+  });
+  document.querySelectorAll('.drop-zone').forEach(function(zone) {
+    zone.classList.remove('correct-drop', 'wrong-drop');
+  });
+}
+
+function readableSpot(spot) {
+  const map = {
+    L5: 'Left 5', L3: 'Left 3', L1: 'Left 1',
+    R1: 'Right 1', R3: 'Right 3', R5: 'Right 5'
+  };
+  return map[spot] || spot;
+}
+</script>
+</body>
+</html>
