@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game 4 — Zone / Base Block Trainer</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero compact-hero">
+      <div class="hero-top">
+        <span class="brand-badge">Perry Panther Football</span>
+        <span class="brand-badge muted-badge">Game 4 — Zone / Base Block Trainer</span>
+      </div>
+      <h1>Zone / Base Block Trainer</h1>
+      <p class="hero-copy">
+        Outside hat and numbers come at you. First steps remain the same. Hands, lockout, half-man leverage, then set the edge or fight base pressure.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Outside Hat</span>
+        <span class="pill">Inside Hand High Center Chest</span>
+        <span class="pill">Outside Hand Shoulder</span>
+        <span class="pill">Half-Man Leverage</span>
+        <span class="pill">Set an Edge</span>
+      </div>
+      <div class="btn-row" style="margin-top:16px;">
+        <a class="secondary-btn" href="../index.html">Back to Hub</a>
+      </div>
+    </header>
+
+    <section id="startScreen" class="section-card start-card">
+      <div class="section-heading">
+        <h2>Start the Drill</h2>
+        <p>
+          This game trains the difference between base pressure and zone pressure when the outside hat and numbers come at you.
+          The first steps stay the same. The reaction after contact changes based on the picture.
+        </p>
+      </div>
+      <div class="start-grid">
+        <label class="input-group">
+          <span>Player Name</span>
+          <input id="playerName" type="text" placeholder="Enter player name" autocomplete="off" />
+        </label>
+      </div>
+      <div class="btn-row" style="margin-top:16px;">
+        <button id="startBtn" class="btn">Start Game 4</button>
+      </div>
+      <div class="rules-grid" style="margin-top:18px;">
+        <div class="rule-box">
+          <h4>Steps Stay the Same</h4>
+          <p>We may widen the pre-snap alignment 6” to 12” versus outside zone, but the first steps do not change.</p>
+        </div>
+        <div class="rule-box">
+          <h4>Base Block</h4>
+          <p>Shoot inside hand high center chest, outside hand to the shoulder, lock out, square to the LOS, and fight base pressure.</p>
+        </div>
+        <div class="rule-box">
+          <h4>Zone Block</h4>
+          <p>Impact with both hands, work the key vertical, set an edge with his body, and force the back to make a vertical cut.</p>
+        </div>
+      </div>
+      <div id="startError" class="error-box hidden"></div>
+    </section>
+
+    <section id="gameScreen" class="section-card hidden">
+      <div class="hud-grid">
+        <div class="hud-box"><span class="hud-label">Player</span><span id="hudPlayer" class="hud-value">—</span></div>
+        <div class="hud-box"><span class="hud-label">Question</span><span id="hudProgress" class="hud-value">1 / 16</span></div>
+        <div class="hud-box"><span class="hud-label">Accuracy</span><span id="hudAccuracy" class="hud-value">100%</span></div>
+        <div class="hud-box"><span class="hud-label">Misses</span><span id="hudMisses" class="hud-value">0</span></div>
+        <div class="hud-box"><span class="hud-label">Runtime</span><span id="hudRuntime" class="hud-value">00:00</span></div>
+        <div class="hud-box"><span class="hud-label">Start Time</span><span id="hudStartTime" class="hud-value">—</span></div>
+      </div>
+
+      <div class="question-panel">
+        <div class="question-title-row">
+          <span class="question-kicker">Zone / Base Reaction</span>
+          <span id="timerPill" class="pill">Outside Hat. Hands. Leverage.</span>
+        </div>
+        <h2 id="questionStem" class="question-stem"></h2>
+        <p id="questionCopy" class="question-copy"></p>
+        <div id="answerGrid" class="answer-grid"></div>
+        <div id="feedbackBox" class="feedback-box hidden">
+          <h3 id="feedbackTitle" class="feedback-title"></h3>
+          <p id="feedbackCopy" class="feedback-copy"></p>
+        </div>
+        <div id="gameError" class="error-box hidden"></div>
+      </div>
+    </section>
+
+    <section id="finishScreen" class="hidden">
+      <div class="ticket-box">
+        <h2>Completion Ticket</h2>
+        <p>Screenshot this ticket after a perfect run. Any miss means the player finished the rep work, but has to run it back clean.</p>
+        <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">End Time</span><span id="ticketEnd" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Runtime</span><span id="ticketRuntime" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Accuracy</span><span id="ticketAccuracy" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Misses</span><span id="ticketMisses" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
+        </div>
+        <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+        <div class="btn-row" style="margin-top:16px;">
+          <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
+          <a class="btn" href="../index.html">Back to Hub</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const EXPLANATION_DELAY_MS = 5000;
+
+    const QUESTION_BANK = [
+      {
+        id: 1,
+        stem: 'Versus an outside zone team, what may we adjust before the snap?',
+        copy: 'This is an alignment adjustment, not a change in footwork.',
+        correct: 'Widen the pre-snap alignment 6” to 12” depending on the outside zone they run',
+        hint: 'The steps do not change. The starting point can widen.',
+        explanation: 'Correct. Versus an outside zone team, we can adjust pre-snap alignment 6” to 12” depending on the type of outside zone they run.'
+      },
+      {
+        id: 2,
+        stem: 'When we widen versus outside zone, what happens to the first steps?',
+        copy: 'Coach Weber’s rule still controls the rep.',
+        correct: 'The first steps remain the same',
+        hint: 'Alignment can change. The steps do not.',
+        explanation: 'Correct. Your first steps remain the same; the wider alignment just takes you to an imaginary point outside your key.'
+      },
+      {
+        id: 3,
+        stem: 'Your outside hat and numbers come at you on base. Where should the inside hand strike?',
+        copy: 'Think hand placement first.',
+        correct: 'High center chest',
+        hint: 'The inside hand is tight and central.',
+        explanation: 'Correct. Shoot the inside hand to high center chest.'
+      },
+      {
+        id: 4,
+        stem: 'Your outside hat and numbers come at you on base. Where should the outside hand strike?',
+        copy: 'Pair the inside hand with the correct outside hand placement.',
+        correct: 'On the shoulder',
+        hint: 'The outside hand controls the outside surface.',
+        explanation: 'Correct. The outside hand goes to the shoulder.'
+      },
+      {
+        id: 5,
+        stem: 'After hand placement on base, what leverage relationship are we maintaining?',
+        copy: 'This is the body relationship that keeps you from being reached or swallowed.',
+        correct: 'Half-man leverage on the key',
+        hint: 'Do not give him your whole body.',
+        explanation: 'Correct. Lock out and maintain half-man leverage on the key.'
+      },
+      {
+        id: 6,
+        stem: 'Once you have control on a base block, what should your body do?',
+        copy: 'After lockout, regain the line-of-scrimmage relationship.',
+        correct: 'Square the body to the LOS, sink the hips, and keep fighting base pressure',
+        hint: 'Control, square, sink, fight.',
+        explanation: 'Correct. As soon as you have control, square to the LOS, sink the hips, keep the inside arm extended, free the gap hand, and continue to fight base pressure.'
+      },
+      {
+        id: 7,
+        stem: 'On base pressure, what should happen with the inside arm after control is established?',
+        copy: 'This keeps separation and helps protect the gap.',
+        correct: 'Keep the inside arm extended',
+        hint: 'Do not collapse the arm and give up separation.',
+        explanation: 'Correct. Keep the inside arm extended while fighting base pressure.'
+      },
+      {
+        id: 8,
+        stem: 'On base pressure, which hand needs to become free?',
+        copy: 'This is the hand tied to your responsibility.',
+        correct: 'The gap hand',
+        hint: 'Free the hand that lets you play your gap.',
+        explanation: 'Correct. Free the gap hand and continue to fight base pressure.'
+      },
+      {
+        id: 9,
+        stem: 'On zone, outside hat and numbers come at you. What is the first contact rule?',
+        copy: 'The contact is physical and immediate.',
+        correct: 'Impact with both hands',
+        hint: 'Do not catch the block with one loose hand.',
+        explanation: 'Correct. On zone, impact with both hands: inside hand high center chest and outside hand on the shoulder.'
+      },
+      {
+        id: 10,
+        stem: 'On zone, what do we do with the key after contact?',
+        copy: 'Use his body to fix the edge.',
+        correct: 'Immediately work the key vertical to set an edge with his body',
+        hint: 'Do not run sideways with the block.',
+        explanation: 'Correct. Immediately work the key vertical to set an edge with his body.'
+      },
+      {
+        id: 11,
+        stem: 'Why do we work the key vertical on zone?',
+        copy: 'This changes the path of the back.',
+        correct: 'To force a vertical cut by the back',
+        hint: 'The back should not be allowed to keep stretching clean to the edge.',
+        explanation: 'Correct. Working the key vertical sets an edge and forces a vertical cut by the back.'
+      },
+      {
+        id: 12,
+        stem: 'While setting the edge on zone, what relationship must you keep so you can come off if the ball moves to your edge?',
+        copy: 'Same leverage language as base.',
+        correct: 'A half-man relationship',
+        hint: 'You need enough of your body free to play the ball.',
+        explanation: 'Correct. Keep a half-man relationship so you can come off if the ball moves toward your edge.'
+      },
+      {
+        id: 13,
+        stem: 'Your outside hat comes at you and you widen your steps instead of keeping the same step rule. What is wrong?',
+        copy: 'Coach does not want new footwork for this picture.',
+        correct: 'The steps never changed; only the alignment landmark changed',
+        hint: 'Wider alignment creates a new angle. It does not create new steps.',
+        explanation: 'Correct. Your first steps still take you to the same spot on your key; you are just coming from a wider alignment.'
+      },
+      {
+        id: 14,
+        stem: 'On base, a player locks out but turns his shoulders and opens the gap. What coaching correction fits?',
+        copy: 'Think square, hips, gap hand.',
+        correct: 'Square to the LOS, sink the hips, and free the gap hand',
+        hint: 'Lockout alone is not enough if the gap opens.',
+        explanation: 'Correct. After control, square the body to the LOS, sink the hips, keep the inside arm extended, and free the gap hand.'
+      },
+      {
+        id: 15,
+        stem: 'On zone, a player keeps running sideways with the blocker and never forces the back vertical. What should he have done?',
+        copy: 'Use the blocker to build the edge.',
+        correct: 'Worked the key vertical and set the edge with his body',
+        hint: 'Do not ride the block sideways.',
+        explanation: 'Correct. Work the key vertical to set the edge with his body and force the back into a vertical cut.'
+      },
+      {
+        id: 16,
+        stem: 'What is the common foundation of both base and zone reactions in this trainer?',
+        copy: 'Before hand placement and leverage, this rule comes first.',
+        correct: 'First steps remain the same and eyes stay on the key',
+        hint: 'Start with feet and eyes.',
+        explanation: 'Correct. First steps remain the same, eyes stay on the helmet and shoulders, then the reaction fits the block picture.'
+      }
+    ];
+
+    const state = {
+      playerName: '',
+      startDate: null,
+      endDate: null,
+      currentIndex: 0,
+      questions: [],
+      misses: 0,
+      correctFirstTry: 0,
+      answered: false,
+      started: false,
+      runtimeSeconds: 0,
+      timerId: null
+    };
+
+    const els = {
+      startScreen: document.getElementById('startScreen'),
+      gameScreen: document.getElementById('gameScreen'),
+      finishScreen: document.getElementById('finishScreen'),
+      playerName: document.getElementById('playerName'),
+      startBtn: document.getElementById('startBtn'),
+      restartBtn: document.getElementById('restartBtn'),
+      startError: document.getElementById('startError'),
+      gameError: document.getElementById('gameError'),
+      hudPlayer: document.getElementById('hudPlayer'),
+      hudProgress: document.getElementById('hudProgress'),
+      hudAccuracy: document.getElementById('hudAccuracy'),
+      hudMisses: document.getElementById('hudMisses'),
+      hudRuntime: document.getElementById('hudRuntime'),
+      hudStartTime: document.getElementById('hudStartTime'),
+      timerPill: document.getElementById('timerPill'),
+      questionStem: document.getElementById('questionStem'),
+      questionCopy: document.getElementById('questionCopy'),
+      answerGrid: document.getElementById('answerGrid'),
+      feedbackBox: document.getElementById('feedbackBox'),
+      feedbackTitle: document.getElementById('feedbackTitle'),
+      feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketName: document.getElementById('ticketName'),
+      ticketDate: document.getElementById('ticketDate'),
+      ticketStart: document.getElementById('ticketStart'),
+      ticketEnd: document.getElementById('ticketEnd'),
+      ticketRuntime: document.getElementById('ticketRuntime'),
+      ticketAccuracy: document.getElementById('ticketAccuracy'),
+      ticketMisses: document.getElementById('ticketMisses'),
+      ticketResult: document.getElementById('ticketResult'),
+      finishMessage: document.getElementById('finishMessage')
+    };
+
+    function formatDate(date) {
+      return date.toLocaleDateString();
+    }
+
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function formatRuntime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const secs = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function shuffle(array) {
+      const clone = [...array];
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone;
+    }
+
+    function buildQuestions() {
+      return QUESTION_BANK.map(q => {
+        const distractors = [
+          'Step with the far foot and chase the ball immediately',
+          'Turn shoulders and run sideways with the blocker',
+          'Catch the block with soft hands and wait for the back',
+          'Give up half-man leverage and play square behind the block',
+          'Open the gap wider to avoid the reach block',
+          'Stop the feet after contact and look into the backfield',
+          'Take the inside gap no matter what the key does',
+          'Run upfield past the block and look for the quarterback'
+        ];
+        const options = shuffle([q.correct, ...shuffle(distractors).filter(d => d !== q.correct).slice(0, 3)]);
+        return { ...q, options };
+      });
+    }
+
+    function setError(target, message) {
+      target.textContent = message;
+      target.classList.remove('hidden');
+    }
+
+    function clearError(target) {
+      target.textContent = '';
+      target.classList.add('hidden');
+    }
+
+    function startRuntimeClock() {
+      clearInterval(state.timerId);
+      state.timerId = setInterval(() => {
+        state.runtimeSeconds += 1;
+        els.hudRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      }, 1000);
+    }
+
+    function stopRuntimeClock() {
+      clearInterval(state.timerId);
+      state.timerId = null;
+    }
+
+    function updateHud() {
+      const attempted = state.currentIndex;
+      const accuracy = attempted === 0 ? 100 : Math.round((state.correctFirstTry / attempted) * 100);
+      els.hudPlayer.textContent = state.playerName;
+      els.hudProgress.textContent = `${Math.min(state.currentIndex + 1, state.questions.length)} / ${state.questions.length}`;
+      els.hudAccuracy.textContent = `${accuracy}%`;
+      els.hudMisses.textContent = String(state.misses);
+      els.hudRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      els.hudStartTime.textContent = formatTime(state.startDate);
+    }
+
+    function showFeedback(title, copy) {
+      els.feedbackTitle.textContent = title;
+      els.feedbackCopy.textContent = copy;
+      els.feedbackBox.classList.remove('hidden');
+    }
+
+    function clearFeedback() {
+      els.feedbackTitle.textContent = '';
+      els.feedbackCopy.textContent = '';
+      els.feedbackBox.classList.add('hidden');
+    }
+
+    function renderQuestion() {
+      clearError(els.gameError);
+      clearFeedback();
+      const q = state.questions[state.currentIndex];
+      state.answered = false;
+      updateHud();
+      els.questionStem.textContent = q.stem;
+      els.questionCopy.textContent = q.copy;
+      els.timerPill.textContent = 'Outside Hat. Hands. Leverage.';
+      els.answerGrid.innerHTML = '';
+      q.options.forEach((option, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + idx)}</span><span>${option}</span>`;
+        btn.addEventListener('click', () => handleAnswer(option, btn));
+        els.answerGrid.appendChild(btn);
+      });
+    }
+
+    function enableRemainingAnswers() {
+      [...els.answerGrid.querySelectorAll('.answer-btn')].forEach(btn => {
+        if (!btn.classList.contains('correct')) {
+          btn.disabled = false;
+          btn.classList.remove('disabled');
+        }
+      });
+    }
+
+    function handleAnswer(option, btnEl) {
+      try {
+        if (!state.started) return;
+        const q = state.questions[state.currentIndex];
+        const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
+        if (option === q.correct) {
+          if (!state.answered) state.correctFirstTry += 1;
+          state.answered = true;
+          btnEl.classList.add('correct');
+          buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+          });
+          showFeedback('Correct — that is the reaction.', q.explanation);
+          updateHud();
+          setTimeout(() => {
+            state.currentIndex += 1;
+            if (state.currentIndex >= state.questions.length) finishGame();
+            else renderQuestion();
+          }, EXPLANATION_DELAY_MS);
+        } else {
+          if (!state.answered) {
+            state.answered = true;
+            state.misses += 1;
+          }
+          btnEl.classList.add('incorrect');
+          btnEl.disabled = true;
+          btnEl.classList.add('disabled');
+          showFeedback('Miss — fix the picture.', `${q.hint} You still must choose the correct answer to move on.`);
+          updateHud();
+          enableRemainingAnswers();
+        }
+      } catch (err) {
+        setError(els.gameError, `Game error: ${err.message}`);
+      }
+    }
+
+    function finishGame() {
+      stopRuntimeClock();
+      state.endDate = new Date();
+      const attempted = state.questions.length;
+      const accuracy = Math.round((state.correctFirstTry / attempted) * 100);
+      const perfect = state.misses === 0;
+      els.gameScreen.classList.add('hidden');
+      els.finishScreen.classList.remove('hidden');
+      els.ticketName.textContent = state.playerName;
+      els.ticketDate.textContent = formatDate(state.endDate);
+      els.ticketStart.textContent = formatTime(state.startDate);
+      els.ticketEnd.textContent = formatTime(state.endDate);
+      els.ticketRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      els.ticketAccuracy.textContent = `${accuracy}%`;
+      els.ticketMisses.textContent = String(state.misses);
+      els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
+      els.finishMessage.innerHTML = perfect
+        ? `<h3 class="feedback-title">Perfect. Zone and base reaction is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+    }
+
+    function hardReset() {
+      stopRuntimeClock();
+      state.playerName = '';
+      state.startDate = null;
+      state.endDate = null;
+      state.currentIndex = 0;
+      state.questions = [];
+      state.misses = 0;
+      state.correctFirstTry = 0;
+      state.answered = false;
+      state.started = false;
+      state.runtimeSeconds = 0;
+      els.playerName.value = '';
+      clearError(els.startError);
+      clearError(els.gameError);
+      clearFeedback();
+      els.finishScreen.classList.add('hidden');
+      els.gameScreen.classList.add('hidden');
+      els.startScreen.classList.remove('hidden');
+    }
+
+    function startGame() {
+      const name = els.playerName.value.trim();
+      clearError(els.startError);
+      if (!name) {
+        setError(els.startError, 'Enter a player name before starting.');
+        return;
+      }
+      state.playerName = name;
+      state.startDate = new Date();
+      state.endDate = null;
+      state.currentIndex = 0;
+      state.questions = buildQuestions();
+      state.misses = 0;
+      state.correctFirstTry = 0;
+      state.answered = false;
+      state.started = true;
+      state.runtimeSeconds = 0;
+      els.startScreen.classList.add('hidden');
+      els.finishScreen.classList.add('hidden');
+      els.gameScreen.classList.remove('hidden');
+      startRuntimeClock();
+      renderQuestion();
+    }
+
+    window.addEventListener('error', (event) => {
+      const msg = event?.error?.message || event.message || 'Unknown error';
+      setError(els.gameError, `Unhandled error: ${msg}`);
+    });
+
+    els.startBtn.addEventListener('click', startGame);
+    els.restartBtn.addEventListener('click', hardReset);
+    els.playerName.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startGame();
+    });
+  </script>
+</body>
+</html>
