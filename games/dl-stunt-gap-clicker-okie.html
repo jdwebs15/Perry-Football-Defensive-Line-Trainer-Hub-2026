@@ -3,109 +3,504 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game 13 — DL Stunt Gap Clicker (OKIE)</title>
+  <title>Helmet Key Reaction Trainer</title>
   <link rel="stylesheet" href="../styles.css" />
-  <style>
-    :root {
-      --board-blue: #10213a;
-      --panel-blue: #152744;
-      --line: rgba(255,255,255,0.22);
-      --gold: #ffd166;
-      --green: #34d399;
-      --red: #ff6b6b;
-      --text: #f8fafc;
-      --muted: #b7c6e6;
-    }
-    .game-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}.mini-link{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--text);text-decoration:none;border:1px solid rgba(255,255,255,.12);font-weight:800}.badge-stack{display:flex;gap:8px;flex-wrap:wrap}.small-badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.small-badge.live{color:#d7fff0;background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.42)}
-    .start-card,.ticket-card{max-width:880px;margin:0 auto;background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.35)}.start-card h1,.ticket-card h1{margin-bottom:10px}.start-card p,.ticket-card p{color:var(--muted);line-height:1.55}.name-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.name-row input{flex:1 1 280px;min-width:240px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;font-weight:800;outline:none}.coach-note{margin-top:18px;padding:14px;border-radius:16px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.25);color:#fff0bf;font-weight:760;line-height:1.5}.hidden{display:none!important}
-    .hud-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:12px}.hud-box{border-radius:18px;background:linear-gradient(180deg,rgba(30,47,88,.96),rgba(19,31,58,.96));border:1px solid rgba(255,255,255,.12);padding:13px}.hud-box span{display:block;color:var(--muted);font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.hud-box strong{display:block;color:#fff;font-size:1.15rem;margin-top:3px}
-    .gap-layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);gap:14px}.field-card,.question-card{background:linear-gradient(180deg,rgba(21,39,68,.95),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 18px 45px rgba(0,0,0,.28);overflow:hidden}.call-banner{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.call-banner strong{color:#fff;letter-spacing:.03em}.call-note{color:var(--muted);font-size:.82rem;font-weight:750}.question-card{padding:18px}.game-board{position:relative;min-height:470px;background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at top,rgba(59,130,246,.13),transparent 55%),rgba(7,16,31,.8);background-size:72px 72px,72px 72px,100% 100%,100% 100%;}
-    .field-title{position:absolute;top:13px;left:16px;color:#c7d2fe;font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.strength-box{position:absolute;top:22px;right:18px;z-index:7;padding:8px 12px;border-radius:999px;background:rgba(20,184,166,.18);border:1px solid rgba(45,212,191,.45);color:#ccfbf1;font-size:.76rem;font-weight:950}.strong-area{position:absolute;top:42px;width:27%;height:126px;border:2px solid rgba(45,212,191,.25);background:rgba(45,212,191,.08);border-radius:18px}.strong-area.left{left:7%}.strong-area.right{right:7%}.hash-line{position:absolute;top:0;bottom:0;width:1px;border-left:1px dashed rgba(255,255,255,.16)}.hash-1{left:33.33%}.hash-2{left:66.66%}.los{position:absolute;left:8%;right:8%;top:49%;height:3px;background:rgba(255,255,255,.62);box-shadow:0 0 10px rgba(255,255,255,.15)}.los-label{position:absolute;left:50%;top:51%;transform:translateX(-50%);color:#dbeafe;font-size:.72rem;font-weight:950;letter-spacing:.06em}
-    .ol,.skill,.dl-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5}.ol{width:46px;height:34px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#f8fafc;font-size:.8rem}.skill{width:42px;height:30px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.75rem}.dl-token{width:43px;height:34px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.9rem}.dl-token.active-player{background:linear-gradient(180deg,#ffd166,#f59e0b);color:#111827;transform:translate(-50%,-50%) scale(1.12);box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);z-index:8}
-    .wr-left-1{left:11%;top:23%}.wr-left-2{left:23%;top:19%}.wr-right-1{left:89%;top:23%}.wr-right-2{left:77%;top:19%}.rb{left:50%;top:18%}.qb{left:50%;top:28%}.ot-l{left:30%;top:39%}.g-l{left:40%;top:39%}.c{left:50%;top:39%}.g-r{left:60%;top:39%}.ot-r{left:70%;top:39%}.e-left{left:36%;top:63%}.n-zero{left:50%;top:63%}.t-right{left:64%;top:63%}.e-right{left:64%;top:63%}.t-left{left:36%;top:63%}.hidden-token{display:none!important}
-    .gap-row{position:absolute;left:7%;right:7%;top:71%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6}.gap-zone{min-height:72px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;cursor:pointer;user-select:none;transition:transform .15s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease}.gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13);box-shadow:0 0 0 4px rgba(255,209,102,.08)}.gap-zone strong{font-size:1rem;letter-spacing:.02em}.gap-zone span{font-size:.7rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.07em}.gap-zone.correct-zone{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22);box-shadow:0 0 0 5px rgba(52,211,153,.12),inset 0 0 22px rgba(52,211,153,.1)}.gap-zone.wrong-zone{border-color:rgba(255,107,107,.92);background:rgba(255,107,107,.2);animation:shake .22s linear 2}@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}.def-label{position:absolute;left:15px;bottom:13px;z-index:5;color:var(--muted);font-size:.74rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.def-left-right{position:absolute;right:15px;bottom:13px;z-index:5;color:var(--gold);font-size:.78rem;font-weight:950;text-align:right}
-    .question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px}.question-card h2{font-size:1.42rem;margin-bottom:8px;color:white}.question-card p{color:var(--muted);line-height:1.5}.responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45}.answer-grid{display:grid;gap:10px;margin-top:14px}.answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800;line-height:1.35;transition:transform .15s ease,border-color .15s ease,background .15s ease}.answer-btn:hover{transform:translateY(-2px);border-color:rgba(255,209,102,.5)}.answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2)}.answer-btn.incorrect{border-color:rgba(255,107,107,.85);background:rgba(255,107,107,.18)}.answer-btn.disabled{pointer-events:none;opacity:.78}.choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950}.feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}.feedback-box h3{margin-bottom:4px;color:white}.feedback-box p{color:var(--muted)}.ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900;letter-spacing:.06em}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px}.btn{border:0}.secondary-btn{background:rgba(255,255,255,.1)!important;color:white!important}.danger-text{color:#fecaca!important}
-    @media(max-width:980px){.gap-layout{grid-template-columns:1fr}.hud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gap-row{gap:6px;grid-template-columns:repeat(3,minmax(72px,1fr));top:69%}.gap-zone{min-height:62px}.ticket-grid{grid-template-columns:1fr}}
-  </style>
 </head>
 <body>
-  <div class="page-shell">
-    <div class="game-topbar">
-      <a class="mini-link" href="../index.html">← Back to Hub</a>
-      <div class="badge-stack"><span class="small-badge live">● Live</span><span class="small-badge">Game 13</span><span class="small-badge">DL Stunt Gap Clicker</span></div>
+  <div class="game-shell">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="ghost-btn" href="../index.html">← Back to Hub</a>
+      </div>
+      <div class="topbar-right">
+        <span class="brand-badge">Perry Defensive Line</span>
+        <span class="brand-badge muted-badge">Game 1 — Helmet Key Reaction Trainer</span>
+      </div>
     </div>
-    <section id="startScreen" class="start-card">
-      <h1>Game 13 — DL Stunt Gap Clicker (OKIE)</h1>
-      <p>This one teaches OKIE stunt responsibility for the defensive line only. Read the call, identify call side or away side, and click your final gap responsibility. No backend. No coverage thinking. Just End, Nose, Tackle and the stunt.</p>
-      <div class="coach-note">Two-man surface only for now. Single Man / LB exchange pressures are saved for the next game. Questions and answer choices shuffle every run.</div>
-      <div class="name-row"><input id="playerName" type="text" placeholder="Player name" autocomplete="off" /><button class="btn" onclick="startGame()">Start Game</button></div>
+
+    <section id="startScreen" class="start-grid">
+      <div class="start-card">
+        <h2>Helmet Key Reaction Trainer</h2>
+        <p>
+          This is the foundation game. The player must identify what the key’s helmet does at the snap and react fast.
+          The goal is to remove hesitation and train immediate recognition.
+        </p>
+
+        <label class="input-label" for="playerName">Player Name</label>
+        <input id="playerName" class="text-input" type="text" maxlength="40" placeholder="Enter player name" />
+
+        <div class="btn-row" style="margin-top:16px;">
+          <button id="startBtn" class="btn">Start Game</button>
+        </div>
+
+        <div id="startError" class="error-box hidden"></div>
+      </div>
+
+      <div class="start-card">
+        <h2>Coach’s Rules</h2>
+        <ul class="coach-list">
+          <li>Don’t think. React.</li>
+          <li>Eyes on the helmet.</li>
+          <li>You are training instant recognition, not slow diagnosis.</li>
+          <li>Misses count. A corrected answer still counts as a miss on the run.</li>
+          <li>You must finish with a perfect run to earn the ticket.</li>
+        </ul>
+
+        <h2 style="margin-top:18px;">Directions</h2>
+        <ul class="instructions">
+          <li>Read the key cue.</li>
+          <li>Pick the correct helmet key immediately.</li>
+          <li>If you miss it, you will get coaching and must still choose the correct answer to move on.</li>
+          <li>Accuracy is based on first-click correctness.</li>
+        </ul>
+      </div>
     </section>
+
     <section id="gameScreen" class="hidden">
       <div class="hud-grid">
-        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div><div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div><div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div><div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div><div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div><div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
+        <div class="hud-box"><span class="hud-label">Player</span><span id="hudPlayer" class="hud-value">—</span></div>
+        <div class="hud-box"><span class="hud-label">Question</span><span id="hudProgress" class="hud-value">1 / 12</span></div>
+        <div class="hud-box"><span class="hud-label">Accuracy</span><span id="hudAccuracy" class="hud-value">100%</span></div>
+        <div class="hud-box"><span class="hud-label">Misses</span><span id="hudMisses" class="hud-value">0</span></div>
+        <div class="hud-box"><span class="hud-label">Runtime</span><span id="hudRuntime" class="hud-value">00:00</span></div>
+        <div class="hud-box"><span class="hud-label">Start Time</span><span id="hudStartTime" class="hud-value">—</span></div>
       </div>
-      <div class="gap-layout">
-        <div class="field-card"><div class="call-banner"><strong id="callTitle">OKIE RIP</strong><span class="call-note">Offense on top. Defense on bottom. Two-man surface only.</span></div>
-          <div class="game-board">
-            <div class="field-title">Offense</div><div id="strengthTag" class="strength-box">Strength: defensive right</div><div id="strongArea" class="strong-area right"></div><div class="hash-line hash-1"></div><div class="hash-line hash-2"></div>
-            <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div><div id="wrL2" class="skill wr-left-2 hidden-token">WR</div><div id="wrR1" class="skill wr-right-1">WR</div><div id="wrR2" class="skill wr-right-2">WR</div><div class="skill rb">RB</div><div class="skill qb">QB</div>
-            <div class="ol ot-l">OT</div><div class="ol g-l">G</div><div class="ol c">C</div><div class="ol g-r">G</div><div class="ol ot-r">OT</div><div class="los"></div><div class="los-label">Line of Scrimmage</div>
-            <div id="dlE" class="dl-token e-right">E</div><div id="dlN" class="dl-token n-zero">N</div><div id="dlT" class="dl-token t-left">T</div>
-            <div class="gap-row">
-              <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
-            </div>
-            <div class="def-label">Defense</div><div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
-          </div>
+
+      <div class="question-panel">
+        <div class="question-title-row">
+          <span class="question-kicker">Eyes on the Helmet</span>
+          <span id="timerPill" class="pill">Quick Reaction Window</span>
         </div>
-        <aside class="question-card"><div id="questionKicker" class="question-kicker">OKIE RIP • Strength: defensive right</div><h2 id="questionStem">Click your responsibility.</h2><p id="questionCopy">Read the call and click the correct gap.</p><div id="responsibilityBox" class="responsibility-box"></div><div id="mcAnswers" class="answer-grid hidden"></div><div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Correct</h3><p id="feedbackCopy">Good rep.</p></div></aside>
+        <h2 id="questionStem" class="question-stem"></h2>
+        <p id="questionCopy" class="question-copy"></p>
+
+        <div id="answerGrid" class="answer-grid"></div>
+
+        <div id="feedbackBox" class="feedback-box hidden">
+          <h3 id="feedbackTitle" class="feedback-title"></h3>
+          <p id="feedbackCopy" class="feedback-copy"></p>
+        </div>
+
+        <div id="gameError" class="error-box hidden"></div>
       </div>
     </section>
-    <section id="ticketScreen" class="ticket-card hidden"><h1>DL Stunt Gap Clicker Ticket</h1><p id="ticketMessage">Perfect run earned.</p><div id="ticketGrid" class="ticket-grid"></div><div class="name-row"><button class="btn" onclick="restartGame()">Restart for Another Attempt</button><a class="btn secondary-btn" href="../index.html">Back to Hub</a></div></section>
+
+    <section id="finishScreen" class="hidden">
+      <div class="ticket-box">
+        <h2>Completion Ticket</h2>
+        <p>
+          Screenshot this ticket after a perfect run. If there were misses on the run, the player must go back and beat it clean.
+        </p>
+
+        <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">End Time</span><span id="ticketEnd" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Runtime</span><span id="ticketRuntime" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Accuracy</span><span id="ticketAccuracy" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Misses</span><span id="ticketMisses" class="value">—</span></div>
+          <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
+        </div>
+
+        <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+
+        <div class="btn-row" style="margin-top:16px;">
+          <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
+          <a class="btn" href="../index.html">Back to Hub</a>
+        </div>
+      </div>
+    </section>
   </div>
-<script>
-const PLAYER_LABELS={E:'End',N:'Nose',T:'Tackle'};
-function sideGap(call,side,gap){const rip=call.includes('RIP');const callSide=rip?'R':'L';const awaySide=rip?'L':'R';return (side==='call'?callSide:awaySide)+gap;}
-function sideText(call,side){const rip=call.includes('RIP');const callSide=rip?'defensive right':'defensive left';const awaySide=rip?'defensive left':'defensive right';return side==='call'?callSide:awaySide;}
-const RAW_BANK=[
-{stunt:'New England',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'New England — You are the End to the call side. Click where you finish.',detail:'Two-man surface. Long stick across the tackle. Do not stay where you started.',coaching:'New England: End long sticks to the A gap on a two-man surface. Cross face and get there now.'},
-{stunt:'New England',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'New England — You are the End to the call side. Click where you finish.',detail:'Two-man surface. Long stick across the tackle. Do not stay where you started.',coaching:'New England: End long sticks to the A gap on a two-man surface. Cross face and get there now.'},
-{stunt:'Patriot',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'call',gap:'A',title:'Patriot — You are the Tackle tagged to long stick. Click your final gap.',detail:'Two-man surface. The Tackle is the long-stick player in this call.',coaching:'Patriot: Tackle long sticks to the A gap. Do not hang in the 4i.'},
-{stunt:'Patriot',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'call',gap:'A',title:'Patriot — You are the Tackle tagged to long stick. Click your final gap.',detail:'Two-man surface. The Tackle is the long-stick player in this call.',coaching:'Patriot: Tackle long sticks to the A gap. Do not hang in the 4i.'},
-{stunt:'Boston',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'Boston — You are the End. Mike clears B first. Click where you finish second.',detail:'Let the LB clear the B gap, then long stick tight to A.',coaching:'Boston: End is second. Allow the LB to clear B, then long stick to A.'},
-{stunt:'Boston',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'Boston — You are the End. Mike clears B first. Click where you finish second.',detail:'Let the LB clear the B gap, then long stick tight to A.',coaching:'Boston: End is second. Allow the LB to clear B, then long stick to A.'},
-{stunt:'Seattle',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'Seattle — You are the End. Click your long-stick finish.',detail:'Two-man surface. Your movement is inside, not contain.',coaching:'Seattle: End long sticks to A. Get across clean and do not get picked off.'},
-{stunt:'Slice',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'B',title:'Slice — You are the End. Click your BB responsibility.',detail:'BB means you are attacking B. Do not run to C. Do not drift to A.',coaching:'Slice: End is BB. BB equals B-gap rush. Hit it vertical.'},
-{stunt:'Mow',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'B',title:'Mow — You are the End. Click your B-gap rush.',detail:'This is not contain. You are tagged to hit B.',coaching:'Mow: End is BB / B-gap rush. Get vertical into B.'},
-{stunt:'Edge',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'call',gap:'B',title:'Edge — You are the tagged Tackle on a two-man surface. Click your responsibility.',detail:'Two-man surface rule: the DL answer is BB.',coaching:'Edge: for End/Tackle on a two-man surface, the rule is BB. BB equals B gap.'},
-{stunt:'Double Texas',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'C',title:'Double Texas — You are the End. Click your contain rush lane.',detail:'Your job is not to chase inside. You are keeping the rush outside.',coaching:'Double Texas: End/Tackle are contain rush outside. Contain means C-side edge responsibility.'},
-{stunt:'Mug Cut',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'away',gap:'C',title:'Mug Cut — You are the Tackle away from the call. Click your pass-rush contain lane.',detail:'Ends and tackles work for contain in this look.',coaching:'Mug Cut: End/Tackle work for contain. Stay outside and keep the QB boxed in.'},
-{stunt:'Mix',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'call',gap:'A',title:'Mix — You are the Tackle tagged to long stick. Click your finish.',detail:'Long stick means get all the way to A.',coaching:'Mix: Tackle long sticks to A gap. Do not stop in B.'},
-{stunt:'Storm',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'call',gap:'A',title:'Storm — You are the Tackle tagged to long stick. Click your final gap.',detail:'Tackle is the long-stick player in this stunt.',coaching:'Storm: Tackle long sticks to A. Tight path, violent finish.'},
-{stunt:'Tomahawk',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'C',title:'Tomahawk — You are the End. Click your contain / box responsibility.',detail:'You are not the inside stunt player. You are keeping the edge controlled.',coaching:'Tomahawk: End has C-gap control / box / contain. Keep the ball inside.'},
-{stunt:'New England',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'away',gap:'A',title:'New England — You are the Nose. Click the opposite A-gap movement.',detail:'The Nose crosses face to the opposite A gap. This is a tight interior movement.',coaching:'New England: Nose crosses face to the opposite A gap. Stay tight and do not create a crease.'},
-{stunt:'Mow',call:'OKIE LIZ',formation:'leftTwoDetached',player:'N',side:'away',gap:'A',title:'Mow — You are the Nose. Click the away-side A gap.',detail:'Nose is working away-side A control in this stunt family.',coaching:'Mow: Nose works the away-side A gap. Stay square and keep the middle from opening.'},
-{stunt:'Tomahawk',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'call',gap:'B',title:'Tomahawk — You are the Nose. Click the strong/call-side B gap.',detail:'This is a pressure movement responsibility. Do not sit at zero.',coaching:'Tomahawk: Nose works call-side B. Get vertical and fight pressure.'},
-{mode:'choice',stunt:'New England',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',title:'New England — End on a two-man surface. What does long stick mean?',detail:'This is a decision rep. Answers shuffle every time.',answers:[{text:'Cross face and finish in the A gap.',correct:true},{text:'Stay outside and contain in C.',correct:false},{text:'Sit in the 4i and read the back.',correct:false},{text:'Run behind the Nose and wait for the ball to declare.',correct:false}],coaching:'Long stick means you are not staying in your alignment. Cross face and get to A.'},
-{mode:'choice',stunt:'Slice',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',title:'Slice — End has BB. What does BB mean for the DL?',detail:'This is a decision rep. Answers shuffle every time.',answers:[{text:'Attack B gap vertically.',correct:true},{text:'Contain rush outside.',correct:false},{text:'Cross face all the way to A.',correct:false},{text:'Lag back to away-side A.',correct:false}],coaching:'BB equals B-gap rush. Hit the B gap now.'}
-];
-const BANK=RAW_BANK.map(q=>{if(q.mode==='choice')return Object.assign({strength:q.call.includes('RIP')?'defensive right':'defensive left'},q);const answer=sideGap(q.call,q.side,q.gap);const side=sideText(q.call,q.side);return Object.assign({},q,{answer:answer,strength:q.call.includes('RIP')?'defensive right':'defensive left',detail:q.detail+' Side: '+(q.side==='call'?'CALL SIDE':'AWAY SIDE')+' ('+side+').'});});
-let QUESTIONS=[],playerName='',currentIndex=0,correctCount=0,missCount=0,totalAttempts=0,attemptNumber=Number(localStorage.getItem('dlStuntGapClickerOkieAttempt')||'1'),startTime=null,locked=false;
-function byId(id){return document.getElementById(id)}function currentQuestion(){return QUESTIONS[currentIndex]}function shuffleArray(array){const copy=array.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
-function buildQuestionSet(){return shuffleArray(BANK).slice(0,14)}
-function startGame(){playerName=byId('playerName').value.trim();if(!playerName){alert('Type your name first.');return}QUESTIONS=buildQuestionSet();startTime=new Date();currentIndex=0;correctCount=0;missCount=0;totalAttempts=0;locked=false;byId('hudName').textContent=playerName;byId('hudAttempt').textContent=attemptNumber;byId('startScreen').classList.add('hidden');byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.remove('hidden');loadQuestion()}
-function restartGame(){attemptNumber+=1;localStorage.setItem('dlStuntGapClickerOkieAttempt',String(attemptNumber));byId('ticketScreen').classList.add('hidden');byId('startScreen').classList.remove('hidden');byId('gameScreen').classList.add('hidden')}
-function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length;byId('hudCorrect').textContent=correctCount;byId('hudMisses').textContent=missCount;const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);byId('hudAccuracy').textContent=accuracy+'%';byId('hudAttempt').textContent=attemptNumber}
-function loadQuestion(){locked=false;clearFeedback();const q=currentQuestion();applyFormation(q.formation,q.call,q.strength);showFront(q.call);highlightPlayer(q.player);byId('callTitle').textContent=q.call+' — '+q.stunt+' — '+PLAYER_LABELS[q.player];byId('questionKicker').textContent=q.call+' • '+q.stunt+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent=q.mode==='gap'?'Click the correct final gap on the board. Use CALL SIDE / AWAY SIDE from the defense’s perspective.':'Choose the correct coaching response. Answers are shuffled.';if(q.mode==='choice')renderChoices(q.answers);else byId('mcAnswers').classList.add('hidden');updateHud()}
-function applyFormation(formation,call,strength){const leftStrong=formation==='leftTwoDetached';byId('strongArea').className='strong-area '+(leftStrong?'left':'right');byId('strengthTag').textContent='Strength: '+strength;byId('wrL1').classList.toggle('hidden-token',!leftStrong);byId('wrL2').classList.toggle('hidden-token',!leftStrong);byId('wrR1').classList.toggle('hidden-token',leftStrong);byId('wrR2').classList.toggle('hidden-token',leftStrong)}
-function showFront(call){const rip=call.includes('RIP');byId('dlE').className='dl-token '+(rip?'e-right':'e-left');byId('dlN').className='dl-token n-zero';byId('dlT').className='dl-token '+(rip?'t-left':'t-right')}
-function highlightPlayer(player){['dlE','dlN','dlT'].forEach(id=>byId(id).classList.remove('active-player'));if(player==='E')byId('dlE').classList.add('active-player');if(player==='N')byId('dlN').classList.add('active-player');if(player==='T')byId('dlT').classList.add('active-player')}
-function selectGap(gap){if(locked)return;const q=currentQuestion();if(q.mode!=='gap')return;totalAttempts+=1;const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]');if(gap===q.answer){correctCount+=1;locked=true;if(zone)zone.classList.add('correct-zone');showFeedback('Correct — that is your stunt job.',q.coaching,true);updateHud();setTimeout(nextQuestion,5000)}else{missCount+=1;if(zone)zone.classList.add('wrong-zone');showFeedback('Not it.','Do not click where the ball looks pretty. Click your final gap from the stunt, call side/away side, and player.',false);updateHud()}}
-function renderChoices(answers){const grid=byId('mcAnswers');grid.innerHTML='';grid.classList.remove('hidden');shuffleArray(answers).forEach((answer,index)=>{const button=document.createElement('button');button.className='answer-btn';button.innerHTML='<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text;button.onclick=function(){chooseAnswer(button,answer)};grid.appendChild(button)})}
-function chooseAnswer(button,answer){if(locked)return;const q=currentQuestion();totalAttempts+=1;if(answer.correct){correctCount+=1;locked=true;button.classList.add('correct');document.querySelectorAll('.answer-btn').forEach(btn=>btn.classList.add('disabled'));showFeedback('Correct — that is the reaction.',q.coaching,true);updateHud();setTimeout(nextQuestion,5000)}else{missCount+=1;button.classList.add('incorrect');button.classList.add('disabled');showFeedback('Not it.','Use the stunt language: long stick, BB, contain, call side, away side. Do not guess off the ball path.',false);updateHud()}}
-function showFeedback(title,copy,isCorrect){byId('feedbackTitle').textContent=title;byId('feedbackCopy').textContent=copy;byId('feedbackBox').classList.remove('hidden');byId('feedbackBox').style.borderColor=isCorrect?'rgba(52,211,153,0.6)':'rgba(255,107,107,0.6)'}
-function clearFeedback(){byId('feedbackBox').classList.add('hidden');byId('mcAnswers').classList.add('hidden');document.querySelectorAll('.gap-zone').forEach(zone=>zone.classList.remove('correct-zone','wrong-zone'))}
-function nextQuestion(){currentIndex+=1;if(currentIndex>=QUESTIONS.length)finishGame();else loadQuestion()}
-function finishGame(){byId('gameScreen').classList.add('hidden');byId('ticketScreen').classList.remove('hidden');byId('ticketMessage').textContent=missCount>0?'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.':'Perfect run earned. Screenshot or print this ticket.';const endTime=new Date();const elapsedSeconds=Math.round((endTime-startTime)/1000);const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);const result=missCount===0?'TICKET EARNED':'REPLAY REQUIRED';const items=[['Player',playerName],['Game','Game 13 — DL Stunt Gap Clicker (OKIE)'],['Date',endTime.toLocaleDateString()],['Start Time',startTime.toLocaleTimeString()],['End Time',endTime.toLocaleTimeString()],['Runtime',elapsedSeconds+' seconds'],['Correct First-Time Answers',correctCount+' / '+QUESTIONS.length],['Misses',missCount],['Accuracy',accuracy+'%'],['Attempt',attemptNumber],['Result',result]];byId('ticketGrid').innerHTML=items.map(item=>'<div class="ticket-item"><span class="label">'+item[0]+'</span><span class="value">'+item[1]+'</span></div>').join('')}
-</script>
+
+  <script>
+    const QUESTION_BANK = [
+      {
+        id: 1,
+        stem: 'Your key’s helmet and shoulders move down inside at the snap.',
+        copy: 'Call the helmet key immediately.',
+        correct: 'Down',
+        hint: 'He is going down inside. Do not overcomplicate it.',
+        explanation: 'That is Down. Down means the offensive lineman’s helmet and shoulders move down inside at the snap.'
+      },
+      {
+        id: 2,
+        stem: 'You get a clear pass set look. Helmet rises and the blocker shows high shoulders.',
+        copy: 'What helmet key is it?',
+        correct: 'High Hat',
+        hint: 'Pass posture. Helmet rises. Shoulders come up.',
+        explanation: 'That is High Hat. High Hat tells you pass set, and now you transition immediately into your pass rush.'
+      },
+      {
+        id: 3,
+        stem: 'The key pulls away from your alignment.',
+        copy: 'Identify the helmet key.',
+        correct: 'Pull',
+        hint: 'When the key leaves and pulls away, label it for what it is.',
+        explanation: 'That is Pull. In your system, key pull away is treated like down with no puller for the reaction piece.'
+      },
+      {
+        id: 4,
+        stem: 'The hat and numbers come directly toward you.',
+        copy: 'What is the helmet key?',
+        correct: 'Base',
+        hint: 'The blocker is coming directly at you. This is not lateral zone movement.',
+        explanation: 'That is Base. Hat and numbers coming directly toward you is a base block look.'
+      },
+      {
+        id: 5,
+        stem: 'At the snap, the blocker’s helmet drops inside.',
+        copy: 'Which key are your eyes reading?',
+        correct: 'Down',
+        hint: 'Eyes on the helmet. It went down inside.',
+        explanation: 'That is Down. Your eyes should identify that movement immediately so your body can react.'
+      },
+      {
+        id: 6,
+        stem: 'The blocker rises into pass posture. No low hat. No lateral movement. Just pass demeanor.',
+        copy: 'Name the key.',
+        correct: 'High Hat',
+        hint: 'This is your pass read.',
+        explanation: 'That is High Hat. High Hat means you engage fully in your pass rush.'
+      },
+      {
+        id: 7,
+        stem: 'The offensive lineman leaves your area and pulls away from you across the formation.',
+        copy: 'What is the key?',
+        correct: 'Pull',
+        hint: 'He is not staying. He is leaving.',
+        explanation: 'That is Pull. In the trainer, key pull away is recognized fast and handled like a down with no puller.'
+      },
+      {
+        id: 8,
+        stem: 'The blocker works laterally toward you, attempting to gain leverage.',
+        copy: 'Identify the helmet key.',
+        correct: 'Zone',
+        hint: 'This is a lateral stretch look. The blocker is trying to reach or gain leverage.',
+        explanation: 'That is Zone. Lateral movement toward you is a zone look, not base.'
+      },
+      {
+        id: 9,
+        stem: 'The key’s helmet and shoulders vanish down inside right off the snap.',
+        copy: 'Which read is that?',
+        correct: 'Down',
+        hint: 'Down inside equals one answer.',
+        explanation: 'That is Down. This is one of the core helmet keys in the system.'
+      },
+      {
+        id: 10,
+        stem: 'The blocker immediately shows a true pass set with high shoulders and high helmet.',
+        copy: 'What helmet key is that?',
+        correct: 'High Hat',
+        hint: 'High shoulders, pass demeanor.',
+        explanation: 'That is High Hat. Read it and rush it.'
+      },
+      {
+        id: 11,
+        stem: 'The hat leaves your frame and pulls away, giving you that key-pull-away picture.',
+        copy: 'Name the key.',
+        correct: 'Pull',
+        hint: 'This one is leaving your frame.',
+        explanation: 'That is Pull. Your system treats this with the same immediate body reaction family as down with no puller.'
+      },
+      {
+        id: 12,
+        stem: 'The key widens and brings outside hat pressure into your leverage space.',
+        copy: 'What helmet key is it?',
+        correct: 'Zone',
+        hint: 'Outside hat pressure with lateral movement is zone.',
+        explanation: 'That is Zone. Recognize it fast so your body can get to the right block reaction mechanics.'
+      }
+    ];
+
+    const ANSWER_OPTIONS = ['Down', 'Base', 'Zone', 'Pull', 'High Hat'];
+    const EXPLANATION_DELAY_MS = 4200;
+
+    const state = {
+      playerName: '',
+      startDate: null,
+      endDate: null,
+      currentIndex: 0,
+      questions: [],
+      misses: 0,
+      correctFirstTry: 0,
+      answered: false,
+      started: false,
+      timerId: null,
+      runtimeSeconds: 0
+    };
+
+    const els = {
+      startScreen: document.getElementById('startScreen'),
+      gameScreen: document.getElementById('gameScreen'),
+      finishScreen: document.getElementById('finishScreen'),
+      playerName: document.getElementById('playerName'),
+      startBtn: document.getElementById('startBtn'),
+      restartBtn: document.getElementById('restartBtn'),
+      startError: document.getElementById('startError'),
+      gameError: document.getElementById('gameError'),
+      hudPlayer: document.getElementById('hudPlayer'),
+      hudProgress: document.getElementById('hudProgress'),
+      hudAccuracy: document.getElementById('hudAccuracy'),
+      hudMisses: document.getElementById('hudMisses'),
+      hudRuntime: document.getElementById('hudRuntime'),
+      hudStartTime: document.getElementById('hudStartTime'),
+      timerPill: document.getElementById('timerPill'),
+      questionStem: document.getElementById('questionStem'),
+      questionCopy: document.getElementById('questionCopy'),
+      answerGrid: document.getElementById('answerGrid'),
+      feedbackBox: document.getElementById('feedbackBox'),
+      feedbackTitle: document.getElementById('feedbackTitle'),
+      feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketName: document.getElementById('ticketName'),
+      ticketDate: document.getElementById('ticketDate'),
+      ticketStart: document.getElementById('ticketStart'),
+      ticketEnd: document.getElementById('ticketEnd'),
+      ticketRuntime: document.getElementById('ticketRuntime'),
+      ticketAccuracy: document.getElementById('ticketAccuracy'),
+      ticketMisses: document.getElementById('ticketMisses'),
+      ticketResult: document.getElementById('ticketResult'),
+      finishMessage: document.getElementById('finishMessage')
+    };
+
+    function formatTime(date) {
+      return new Intl.DateTimeFormat([], {
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit'
+      }).format(date);
+    }
+
+    function formatDate(date) {
+      return new Intl.DateTimeFormat([], {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(date);
+    }
+
+    function formatRuntime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const secs = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function shuffle(array) {
+      const clone = [...array];
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone;
+    }
+
+    function buildQuestions() {
+      return shuffle(QUESTION_BANK).map(q => ({
+        ...q,
+        options: shuffle(ANSWER_OPTIONS)
+      }));
+    }
+
+    function setError(target, message) {
+      target.textContent = message;
+      target.classList.remove('hidden');
+    }
+
+    function clearError(target) {
+      target.textContent = '';
+      target.classList.add('hidden');
+    }
+
+    function startRuntimeClock() {
+      clearInterval(state.timerId);
+      state.timerId = setInterval(() => {
+        state.runtimeSeconds += 1;
+        els.hudRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      }, 1000);
+    }
+
+    function stopRuntimeClock() {
+      clearInterval(state.timerId);
+      state.timerId = null;
+    }
+
+    function updateHud() {
+      const attempted = state.currentIndex;
+      const accuracy = attempted === 0 ? 100 : Math.round((state.correctFirstTry / attempted) * 100);
+      els.hudPlayer.textContent = state.playerName;
+      els.hudProgress.textContent = `${Math.min(state.currentIndex + 1, state.questions.length)} / ${state.questions.length}`;
+      els.hudAccuracy.textContent = `${accuracy}%`;
+      els.hudMisses.textContent = String(state.misses);
+      els.hudRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      els.hudStartTime.textContent = formatTime(state.startDate);
+    }
+
+    function showFeedback(title, copy) {
+      els.feedbackTitle.textContent = title;
+      els.feedbackCopy.textContent = copy;
+      els.feedbackBox.classList.remove('hidden');
+    }
+
+    function clearFeedback() {
+      els.feedbackTitle.textContent = '';
+      els.feedbackCopy.textContent = '';
+      els.feedbackBox.classList.add('hidden');
+    }
+
+    function renderQuestion() {
+      clearError(els.gameError);
+      clearFeedback();
+
+      const q = state.questions[state.currentIndex];
+      state.answered = false;
+      updateHud();
+      els.questionStem.textContent = q.stem;
+      els.questionCopy.textContent = q.copy;
+      els.timerPill.textContent = 'Read Fast. React Fast.';
+      els.answerGrid.innerHTML = '';
+
+      q.options.forEach((option, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + idx)}</span><span>${option}</span>`;
+        btn.addEventListener('click', () => handleAnswer(option, btn));
+        els.answerGrid.appendChild(btn);
+      });
+    }
+
+    function enableRemainingAnswers() {
+      [...els.answerGrid.querySelectorAll('.answer-btn')].forEach(btn => {
+        if (!btn.classList.contains('correct')) {
+          btn.disabled = false;
+          btn.classList.remove('disabled');
+        }
+      });
+    }
+
+    function handleAnswer(option, btnEl) {
+      try {
+        if (!state.started) return;
+        const q = state.questions[state.currentIndex];
+        const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
+
+        if (option === q.correct) {
+          if (!state.answered) {
+            state.correctFirstTry += 1;
+          }
+          state.answered = true;
+          btnEl.classList.add('correct');
+          buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+          });
+          showFeedback('Correct — now train the language.', q.explanation);
+          updateHud();
+          setTimeout(() => {
+            state.currentIndex += 1;
+            if (state.currentIndex >= state.questions.length) {
+              finishGame();
+            } else {
+              renderQuestion();
+            }
+          }, EXPLANATION_DELAY_MS);
+        } else {
+          if (!state.answered) {
+            state.answered = true;
+            state.misses += 1;
+          }
+          btnEl.classList.add('incorrect');
+          btnEl.disabled = true;
+          btnEl.classList.add('disabled');
+          showFeedback('Miss — coach it and get it right.', `${q.hint} You still must choose the correct answer to move on.`);
+          updateHud();
+          enableRemainingAnswers();
+        }
+      } catch (err) {
+        setError(els.gameError, `Game error: ${err.message}`);
+      }
+    }
+
+    function finishGame() {
+      stopRuntimeClock();
+      state.endDate = new Date();
+      const attempted = state.questions.length;
+      const accuracy = Math.round((state.correctFirstTry / attempted) * 100);
+      const perfect = state.misses === 0;
+
+      els.gameScreen.classList.add('hidden');
+      els.finishScreen.classList.remove('hidden');
+
+      els.ticketName.textContent = state.playerName;
+      els.ticketDate.textContent = formatDate(state.endDate);
+      els.ticketStart.textContent = formatTime(state.startDate);
+      els.ticketEnd.textContent = formatTime(state.endDate);
+      els.ticketRuntime.textContent = formatRuntime(state.runtimeSeconds);
+      els.ticketAccuracy.textContent = `${accuracy}%`;
+      els.ticketMisses.textContent = String(state.misses);
+      els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
+
+      els.finishMessage.innerHTML = perfect
+        ? `<h3 class="feedback-title">Perfect. That is the standard.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the game, but misses were recorded on the run. Restart and beat it clean.</p>`;
+    }
+
+    function hardReset() {
+      stopRuntimeClock();
+      state.playerName = '';
+      state.startDate = null;
+      state.endDate = null;
+      state.currentIndex = 0;
+      state.questions = [];
+      state.misses = 0;
+      state.correctFirstTry = 0;
+      state.answered = false;
+      state.started = false;
+      state.runtimeSeconds = 0;
+      els.playerName.value = '';
+      clearError(els.startError);
+      clearError(els.gameError);
+      clearFeedback();
+      els.finishScreen.classList.add('hidden');
+      els.gameScreen.classList.add('hidden');
+      els.startScreen.classList.remove('hidden');
+    }
+
+    function startGame() {
+      const name = els.playerName.value.trim();
+      clearError(els.startError);
+      if (!name) {
+        setError(els.startError, 'Enter a player name before starting.');
+        return;
+      }
+
+      state.playerName = name;
+      state.startDate = new Date();
+      state.endDate = null;
+      state.currentIndex = 0;
+      state.questions = buildQuestions();
+      state.misses = 0;
+      state.correctFirstTry = 0;
+      state.answered = false;
+      state.started = true;
+      state.runtimeSeconds = 0;
+
+      els.startScreen.classList.add('hidden');
+      els.finishScreen.classList.add('hidden');
+      els.gameScreen.classList.remove('hidden');
+      startRuntimeClock();
+      renderQuestion();
+    }
+
+    window.addEventListener('error', (event) => {
+      const msg = event?.error?.message || event.message || 'Unknown error';
+      setError(els.gameError, `Unhandled error: ${msg}`);
+    });
+
+    els.startBtn.addEventListener('click', startGame);
+    els.restartBtn.addEventListener('click', hardReset);
+    els.playerName.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startGame();
+    });
+  </script>
 </body>
 </html>
