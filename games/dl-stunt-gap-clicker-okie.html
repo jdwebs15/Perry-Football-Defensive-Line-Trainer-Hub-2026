@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="../styles.css" />
   <style>
     :root {
+      --board-blue: #10213a;
+      --panel-blue: #152744;
+      --line: rgba(255,255,255,0.22);
       --gold: #ffd166;
       --green: #34d399;
       --red: #ff6b6b;
@@ -23,7 +26,7 @@
     .small-badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
     .small-badge.live{color:#d7fff0;background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.42)}
 
-    .start-card,.ticket-card{max-width:920px;margin:0 auto;background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
+    .start-card,.ticket-card{max-width:880px;margin:0 auto;background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
     .start-card h1,.ticket-card h1{margin-bottom:10px}.start-card p,.ticket-card p{color:var(--muted);line-height:1.55}
     .name-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.name-row input{flex:1 1 280px;min-width:240px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;font-weight:800;outline:none}
     .coach-note{margin-top:18px;padding:14px;border-radius:16px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.25);color:#fff0bf;font-weight:760;line-height:1.5}
@@ -35,36 +38,17 @@
 
     .gap-layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);gap:14px}
     .field-card,.question-card{background:linear-gradient(180deg,rgba(21,39,68,.95),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 18px 45px rgba(0,0,0,.28);overflow:hidden}
-    .call-banner{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .call-banner strong{color:#fff;letter-spacing:.03em}.call-note{color:var(--muted);font-size:.82rem;font-weight:750}.question-card{padding:18px}
+    .call-banner{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.call-banner strong{color:#fff;letter-spacing:.03em}.call-note{color:var(--muted);font-size:.82rem;font-weight:750}.question-card{padding:18px}
+    .game-board{position:relative;min-height:470px;background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at top,rgba(59,130,246,.13),transparent 55%),rgba(7,16,31,.8);background-size:72px 72px,72px 72px,100% 100%,100% 100%;overflow:hidden}
+    .field-title{position:absolute;top:13px;left:16px;color:#c7d2fe;font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.strength-box{position:absolute;top:22px;right:18px;z-index:7;padding:8px 12px;border-radius:999px;background:rgba(20,184,166,.18);border:1px solid rgba(45,212,191,.45);color:#ccfbf1;font-size:.76rem;font-weight:950}.strong-area{position:absolute;top:42px;width:27%;height:126px;border:2px solid rgba(45,212,191,.25);background:rgba(45,212,191,.08);border-radius:18px}.strong-area.left{left:7%}.strong-area.right{right:7%}.hash-line{position:absolute;top:0;bottom:0;width:1px;border-left:1px dashed rgba(255,255,255,.16)}.hash-1{left:33.33%}.hash-2{left:66.66%}.los{position:absolute;left:8%;right:8%;top:49%;height:3px;background:rgba(255,255,255,.62);box-shadow:0 0 10px rgba(255,255,255,.15)}.los-label{position:absolute;left:50%;top:51%;transform:translateX(-50%);color:#dbeafe;font-size:.72rem;font-weight:950;letter-spacing:.06em}
+    .ol,.skill,.dl-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5}.ol{width:46px;height:34px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#f8fafc;font-size:.8rem}.skill{width:42px;height:30px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.75rem}.dl-token{width:43px;height:34px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.9rem}.dl-token.active-player{background:linear-gradient(180deg,#ffd166,#f59e0b);color:#111827;transform:translate(-50%,-50%) scale(1.12);box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);z-index:8}.dl-ghost{position:absolute;width:43px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:950;font-size:.9rem;color:#0f172a;background:linear-gradient(180deg,#fff7ed,#fbbf24);border:2px solid #fff;box-shadow:0 0 0 6px rgba(255,209,102,.12),0 16px 30px rgba(0,0,0,.38);z-index:13;pointer-events:none;transform:translate(-50%,-50%)}
+    .wr-left-1{left:11%;top:23%}.wr-left-2{left:23%;top:19%}.wr-right-1{left:89%;top:23%}.wr-right-2{left:77%;top:19%}.rb{left:50%;top:18%}.qb{left:50%;top:28%}.ot-l{left:30%;top:39%}.g-l{left:40%;top:39%}.c{left:50%;top:39%}.g-r{left:60%;top:39%}.ot-r{left:70%;top:39%}.e-left{left:36%;top:63%}.n-zero{left:50%;top:63%}.t-right{left:64%;top:63%}.e-right{left:64%;top:63%}.t-left{left:36%;top:63%}.hidden-token{display:none!important}
+    .gap-row{position:absolute;left:7%;right:7%;top:71%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6}.gap-zone{min-height:72px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;cursor:pointer;user-select:none;transition:transform .15s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease}.gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13);box-shadow:0 0 0 4px rgba(255,209,102,.08)}.gap-zone strong{font-size:1rem;letter-spacing:.02em}.gap-zone span{font-size:.7rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.07em}.gap-zone.correct-zone{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22);box-shadow:0 0 0 5px rgba(52,211,153,.12),inset 0 0 22px rgba(52,211,153,.1)}.gap-zone.wrong-zone{border-color:rgba(255,107,107,.92);background:rgba(255,107,107,.2);animation:shake .22s linear 2}@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}.def-label{position:absolute;left:15px;bottom:13px;z-index:5;color:var(--muted);font-size:.74rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.def-left-right{position:absolute;right:15px;bottom:13px;z-index:5;color:var(--gold);font-size:.78rem;font-weight:950;text-align:right}
 
-    .game-board{position:relative;min-height:500px;background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at top,rgba(59,130,246,.13),transparent 55%),rgba(7,16,31,.8);background-size:72px 72px,72px 72px,100% 100%,100% 100%;overflow:hidden}
-    .field-title{position:absolute;top:13px;left:16px;color:#c7d2fe;font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
-    .strength-box{position:absolute;top:22px;right:18px;z-index:7;padding:8px 12px;border-radius:999px;background:rgba(20,184,166,.18);border:1px solid rgba(45,212,191,.45);color:#ccfbf1;font-size:.76rem;font-weight:950}
-    .strong-area{position:absolute;top:42px;width:27%;height:126px;border:2px solid rgba(45,212,191,.25);background:rgba(45,212,191,.08);border-radius:18px}.strong-area.left{left:7%}.strong-area.right{right:7%}
-    .hash-line{position:absolute;top:0;bottom:0;width:1px;border-left:1px dashed rgba(255,255,255,.16)}.hash-1{left:33.33%}.hash-2{left:66.66%}
-    .los{position:absolute;left:8%;right:8%;top:49%;height:3px;background:rgba(255,255,255,.62);box-shadow:0 0 10px rgba(255,255,255,.15)}.los-label{position:absolute;left:50%;top:51%;transform:translateX(-50%);color:#dbeafe;font-size:.72rem;font-weight:950;letter-spacing:.06em}
+    .stunt-svg{position:absolute;inset:0;width:100%;height:100%;z-index:11;pointer-events:none;overflow:visible}.stunt-path{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px rgba(255,255,255,.28));stroke-dasharray:800;stroke-dashoffset:800;animation:drawPath var(--path-speed,1100ms) ease-out forwards}.stunt-path.path-A{stroke:var(--blue-a)}.stunt-path.path-B{stroke:var(--red-b)}.stunt-path.path-C{stroke:var(--gold-c)}.trail-dot{position:absolute;width:10px;height:10px;border-radius:999px;z-index:12;pointer-events:none;opacity:0;box-shadow:0 0 14px currentColor;animation:trailPulse 1.8s ease-out forwards}@keyframes trailPulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}25%{opacity:.85}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45)}}
+    .field-target-pulse{position:absolute;width:34px;height:34px;border-radius:999px;border:3px solid currentColor;background:rgba(255,255,255,.06);z-index:12;pointer-events:none;transform:translate(-50%,-50%);box-shadow:0 0 18px currentColor;animation:targetPulse 1.8s ease-out forwards}@keyframes targetPulse{0%{opacity:.15;transform:translate(-50%,-50%) scale(.5)}35%{opacity:.95;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.55)}}
     .path-legend{position:absolute;left:16px;top:43px;z-index:7;display:flex;gap:8px;flex-wrap:wrap}.path-pill{font-size:.68rem;font-weight:950;border-radius:999px;padding:5px 8px;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.18);text-transform:uppercase;letter-spacing:.06em}.path-pill.a{color:#dbeafe}.path-pill.b{color:#ffe4e6}.path-pill.c{color:#fef3c7}
-
-    .ol,.skill,.dl-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5}
-    .ol{width:46px;height:34px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#f8fafc;font-size:.8rem}.skill{width:42px;height:30px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.75rem}
-    .dl-token{width:43px;height:34px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.9rem}
-    .dl-token.active-player{background:linear-gradient(180deg,#ffd166,#f59e0b);color:#111827;transform:translate(-50%,-50%) scale(1.12);box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);z-index:8}
-    .dl-ghost{position:absolute;width:43px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:950;font-size:.9rem;color:#0f172a;background:linear-gradient(180deg,#fff7ed,#fbbf24);border:2px solid #fff;box-shadow:0 0 0 6px rgba(255,209,102,.12),0 16px 30px rgba(0,0,0,.38);z-index:13;pointer-events:none;transform:translate(-50%,-50%)}
-
-    .wr-left-1{left:11%;top:23%}.wr-left-2{left:23%;top:19%}.wr-right-1{left:89%;top:23%}.wr-right-2{left:77%;top:19%}.rb{left:50%;top:18%}.qb{left:50%;top:28%}.ot-l{left:30%;top:39%}.g-l{left:40%;top:39%}.c{left:50%;top:39%}.g-r{left:60%;top:39%}.ot-r{left:70%;top:39%}
-    .e-5-left{left:26%;top:63%}.e-5-right{left:74%;top:63%}.n-shade-left{left:47%;top:63%}.n-shade-right{left:53%;top:63%}.t-4i-left{left:36%;top:63%}.t-4i-right{left:64%;top:63%}.hidden-token{display:none!important}
-
-    .gap-row{position:absolute;left:7%;right:7%;top:72%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6}
-    .gap-zone{min-height:72px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;cursor:pointer;user-select:none;transition:transform .15s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease}
-    .gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13);box-shadow:0 0 0 4px rgba(255,209,102,.08)}.gap-zone strong{font-size:1rem;letter-spacing:.02em}.gap-zone span{font-size:.7rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.07em}
-    .gap-zone.correct-zone{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22);box-shadow:0 0 0 5px rgba(52,211,153,.12),inset 0 0 22px rgba(52,211,153,.1)}.gap-zone.wrong-zone{border-color:rgba(255,107,107,.92);background:rgba(255,107,107,.2);animation:shake .22s linear 2}@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
-    .def-label{position:absolute;left:15px;bottom:13px;z-index:5;color:var(--muted);font-size:.74rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.def-left-right{position:absolute;right:15px;bottom:13px;z-index:5;color:var(--gold);font-size:.78rem;font-weight:950;text-align:right}
-
-    .stunt-svg{position:absolute;inset:0;width:100%;height:100%;z-index:11;pointer-events:none;overflow:visible}.stunt-path{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px rgba(255,255,255,.28));stroke-dasharray:800;stroke-dashoffset:800;animation:drawPath var(--path-speed,1100ms) ease-out forwards}.stunt-path.path-A{stroke:var(--blue-a)}.stunt-path.path-B{stroke:var(--red-b)}.stunt-path.path-C{stroke:var(--gold-c)}@keyframes drawPath{to{stroke-dashoffset:0}}
-    .trail-dot{position:absolute;width:10px;height:10px;border-radius:999px;z-index:12;pointer-events:none;opacity:0;box-shadow:0 0 14px currentColor;animation:trailPulse 1.8s ease-out forwards}@keyframes trailPulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}25%{opacity:.85}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45)}}
-
-    .question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px}.question-card h2{font-size:1.42rem;margin-bottom:8px;color:white}.question-card p{color:var(--muted);line-height:1.5}.responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45}.answer-grid{display:grid;gap:10px;margin-top:14px}.answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800;line-height:1.35;transition:transform .15s ease,border-color .15s ease,background .15s ease}.answer-btn:hover{transform:translateY(-2px);border-color:rgba(255,209,102,.5)}.answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2)}.answer-btn.incorrect{border-color:rgba(255,107,107,.85);background:rgba(255,107,107,.18)}.answer-btn.disabled{pointer-events:none;opacity:.78}.choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950}.feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}.feedback-box h3{margin-bottom:4px;color:white}.feedback-box p{color:var(--muted)}.ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900;letter-spacing:.06em}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px}.secondary-btn{background:rgba(255,255,255,.1)!important;color:white!important}
+    .question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px}.question-card h2{font-size:1.42rem;margin-bottom:8px;color:white}.question-card p{color:var(--muted);line-height:1.5}.responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45}.answer-grid{display:grid;gap:10px;margin-top:14px}.answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800;line-height:1.35;transition:transform .15s ease,border-color .15s ease,background .15s ease}.answer-btn:hover{transform:translateY(-2px);border-color:rgba(255,209,102,.5)}.answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2)}.answer-btn.incorrect{border-color:rgba(255,107,107,.85);background:rgba(255,107,107,.18)}.answer-btn.disabled{pointer-events:none;opacity:.78}.choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950}.feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}.feedback-box h3{margin-bottom:4px;color:white}.feedback-box p{color:var(--muted)}.ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900;letter-spacing:.06em}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px}.btn{border:0}.secondary-btn{background:rgba(255,255,255,.1)!important;color:white!important}.danger-text{color:#fecaca!important}
     @media(max-width:980px){.gap-layout{grid-template-columns:1fr}.hud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gap-row{gap:6px;grid-template-columns:repeat(3,minmax(72px,1fr));top:69%}.gap-zone{min-height:62px}.ticket-grid{grid-template-columns:1fr}}
   </style>
 </head>
@@ -72,30 +56,23 @@
   <div class="page-shell">
     <div class="game-topbar">
       <a class="mini-link" href="../index.html">← Back to Hub</a>
-      <div class="badge-stack"><span class="small-badge live">● Live</span><span class="small-badge">Game 13</span><span class="small-badge">DL Stunt Gap Clicker</span></div>
+      <div class="badge-stack"><span class="small-badge live">● Live</span><span class="small-badge">Game 13</span><span class="small-badge">Animated Stunts</span></div>
     </div>
 
     <section id="startScreen" class="start-card">
       <h1>Game 13 — DL Stunt Gap Clicker (OKIE)</h1>
-      <p>This game teaches OKIE stunt responsibility for the defensive line only. Read the call, identify call side or away side, and click your final gap responsibility. No backend. No coverage thinking. Just End, Nose, Tackle and the stunt.</p>
-      <div class="coach-note">OKIE stunt alignment: Nose shaded to the strength, End in a 5 to the strength, and Tackle in a weak 4i. Two-man surface only for now. Single Man / LB exchange pressures are saved for the next game.</div>
-      <div class="name-row"><input id="playerName" type="text" placeholder="Player name" autocomplete="off" /><button class="btn" type="button" onclick="startGame()">Start Game</button></div>
+      <p>This teaches OKIE stunt responsibility for the defensive line only. Read the call, identify call side or away side, and click your final gap responsibility. No backend. No coverage thinking. Just End, Nose, Tackle and the stunt.</p>
+      <div class="coach-note">Two-man surface only for now. Correct reps now show stunt-sheet style arrows: A-gap paths are blue, B-gap paths are red, C/contain paths are gold. Some stunts show related DL movement so players can see the full stunt picture.</div>
+      <div class="name-row"><input id="playerName" type="text" placeholder="Player name" autocomplete="off" /><button class="btn" onclick="startGame()">Start Game</button></div>
     </section>
 
     <section id="gameScreen" class="hidden">
       <div class="hud-grid">
-        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div>
-        <div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div>
-        <div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div>
-        <div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div>
-        <div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div>
-        <div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
+        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div><div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div><div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div><div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div><div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div><div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
       </div>
-
       <div class="gap-layout">
-        <div class="field-card">
-          <div class="call-banner"><strong id="callTitle">OKIE RIP</strong><span class="call-note">Offense on top. Defense on bottom. Strength sets the OKIE stunt shade.</span></div>
-          <div id="gameBoard" class="game-board">
+        <div class="field-card"><div class="call-banner"><strong id="callTitle">OKIE RIP</strong><span class="call-note">Offense on top. Defense on bottom. Two-man surface only.</span></div>
+          <div class="game-board" id="gameBoard">
             <svg id="stuntSvg" class="stunt-svg" aria-hidden="true">
               <defs>
                 <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa"></path></marker>
@@ -103,33 +80,21 @@
                 <marker id="arrowC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24"></path></marker>
               </defs>
             </svg>
-            <div class="field-title">Offense</div>
-            <div class="path-legend"><span class="path-pill a">A = blue</span><span class="path-pill b">B = red</span><span class="path-pill c">C = gold</span></div>
-            <div id="strengthTag" class="strength-box">Strength: defensive right</div>
-            <div id="strongArea" class="strong-area right"></div>
-            <div class="hash-line hash-1"></div><div class="hash-line hash-2"></div>
+            <div class="field-title">Offense</div><div class="path-legend"><span class="path-pill a">Blue = A</span><span class="path-pill b">Red = B</span><span class="path-pill c">Gold = C / contain</span></div><div id="strengthTag" class="strength-box">Strength: defensive right</div><div id="strongArea" class="strong-area right"></div><div class="hash-line hash-1"></div><div class="hash-line hash-2"></div>
             <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div><div id="wrL2" class="skill wr-left-2 hidden-token">WR</div><div id="wrR1" class="skill wr-right-1">WR</div><div id="wrR2" class="skill wr-right-2">WR</div><div class="skill rb">RB</div><div class="skill qb">QB</div>
             <div class="ol ot-l">OT</div><div class="ol g-l">G</div><div class="ol c">C</div><div class="ol g-r">G</div><div class="ol ot-r">OT</div><div class="los"></div><div class="los-label">Line of Scrimmage</div>
-            <div id="dlE" class="dl-token e-5-right">E</div><div id="dlN" class="dl-token n-shade-right">N</div><div id="dlT" class="dl-token t-4i-left">T</div>
+            <div id="dlE" class="dl-token e-right">E</div><div id="dlN" class="dl-token n-zero">N</div><div id="dlT" class="dl-token t-left">T</div>
             <div class="gap-row">
               <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
             </div>
             <div class="def-label">Defense</div><div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
           </div>
         </div>
-
-        <aside class="question-card">
-          <div id="questionKicker" class="question-kicker">OKIE RIP • Strength: defensive right</div>
-          <h2 id="questionStem">Click your responsibility.</h2>
-          <p id="questionCopy">Read the call and click the correct gap.</p>
-          <div id="responsibilityBox" class="responsibility-box"></div>
-          <div id="mcAnswers" class="answer-grid hidden"></div>
-          <div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Correct</h3><p id="feedbackCopy">Good rep.</p></div>
-        </aside>
+        <aside class="question-card"><div id="questionKicker" class="question-kicker">OKIE RIP • Strength: defensive right</div><h2 id="questionStem">Click your responsibility.</h2><p id="questionCopy">Read the call and click the correct gap.</p><div id="responsibilityBox" class="responsibility-box"></div><div id="mcAnswers" class="answer-grid hidden"></div><div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Correct</h3><p id="feedbackCopy">Good rep.</p></div></aside>
       </div>
     </section>
 
-    <section id="ticketScreen" class="ticket-card hidden"><h1>DL Stunt Gap Clicker Ticket</h1><p id="ticketMessage">Perfect run earned.</p><div id="ticketGrid" class="ticket-grid"></div><div class="name-row"><button class="btn" type="button" onclick="restartGame()">Restart for Another Attempt</button><a class="btn secondary-btn" href="../index.html">Back to Hub</a></div></section>
+    <section id="ticketScreen" class="ticket-card hidden"><h1>DL Stunt Gap Clicker Ticket</h1><p id="ticketMessage">Perfect run earned.</p><div id="ticketGrid" class="ticket-grid"></div><div class="name-row"><button class="btn" onclick="restartGame()">Restart for Another Attempt</button><a class="btn secondary-btn" href="../index.html">Back to Hub</a></div></section>
   </div>
 
 <script>
@@ -140,48 +105,39 @@ function sideText(call,side){const rip=call.includes('RIP');const callSide=rip?'
 function oppositeSide(side){return side==='call'?'away':'call';}
 
 const RAW_BANK=[
-{stunt:'New England',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'New England — You are the End to the call side. Click where you finish.',detail:'Two-man surface. Long stick across the tackle. Do not stay where you started.',coaching:'New England: End long sticks to the A gap on a two-man surface. Cross face and get there now.'},
-{stunt:'New England',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'New England — You are the End to the call side. Click where you finish.',detail:'Two-man surface. Long stick across the tackle. Do not stay where you started.',coaching:'New England: End long sticks to the A gap on a two-man surface. Cross face and get there now.'},
-{stunt:'New England',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'away',gap:'A',title:'New England — You are the Nose. Click the weak A-gap movement.',detail:'The Nose crosses face to the weak A gap. This is a tight interior movement.',coaching:'New England: Nose crosses face to the weak A gap. Stay tight and do not create a crease.'},
-{stunt:'New England',call:'OKIE LIZ',formation:'leftTwoDetached',player:'N',side:'away',gap:'A',title:'New England — You are the Nose. Click the weak A-gap movement.',detail:'The Nose crosses face to the weak A gap. This is a tight interior movement.',coaching:'New England: Nose crosses face to the weak A gap. Stay tight and do not create a crease.'},
-
-{stunt:'Boston',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'Boston — You are the End. Run it like New England. Click where you finish.',detail:'Two-man surface. End long sticks to the call-side A gap. Nose works weak A. Do not treat the Nose as strong B.',coaching:'Boston: for the End and Nose, run it like New England. End long sticks to A; Nose works weak A.'},
-{stunt:'Boston',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'Boston — You are the End. Run it like New England. Click where you finish.',detail:'Two-man surface. End long sticks to the call-side A gap. Nose works weak A. Do not treat the Nose as strong B.',coaching:'Boston: for the End and Nose, run it like New England. End long sticks to A; Nose works weak A.'},
-{stunt:'Boston',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'away',gap:'A',title:'Boston — You are the Nose. Run it like New England. Click your weak A-gap movement.',detail:'Two-man surface. Nose works weak A. This is not strong B.',coaching:'Boston: Nose works weak A, just like New England. Stay tight and do not open a crease.'},
-{stunt:'Boston',call:'OKIE LIZ',formation:'leftTwoDetached',player:'N',side:'away',gap:'A',title:'Boston — You are the Nose. Run it like New England. Click your weak A-gap movement.',detail:'Two-man surface. Nose works weak A. This is not strong B.',coaching:'Boston: Nose works weak A, just like New England. Stay tight and do not open a crease.'},
-
-{stunt:'Patriot',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'call',gap:'A',title:'Patriot — You are the Tackle tagged to long stick. Click your final gap.',detail:'Two-man surface. The Tackle is the long-stick player in this call.',coaching:'Patriot: Tackle long sticks to the A gap. Do not hang in the weak 4i.'},
-{stunt:'Patriot',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'call',gap:'A',title:'Patriot — You are the Tackle tagged to long stick. Click your final gap.',detail:'Two-man surface. The Tackle is the long-stick player in this call.',coaching:'Patriot: Tackle long sticks to the A gap. Do not hang in the weak 4i.'},
+{stunt:'New England',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'New England — You are the End to the call side. Click where you finish.',detail:'Two-man surface. Long stick across the tackle. Do not stay where you started.',coaching:'New England: End long sticks to the A gap on a two-man surface. Nose works opposite A. Cross face and get there now.'},
+{stunt:'New England',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'New England — You are the End to the call side. Click where you finish.',detail:'Two-man surface. Long stick across the tackle. Do not stay where you started.',coaching:'New England: End long sticks to the A gap on a two-man surface. Nose works opposite A. Cross face and get there now.'},
+{stunt:'Patriot',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'call',gap:'A',title:'Patriot — You are the Tackle tagged to long stick. Click your final gap.',detail:'Two-man surface. The Tackle is the long-stick player in this call.',coaching:'Patriot: Tackle long sticks to the A gap. Do not hang in the 4i.'},
+{stunt:'Patriot',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'call',gap:'A',title:'Patriot — You are the Tackle tagged to long stick. Click your final gap.',detail:'Two-man surface. The Tackle is the long-stick player in this call.',coaching:'Patriot: Tackle long sticks to the A gap. Do not hang in the 4i.'},
+{stunt:'Boston',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'Boston — You are the End. Mike clears B first. Click where you finish second.',detail:'Let the LB clear the B gap, then long stick tight to A.',coaching:'Boston: End is second. Allow the LB to clear B, then long stick to A.'},
+{stunt:'Boston',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'Boston — You are the End. Mike clears B first. Click where you finish second.',detail:'Let the LB clear the B gap, then long stick tight to A.',coaching:'Boston: End is second. Allow the LB to clear B, then long stick to A.'},
 {stunt:'Seattle',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'A',title:'Seattle — You are the End. Click your long-stick finish.',detail:'Two-man surface. Your movement is inside, not contain.',coaching:'Seattle: End long sticks to A. Get across clean and do not get picked off.'},
-{stunt:'Seattle',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'Seattle — You are the End. Click your long-stick finish.',detail:'Two-man surface. Your movement is inside, not contain.',coaching:'Seattle: End long sticks to A. Get across clean and do not get picked off.'},
-{stunt:'Slice',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'B',title:'Slice — You are the End. Click your BB responsibility.',detail:'BB means you are attacking B. Do not run to C. Do not drift to A.',coaching:'Slice: End is BB. BB equals B-gap rush. Hit it vertical.'},
 {stunt:'Slice',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'B',title:'Slice — You are the End. Click your BB responsibility.',detail:'BB means you are attacking B. Do not run to C. Do not drift to A.',coaching:'Slice: End is BB. BB equals B-gap rush. Hit it vertical.'},
 {stunt:'Mow',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'B',title:'Mow — You are the End. Click your B-gap rush.',detail:'This is not contain. You are tagged to hit B.',coaching:'Mow: End is BB / B-gap rush. Get vertical into B.'},
-{stunt:'Mow',call:'OKIE LIZ',formation:'leftTwoDetached',player:'N',side:'away',gap:'A',title:'Mow — You are the Nose. Click the away-side A gap.',detail:'Nose is working away-side A control in this stunt family.',coaching:'Mow: Nose works the away-side A gap. Stay square and keep the middle from opening.'},
-{stunt:'Edge',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'call',gap:'B',title:'Edge — You are the tagged Tackle on a two-man surface. Click your responsibility.',detail:'Two-man surface rule: the DL answer is BB.',coaching:'Edge: for End/Tackle on a two-man surface, the rule is BB. BB equals B gap.'},
 {stunt:'Edge',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'call',gap:'B',title:'Edge — You are the tagged Tackle on a two-man surface. Click your responsibility.',detail:'Two-man surface rule: the DL answer is BB.',coaching:'Edge: for End/Tackle on a two-man surface, the rule is BB. BB equals B gap.'},
 {stunt:'Double Texas',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'C',title:'Double Texas — You are the End. Click your contain rush lane.',detail:'Your job is not to chase inside. You are keeping the rush outside.',coaching:'Double Texas: End/Tackle are contain rush outside. Contain means C-side edge responsibility.'},
-{stunt:'Double Texas',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'C',title:'Double Texas — You are the End. Click your contain rush lane.',detail:'Your job is not to chase inside. You are keeping the rush outside.',coaching:'Double Texas: End/Tackle are contain rush outside. Contain means C-side edge responsibility.'},
+{stunt:'Mug Cut',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'away',gap:'C',title:'Mug Cut — You are the Tackle away from the call. Click your pass-rush contain lane.',detail:'Ends and tackles work for contain in this look.',coaching:'Mug Cut: End/Tackle work for contain. Stay outside and keep the QB boxed in.'},
 {stunt:'Mix',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'call',gap:'A',title:'Mix — You are the Tackle tagged to long stick. Click your finish.',detail:'Long stick means get all the way to A.',coaching:'Mix: Tackle long sticks to A gap. Do not stop in B.'},
 {stunt:'Storm',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'call',gap:'A',title:'Storm — You are the Tackle tagged to long stick. Click your final gap.',detail:'Tackle is the long-stick player in this stunt.',coaching:'Storm: Tackle long sticks to A. Tight path, violent finish.'},
 {stunt:'Tomahawk',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'C',title:'Tomahawk — You are the End. Click your contain / box responsibility.',detail:'You are not the inside stunt player. You are keeping the edge controlled.',coaching:'Tomahawk: End has C-gap control / box / contain. Keep the ball inside.'},
-{stunt:'Tomahawk',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'call',gap:'B',title:'Tomahawk — You are the Nose. Click the strong/call-side B gap.',detail:'This is a pressure movement responsibility. Do not sit in the shade.',coaching:'Tomahawk: Nose works call-side B. Get vertical and fight pressure.'},
-
-{mode:'choice',stunt:'New England',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',title:'New England — End on a two-man surface. What does long stick mean?',detail:'This is a decision rep. Answers shuffle every time.',answers:[{text:'Cross face and finish in the A gap.',correct:true},{text:'Stay outside and contain in C.',correct:false},{text:'Sit in the 5 and read the back.',correct:false},{text:'Run behind the Nose and wait for the ball to declare.',correct:false}],coaching:'Long stick means you are not staying in your alignment. Cross face and get to A.'},
-{mode:'choice',stunt:'Boston',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'away',title:'Boston — What is the Nose doing?',detail:'This corrects the Boston rule. Do not send the Nose strong B.',answers:[{text:'Nose works weak A, just like New England.',correct:true},{text:'Nose works strong B.',correct:false},{text:'Nose contains outside.',correct:false},{text:'Nose sits in the shade and reads.',correct:false}],coaching:'Correct. Boston for the Nose and End is run like New England: Nose weak A, End long stick A.'},
-{mode:'choice',stunt:'Slice',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',title:'Slice — End has BB. What does BB mean for the DL?',detail:'This is a decision rep. Answers shuffle every time.',answers:[{text:'Attack B gap vertically.',correct:true},{text:'Contain rush outside.',correct:false},{text:'Cross face all the way to A.',correct:false},{text:'Lag back to away-side A.',correct:false}],coaching:'BB equals B-gap rush. Hit the B gap now.'}
+{stunt:'New England',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'away',gap:'A',title:'New England — You are the Nose. Click the opposite A-gap movement.',detail:'The Nose crosses face to the opposite A gap. This is a tight interior movement.',coaching:'New England: Nose crosses face to the opposite A gap. Stay tight and do not create a crease.'},
+{stunt:'Mow',call:'OKIE LIZ',formation:'leftTwoDetached',player:'N',side:'away',gap:'A',title:'Mow — You are the Nose. Click the away-side A gap.',detail:'Nose is working away-side A control in this stunt family.',coaching:'Mow: Nose works the away-side A gap. Stay square and keep the middle from opening.'},
+{stunt:'Tomahawk',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'call',gap:'B',title:'Tomahawk — You are the Nose. Click the strong/call-side B gap.',detail:'This is a pressure movement responsibility. Do not sit at zero.',coaching:'Tomahawk: Nose works call-side B. Get vertical and fight pressure.'},
+{mode:'choice',stunt:'New England',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'A',title:'New England — End on a two-man surface. What does long stick mean?',detail:'This is a decision rep. Answers shuffle every time.',answers:[{text:'Cross face and finish in the A gap.',correct:true},{text:'Stay outside and contain in C.',correct:false},{text:'Sit in the 4i and read the back.',correct:false},{text:'Run behind the Nose and wait for the ball to declare.',correct:false}],coaching:'Long stick means you are not staying in your alignment. Cross face and get to A.'},
+{mode:'choice',stunt:'Slice',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'B',title:'Slice — End has BB. What does BB mean for the DL?',detail:'This is a decision rep. Answers shuffle every time.',answers:[{text:'Attack B gap vertically.',correct:true},{text:'Contain rush outside.',correct:false},{text:'Cross face all the way to A.',correct:false},{text:'Lag back to away-side A.',correct:false}],coaching:'BB equals B-gap rush. Hit the B gap now.'}
 ];
 
-const BANK=RAW_BANK.map(q=>{if(q.mode==='choice')return Object.assign({strength:q.call.includes('RIP')?'defensive right':'defensive left'},q);const answer=sideGap(q.call,q.side,q.gap);const side=sideText(q.call,q.side);return Object.assign({mode:'gap'},q,{answer,strength:q.call.includes('RIP')?'defensive right':'defensive left',detail:q.detail+' Side: '+(q.side==='call'?'CALL SIDE':'AWAY SIDE')+' ('+side+').'});});
+const BANK=RAW_BANK.map(q=>{const strength=q.call.includes('RIP')?'defensive right':'defensive left';if(q.mode==='choice'){return Object.assign({strength:strength,answer:sideGap(q.call,q.side,q.gap||'A')},q)}const answer=sideGap(q.call,q.side,q.gap);const side=sideText(q.call,q.side);return Object.assign({},q,{mode:'gap',answer:answer,strength:strength,detail:q.detail+' Side: '+(q.side==='call'?'CALL SIDE':'AWAY SIDE')+' ('+side+').'});});
 let QUESTIONS=[],playerName='',currentIndex=0,correctCount=0,missCount=0,totalAttempts=0,attemptNumber=Number(localStorage.getItem('dlStuntGapClickerOkieAttempt')||'1'),startTime=null,locked=false;
+
 function byId(id){return document.getElementById(id)}function currentQuestion(){return QUESTIONS[currentIndex]}function shuffleArray(array){const copy=array.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
 function buildQuestionSet(){return shuffleArray(BANK).slice(0,14)}
 function startGame(){playerName=byId('playerName').value.trim();if(!playerName){alert('Type your name first.');return}QUESTIONS=buildQuestionSet();startTime=new Date();currentIndex=0;correctCount=0;missCount=0;totalAttempts=0;locked=false;byId('hudName').textContent=playerName;byId('hudAttempt').textContent=attemptNumber;byId('startScreen').classList.add('hidden');byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.remove('hidden');loadQuestion()}
 function restartGame(){attemptNumber+=1;localStorage.setItem('dlStuntGapClickerOkieAttempt',String(attemptNumber));byId('ticketScreen').classList.add('hidden');byId('startScreen').classList.remove('hidden');byId('gameScreen').classList.add('hidden')}
 function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length;byId('hudCorrect').textContent=correctCount;byId('hudMisses').textContent=missCount;const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);byId('hudAccuracy').textContent=accuracy+'%';byId('hudAttempt').textContent=attemptNumber}
-function loadQuestion(){locked=false;clearFeedback();const q=currentQuestion();applyFormation(q.formation,q.call,q.strength);showFront(q.call);highlightPlayer(q.player);byId('callTitle').textContent=q.call+' — '+q.stunt+' — '+PLAYER_LABELS[q.player];byId('questionKicker').textContent=q.call+' • '+q.stunt+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent=q.mode==='gap'?'Click the correct final gap on the board. Use CALL SIDE / AWAY SIDE from the defense’s perspective.':'Choose the correct coaching response. Answers are shuffled.';if(q.mode==='choice')renderChoices(q.answers);else byId('mcAnswers').classList.add('hidden');updateHud()}
+function loadQuestion(){locked=false;clearFeedback();const q=currentQuestion();applyFormation(q.formation,q.call,q.strength);showFront(q.call);highlightPlayer(q.player);byId('callTitle').textContent=q.call+' — '+q.stunt+' — '+PLAYER_LABELS[q.player];byId('questionKicker').textContent=q.call+' • '+q.stunt+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent=q.mode==='gap'?'Click the correct final gap button below. The arrow will show the movement upfield into the offensive formation. Use CALL SIDE / AWAY SIDE from the defense’s perspective.':'Choose the correct coaching response. Answers are shuffled.';if(q.mode==='choice')renderChoices(q.answers);else byId('mcAnswers').classList.add('hidden');updateHud()}
 function applyFormation(formation,call,strength){const leftStrong=formation==='leftTwoDetached';byId('strongArea').className='strong-area '+(leftStrong?'left':'right');byId('strengthTag').textContent='Strength: '+strength;byId('wrL1').classList.toggle('hidden-token',!leftStrong);byId('wrL2').classList.toggle('hidden-token',!leftStrong);byId('wrR1').classList.toggle('hidden-token',leftStrong);byId('wrR2').classList.toggle('hidden-token',leftStrong)}
-function showFront(call){const rip=call.includes('RIP');byId('dlE').className='dl-token '+(rip?'e-5-right':'e-5-left');byId('dlN').className='dl-token '+(rip?'n-shade-right':'n-shade-left');byId('dlT').className='dl-token '+(rip?'t-4i-left':'t-4i-right')}
+function showFront(call){const rip=call.includes('RIP');byId('dlE').className='dl-token '+(rip?'e-right':'e-left');byId('dlN').className='dl-token n-zero';byId('dlT').className='dl-token '+(rip?'t-left':'t-right')}
 function highlightPlayer(player){['dlE','dlN','dlT'].forEach(id=>byId(id).classList.remove('active-player'));if(player==='E')byId('dlE').classList.add('active-player');if(player==='N')byId('dlN').classList.add('active-player');if(player==='T')byId('dlT').classList.add('active-player')}
 function selectGap(gap){if(locked)return;const q=currentQuestion();if(q.mode!=='gap')return;totalAttempts+=1;const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]');if(gap===q.answer){correctCount+=1;locked=true;if(zone)zone.classList.add('correct-zone');animateStuntSheet(q);showFeedback('Correct — that is your stunt job.',q.coaching,true);updateHud();setTimeout(nextQuestion,6200)}else{missCount+=1;if(zone)zone.classList.add('wrong-zone');showFeedback('Not it.','Do not click where the ball looks pretty. Click your final gap from the stunt, call side/away side, and player.',false);updateHud()}}
 function renderChoices(answers){const grid=byId('mcAnswers');grid.innerHTML='';grid.classList.remove('hidden');shuffleArray(answers).forEach((answer,index)=>{const button=document.createElement('button');button.className='answer-btn';button.innerHTML='<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text;button.onclick=function(){chooseAnswer(button,answer)};grid.appendChild(button)})}
@@ -196,17 +152,35 @@ function pathColorClass(gap){const letter=gapLetter(gap);return letter==='A'?'pa
 function arrowId(gap){const letter=gapLetter(gap);return letter==='A'?'arrowA':letter==='B'?'arrowB':'arrowC'}
 function speedForMovement(q,gap){const letter=gapLetter(gap);if(letter==='A')return q.stunt==='Boston'?1500:1250;if(letter==='B')return 850;return 1050}
 function centerOfElement(el){const board=byId('gameBoard').getBoundingClientRect();const r=el.getBoundingClientRect();return {x:r.left+r.width/2-board.left,y:r.top+r.height/2-board.top}}
-function centerOfGap(gap){const el=document.querySelector('.gap-zone[data-gap="'+gap+'"]');return el?centerOfElement(el):{x:0,y:0}}
+function centerOfFieldGap(gap){
+  // Answer buttons stay below. The teaching arrow finishes in the real offensive-line gap.
+  const board=byId('gameBoard').getBoundingClientRect();
+  const targets={
+    LC:{x:.245,y:.475},
+    LB:{x:.350,y:.465},
+    LA:{x:.455,y:.455},
+    RA:{x:.545,y:.455},
+    RB:{x:.650,y:.465},
+    RC:{x:.755,y:.475}
+  };
+  const t=targets[gap]||{x:.5,y:.46};
+  return {x:board.width*t.x,y:board.height*t.y};
+}
+function centerOfGap(gap){return centerOfFieldGap(gap)}
 function centerOfToken(player){const id=TOKEN_IDS[player];return id?centerOfElement(byId(id)):{x:0,y:0}}
 function buildMovementList(q){
   const moves=[];
   if(q.mode==='gap') moves.push({player:q.player,gap:q.answer,primary:true,delay:0});
+
+  // Boston and New England teach the same DL exchange for End/Nose:
+  // End long-sticks to call-side A. Nose works weak/away A.
   if(q.stunt==='New England' || q.stunt==='Boston'){
     const noseGap=sideGap(q.call,'away','A');
     const endGap=sideGap(q.call,'call','A');
     if(q.player!=='N')moves.push({player:'N',gap:noseGap,primary:false,delay:220});
     if(q.player==='N' || q.mode==='choice')moves.push({player:'E',gap:endGap,primary:false,delay:220});
   }
+
   if(q.stunt==='Double Texas'){
     const other=q.player==='E'?'T':'E';
     const otherGap=sideGap(q.call,oppositeSide(q.side),'C');
@@ -215,11 +189,36 @@ function buildMovementList(q){
   return moves;
 }
 function animateStuntSheet(q){clearAnimations();const moves=buildMovementList(q);moves.forEach(m=>setTimeout(()=>drawMovement(m.player,m.gap,m.primary,q),m.delay||0));}
-function drawMovement(player,gap,primary,q){const svg=byId('stuntSvg');const start=centerOfToken(player);const end=centerOfGap(gap);if(!start||!end)return;const letter=gapLetter(gap);const color=letter==='A'?'#60a5fa':letter==='B'?'#fb7185':'#fbbf24';const bend=(letter==='A'?-55:letter==='B'?-28:-42);const midX=(start.x+end.x)/2;const midY=(start.y+end.y)/2+bend;const d='M '+start.x+' '+start.y+' Q '+midX+' '+midY+' '+end.x+' '+end.y;const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',d);path.setAttribute('class','stunt-path '+pathColorClass(gap));path.setAttribute('marker-end','url(#'+arrowId(gap)+')');path.style.setProperty('--path-speed',speedForMovement(q,gap)+'ms');if(!primary){path.style.opacity='.55';path.style.strokeWidth='4'}svg.appendChild(path);makeTrail(start,{x:midX,y:midY},end,color);animateGhost(player,start,{x:midX,y:midY},end,color,speedForMovement(q,gap),primary)}
+function drawMovement(player,gap,primary,q){
+  const svg=byId('stuntSvg');
+  const start=centerOfToken(player);
+  const end=centerOfFieldGap(gap);
+  if(!start||!end)return;
+  const letter=gapLetter(gap);
+  const color=letter==='A'?'#60a5fa':letter==='B'?'#fb7185':'#fbbf24';
+  // Stunt-sheet look: the arrow goes upfield into the OL gap instead of down to the answer button.
+  const horizontal=end.x-start.x;
+  const bendY=letter==='A'?-72:letter==='B'?-44:-56;
+  const bendX=letter==='A'?horizontal*.18:letter==='B'?horizontal*.08:horizontal*.26;
+  const midX=(start.x+end.x)/2+bendX;
+  const midY=(start.y+end.y)/2+bendY;
+  const d='M '+start.x+' '+start.y+' Q '+midX+' '+midY+' '+end.x+' '+end.y;
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',d);
+  path.setAttribute('class','stunt-path '+pathColorClass(gap));
+  path.setAttribute('marker-end','url(#'+arrowId(gap)+')');
+  path.style.setProperty('--path-speed',speedForMovement(q,gap)+'ms');
+  if(!primary){path.style.opacity='.55';path.style.strokeWidth='4'}
+  svg.appendChild(path);
+  showFieldTarget(end,color);
+  makeTrail(start,{x:midX,y:midY},end,color);
+  animateGhost(player,start,{x:midX,y:midY},end,color,speedForMovement(q,gap),primary);
+}
 function quadPoint(a,b,c,t){const x=(1-t)*(1-t)*a.x+2*(1-t)*t*b.x+t*t*c.x;const y=(1-t)*(1-t)*a.y+2*(1-t)*t*b.y+t*t*c.y;return {x,y}}
 function makeTrail(start,mid,end,color){[.2,.38,.56,.74,.9].forEach((t,i)=>{const p=quadPoint(start,mid,end,t);const dot=document.createElement('div');dot.className='trail-dot';dot.style.left=p.x+'px';dot.style.top=p.y+'px';dot.style.color=color;dot.style.background=color;dot.style.animationDelay=(i*110)+'ms';byId('gameBoard').appendChild(dot)})}
+function showFieldTarget(end,color){const target=document.createElement('div');target.className='field-target-pulse';target.style.left=end.x+'px';target.style.top=end.y+'px';target.style.color=color;byId('gameBoard').appendChild(target)}
 function animateGhost(player,start,mid,end,color,duration,primary){const ghost=document.createElement('div');ghost.className='dl-ghost';ghost.textContent=player;ghost.style.left=start.x+'px';ghost.style.top=start.y+'px';ghost.style.background='linear-gradient(180deg,#ffffff,'+color+')';ghost.style.opacity=primary?'1':'.72';byId('gameBoard').appendChild(ghost);const startTime=performance.now();function frame(now){const t=Math.min(1,(now-startTime)/duration);const eased=1-Math.pow(1-t,3);const p=quadPoint(start,mid,end,eased);ghost.style.left=p.x+'px';ghost.style.top=p.y+'px';if(t<1){requestAnimationFrame(frame)}else{ghost.style.boxShadow='0 0 0 8px rgba(52,211,153,.18),0 16px 30px rgba(0,0,0,.38)'}}requestAnimationFrame(frame)}
-function clearAnimations(){byId('stuntSvg').innerHTML='<defs><marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa"></path></marker><marker id="arrowB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#fb7185"></path></marker><marker id="arrowC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24"></path></marker></defs>';document.querySelectorAll('.trail-dot,.dl-ghost').forEach(el=>el.remove())}
+function clearAnimations(){byId('stuntSvg').innerHTML='<defs><marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa"></path></marker><marker id="arrowB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#fb7185"></path></marker><marker id="arrowC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24"></path></marker></defs>';document.querySelectorAll('.trail-dot,.dl-ghost,.field-target-pulse').forEach(el=>el.remove())}
 </script>
 </body>
 </html>
