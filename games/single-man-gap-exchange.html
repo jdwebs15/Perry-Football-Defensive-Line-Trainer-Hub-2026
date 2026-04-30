@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Game 14 — Single Man Gap Exchange</title>
+<link rel="stylesheet" href="../styles.css" />
+
+<style>
+/* ==== ADDITIONAL VISUALS ==== */
+.arrow {
+  position:absolute;
+  height:4px;
+  border-radius:3px;
+  transform-origin:left center;
+  z-index:9;
+}
+.arrow.blue { background:#3b82f6; }
+.arrow.red { background:#ef4444; }
+.arrow.gold { background:#f59e0b; }
+.arrow.green { background:#22c55e; }
+
+.ghost {
+  position:absolute;
+  width:42px;
+  height:32px;
+  border-radius:10px;
+  opacity:.25;
+  z-index:4;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-shell">
+
+<div class="game-topbar">
+  <a class="mini-link" href="../index.html">← Back to Hub</a>
+  <div class="badge-stack">
+    <span class="small-badge live">● Live</span>
+    <span class="small-badge">Game 14</span>
+    <span class="small-badge">Single Man Exchange</span>
+  </div>
+</div>
+
+<section id="startScreen" class="start-card">
+  <h1>Game 14 — Single Man Gap Exchange</h1>
+  <p>Single Man pressure forces a gap exchange. If the LB is coming, you are not staying in your gap.</p>
+
+  <div class="coach-note">
+    Spill = close B.  
+    LB becomes the new C-gap player.
+  </div>
+
+  <div class="name-row">
+    <input id="playerName" placeholder="Player name" />
+    <button class="btn" onclick="startGame()">Start Game</button>
+  </div>
+</section>
+
+<section id="gameScreen" class="hidden">
+
+<div class="hud-grid">
+  <div class="hud-box"><span>Player</span><strong id="hudName"></strong></div>
+  <div class="hud-box"><span>Question</span><strong id="hudQ"></strong></div>
+  <div class="hud-box"><span>Misses</span><strong id="hudMiss"></strong></div>
+</div>
+
+<div class="gap-layout">
+
+<div class="field-card">
+  <div class="game-board" id="board">
+
+    <!-- DL -->
+    <div id="E" class="dl-token e-right">E</div>
+    <div id="N" class="dl-token n-zero">N</div>
+    <div id="T" class="dl-token t-left">T</div>
+
+    <!-- LB (for exchange visual) -->
+    <div id="LB" class="dl-token" style="top:72%; left:55%;">LB</div>
+
+    <!-- GAPS -->
+    <div class="gap-row">
+      <div class="gap-zone" data-gap="LC" onclick="pick('LC')">LC</div>
+      <div class="gap-zone" data-gap="LB" onclick="pick('LB')">LB</div>
+      <div class="gap-zone" data-gap="LA" onclick="pick('LA')">LA</div>
+      <div class="gap-zone" data-gap="RA" onclick="pick('RA')">RA</div>
+      <div class="gap-zone" data-gap="RB" onclick="pick('RB')">RB</div>
+      <div class="gap-zone" data-gap="RC" onclick="pick('RC')">RC</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="question-card">
+  <h2 id="qText"></h2>
+  <p id="qSub"></p>
+
+  <div id="feedbackBox" class="feedback-box hidden">
+    <h3 id="fTitle"></h3>
+    <p id="fCopy"></p>
+  </div>
+</div>
+
+</div>
+</section>
+
+<section id="ticketScreen" class="ticket-card hidden">
+  <h1>Completion Ticket</h1>
+  <p id="result"></p>
+  <button class="btn" onclick="location.reload()">Restart</button>
+</section>
+
+</div>
+
+<script>
+
+const QUESTIONS = [
+{
+player:'E',
+answer:'RB',
+text:'OKIE RIP — Single Man. End spills. Where do you finish?',
+coach:'Spill = close B gap. LB replaces C.'
+},
+{
+player:'E',
+answer:'LB',
+text:'OKIE LIZ — Single Man. End spills. Where do you finish?',
+coach:'You leave C. Close B. LB takes C.'
+},
+{
+player:'T',
+answer:'RA',
+text:'OKIE RIP — Single Man. Tackle long stick.',
+coach:'Tackle still executes stunt responsibility.'
+}
+];
+
+let index=0,miss=0;
+
+function startGame(){
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('gameScreen').classList.remove('hidden');
+  load();
+}
+
+function load(){
+  const q=QUESTIONS[index];
+  document.getElementById('qText').innerText=q.text;
+  document.getElementById('hudQ').innerText=(index+1)+' / '+QUESTIONS.length;
+  document.getElementById('hudMiss').innerText=miss;
+}
+
+function pick(g){
+  const q=QUESTIONS[index];
+
+  if(g===q.answer){
+    animate(q);
+    show('Correct',q.coach,true);
+    setTimeout(next,4500);
+  } else {
+    miss++;
+    show('No','You must exchange the gap. Think spill rules.',false);
+    document.getElementById('hudMiss').innerText=miss;
+  }
+}
+
+function animate(q){
+  const el=document.getElementById(q.player);
+  const zone=document.querySelector(`[data-gap="${q.answer}"]`);
+  const b=document.getElementById('board');
+
+  const r1=el.getBoundingClientRect();
+  const r2=zone.getBoundingClientRect();
+  const rb=b.getBoundingClientRect();
+
+  const dx=(r2.left-r1.left);
+  const dy=(r2.top-r1.top);
+
+  const arrow=document.createElement('div');
+  arrow.className='arrow red';
+  arrow.style.width=Math.hypot(dx,dy)+'px';
+  arrow.style.left=(r1.left-rb.left)+'px';
+  arrow.style.top=(r1.top-rb.top)+'px';
+  arrow.style.transform=`rotate(${Math.atan2(dy,dx)}rad)`;
+
+  b.appendChild(arrow);
+
+  const ghost=document.createElement('div');
+  ghost.className='ghost';
+  ghost.style.left=el.style.left;
+  ghost.style.top=el.style.top;
+  b.appendChild(ghost);
+
+  el.style.transition='transform .6s ease';
+  el.style.transform=`translate(${dx}px,${dy}px)`;
+
+  setTimeout(()=>{arrow.remove();ghost.remove();el.style.transform='';},1500);
+}
+
+function show(t,c,ok){
+  document.getElementById('fTitle').innerText=t;
+  document.getElementById('fCopy').innerText=c;
+  document.getElementById('feedbackBox').classList.remove('hidden');
+}
+
+function next(){
+  index++;
+  if(index>=QUESTIONS.length){
+    finish();
+  } else {
+    load();
+  }
+}
+
+function finish(){
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('ticketScreen').classList.remove('hidden');
+
+  document.getElementById('result').innerText=
+    miss===0 ? 'MASTERED — CLEAN RUN' : 'NOT CLEAN — RUN AGAIN';
+}
+
+</script>
+
+</body>
+</html>
