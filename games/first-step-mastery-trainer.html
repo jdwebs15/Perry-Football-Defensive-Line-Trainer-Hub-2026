@@ -7,62 +7,57 @@
   <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
-  <div class="page-shell">
-    <header class="hero compact-hero">
-      <div class="hero-top">
-        <span class="brand-badge">Perry Panther Football</span>
+  <div class="game-shell">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="ghost-btn" href="../index.html">← Back to Hub</a>
+      </div>
+      <div class="topbar-right">
+        <span class="brand-badge">Perry Defensive Line</span>
         <span class="brand-badge muted-badge">Game 2 — First Step Mastery Trainer</span>
       </div>
-      <h1>First Step Mastery Trainer</h1>
-      <p class="hero-copy">
-        Near foot. Pre-snap V of the neck or center of the numbers. Your first two steps never change.
-      </p>
-      <div class="pill-row">
-        <span class="pill">Near Foot First</span>
-        <span class="pill">V of the Neck</span>
-        <span class="pill">Center of the Numbers</span>
-        <span class="pill">First Two Steps Never Change</span>
-      </div>
-      <div class="btn-row" style="margin-top:16px;">
-        <a class="secondary-btn" href="../index.html">Back to Hub</a>
-      </div>
-    </header>
+    </div>
 
-    <section id="startScreen" class="section-card start-card">
-      <div class="section-heading">
-        <h2>Start the Drill</h2>
+    <section id="startScreen" class="start-grid">
+      <div class="start-card">
+        <h2>First Step Mastery Trainer</h2>
         <p>
           This game trains the landmark language exactly the way it needs to sound on the field.
-          Read fast. Answer clean. Misses count for the whole run.
+          Near foot. Pre-snap V of the neck or center of the numbers. Your first two steps never change.
         </p>
-      </div>
-      <div class="start-grid">
-        <label class="input-group">
-          <span>Player Name</span>
-          <input id="playerName" type="text" placeholder="Enter player name" autocomplete="off" />
-        </label>
-      </div>
-      <div class="btn-row" style="margin-top:16px;">
-        <button id="startBtn" class="btn">Start Game 2</button>
-      </div>
-      <div class="rules-grid" style="margin-top:18px;">
-        <div class="rule-box">
-          <h4>Coaching Point</h4>
-          <p>We always step with the near foot to the pre-snap V of the neck or center of the numbers alignment of the offensive lineman.</p>
+
+        <label class="input-label" for="playerName">Player Name</label>
+        <input id="playerName" class="text-input" type="text" maxlength="40" placeholder="Enter player name" />
+
+        <div class="btn-row" style="margin-top:16px;">
+          <button id="startBtn" class="btn" type="button">Start Game</button>
         </div>
-        <div class="rule-box">
-          <h4>Non-Negotiable</h4>
-          <p>Your first two steps will NEVER change. Only the alignment landmark changes.</p>
-        </div>
-        <div class="rule-box">
-          <h4>Mastery Rule</h4>
-          <p>To earn the ticket, the player must finish with a clean run.</p>
-        </div>
+
+        <div id="startError" class="error-box hidden"></div>
       </div>
-      <div id="startError" class="error-box hidden"></div>
+
+      <div class="start-card">
+        <h2>Coach’s Rules</h2>
+        <ul class="coach-list">
+          <li>Near foot first.</li>
+          <li>Step to the pre-snap V of the neck or center of the numbers.</li>
+          <li>Your first two steps never change.</li>
+          <li>Only the alignment landmark changes.</li>
+          <li>Misses count. A corrected answer still counts as a miss on the run.</li>
+          <li>You must finish with a perfect run to earn the ticket.</li>
+        </ul>
+
+        <h2 style="margin-top:18px;">Directions</h2>
+        <ul class="instructions">
+          <li>Read the coaching cue.</li>
+          <li>Pick the correct first-step rule or landmark.</li>
+          <li>If you miss it, you will get coaching and must still choose the correct answer to move on.</li>
+          <li>Accuracy is based on first-click correctness.</li>
+        </ul>
+      </div>
     </section>
 
-    <section id="gameScreen" class="section-card hidden">
+    <section id="gameScreen" class="hidden">
       <div class="hud-grid">
         <div class="hud-box"><span class="hud-label">Player</span><span id="hudPlayer" class="hud-value">—</span></div>
         <div class="hud-box"><span class="hud-label">Question</span><span id="hudProgress" class="hud-value">1 / 12</span></div>
@@ -112,7 +107,7 @@
         <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
 
         <div class="btn-row" style="margin-top:16px;">
-          <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
+          <button id="restartBtn" class="secondary-btn" type="button">Restart for a Clean Run</button>
           <a class="btn" href="../index.html">Back to Hub</a>
         </div>
       </div>
@@ -162,14 +157,13 @@
         explanation: 'Correct. Eyes are locked on the helmet and shoulders of the offensive lineman for the read.'
       },
       {
-       {
-  id: 6,
-  stem: 'The opponent changes offensive structure this week, so your alignment moves. What stays exactly the same?',
-  copy: 'Answer the non-negotiable piece.',
-  correct: 'The first two steps',
-  hint: 'Weekly adjustments do not rewrite base footwork.',
-  explanation: 'Correct. Weekly alignment may change, but the first two steps never do.'
-},
+        id: 6,
+        stem: 'The opponent changes offensive structure this week, so your alignment moves. What stays exactly the same?',
+        copy: 'Answer the non-negotiable piece.',
+        correct: 'The first two steps',
+        hint: 'Weekly adjustments do not rewrite base footwork.',
+        explanation: 'Correct. Weekly alignment may change, but the first two steps never do.'
+      },
       {
         id: 7,
         stem: 'Coach says, “Step to the landmark.” Which landmark matches the trainer language?',
@@ -220,21 +214,6 @@
       }
     ];
 
-    const ANSWER_OPTIONS = [
-      'Near foot',
-      'Far foot',
-      'Both feet together',
-      'Back foot',
-      'Pre-snap V of the neck or center of the numbers',
-      'Inside hip of the guard',
-      'Helmet and shoulders of the offensive lineman',
-      'The first two steps',
-      'The alignment landmark only',
-      'No — the first two steps never change',
-      'For your read',
-      'Near foot to the landmark',
-      'Near foot / pre-snap V of the neck or center of the numbers'
-    ];
     const EXPLANATION_DELAY_MS = 4200;
 
     const state = {
@@ -316,11 +295,11 @@
     }
 
     function buildQuestions() {
-      return QUESTION_BANK.map(q => {
+      return shuffle(QUESTION_BANK).map(q => {
         let options;
         switch (q.id) {
           case 1:
-            options = ['Near foot','Far foot','Back foot','Both feet together'];
+            options = ['Near foot', 'Far foot', 'Back foot', 'Both feet together'];
             break;
           case 2:
           case 7:
@@ -334,13 +313,13 @@
           case 3:
           case 6:
           case 11:
-            options = ['The first two steps','The hand placement','The stance only','The eyes only'];
+            options = ['The first two steps', 'The hand placement', 'The stance only', 'The eyes only'];
             break;
           case 4:
-            options = ['The alignment landmark only','The first two steps','The near foot rule','Nothing changes at all'];
+            options = ['The alignment landmark only', 'The first two steps', 'The near foot rule', 'Nothing changes at all'];
             break;
           case 5:
-            options = ['Helmet and shoulders of the offensive lineman','Backfield mesh point','The ball only','The linebacker'];
+            options = ['Helmet and shoulders of the offensive lineman', 'Backfield mesh point', 'The ball only', 'The linebacker'];
             break;
           case 8:
             options = [
@@ -351,10 +330,10 @@
             ];
             break;
           case 9:
-            options = ['For your read','For your stance','For your get-off cadence only','To look at the backfield'];
+            options = ['For your read', 'For your stance', 'For your get-off cadence only', 'To look at the backfield'];
             break;
           case 10:
-            options = ['Near foot to the landmark','Far foot to the landmark','Eyes to the backfield first','Hands first, feet second'];
+            options = ['Near foot to the landmark', 'Far foot to the landmark', 'Eyes to the backfield first', 'Hands first, feet second'];
             break;
           case 12:
             options = [
@@ -365,8 +344,13 @@
             ];
             break;
           default:
-            options = shuffle(ANSWER_OPTIONS).slice(0,4);
+            options = [q.correct, 'Near foot', 'The first two steps', 'Helmet and shoulders of the offensive lineman'];
         }
+
+        if (!options.includes(q.correct)) {
+          options[0] = q.correct;
+        }
+
         return { ...q, options: shuffle(options) };
       });
     }
@@ -432,6 +416,7 @@
       q.options.forEach((option, idx) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
+        btn.type = 'button';
         btn.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + idx)}</span><span>${option}</span>`;
         btn.addEventListener('click', () => handleAnswer(option, btn));
         els.answerGrid.appendChild(btn);
