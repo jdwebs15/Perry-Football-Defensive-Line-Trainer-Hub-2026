@@ -6,158 +6,1305 @@
   <title>Game 14 — Single Man Gap Exchange</title>
   <link rel="stylesheet" href="../styles.css" />
   <style>
-    :root{--gold:#ffd166;--green:#34d399;--red:#ff6b6b;--blue:#60a5fa;--muted:#b7c6e6;--text:#f8fafc;--orange:#fb923c;--purple:#c084fc;}
-    .hidden{display:none!important;}
-    .game-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
-    .mini-link{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--text);text-decoration:none;border:1px solid rgba(255,255,255,.12);font-weight:800;}
-    .badge-stack{display:flex;gap:8px;flex-wrap:wrap;}
-    .small-badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;}
-    .small-badge.live{color:#d7fff0;background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.42);}
-    .start-card,.ticket-card{max-width:960px;margin:0 auto;background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.35);}
-    .start-card h1,.ticket-card h1{margin-bottom:10px;}
-    .start-card p,.ticket-card p{color:var(--muted);line-height:1.55;}
-    .name-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
-    .name-row input{flex:1 1 280px;min-width:240px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;font-weight:800;outline:none;}
-    .coach-note{margin-top:18px;padding:14px;border-radius:16px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.25);color:#fff0bf;font-weight:760;line-height:1.5;}
-    .hud-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:12px;}
-    .hud-box{border-radius:18px;background:linear-gradient(180deg,rgba(30,47,88,.96),rgba(19,31,58,.96));border:1px solid rgba(255,255,255,.12);padding:13px;}
-    .hud-box span{display:block;color:var(--muted);font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;}
-    .hud-box strong{display:block;color:#fff;font-size:1.08rem;margin-top:3px;}
-    .sim-layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);gap:14px;}
-    .field-card,.question-card{background:linear-gradient(180deg,rgba(21,39,68,.95),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 18px 45px rgba(0,0,0,.28);overflow:hidden;}
-    .call-banner{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-    .call-note{color:var(--muted);font-size:.82rem;font-weight:750;}
-    .question-card{padding:18px;}
-    .game-board{position:relative;min-height:540px;background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at top,rgba(59,130,246,.13),transparent 55%),rgba(7,16,31,.8);background-size:72px 72px,72px 72px,100% 100%,100% 100%;overflow:hidden;}
-    .field-title{position:absolute;top:13px;left:16px;color:#c7d2fe;font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;}
-    .strength-box{position:absolute;top:22px;right:18px;z-index:7;padding:8px 12px;border-radius:999px;background:rgba(20,184,166,.18);border:1px solid rgba(45,212,191,.45);color:#ccfbf1;font-size:.76rem;font-weight:950;}
-    .strong-area{position:absolute;top:42px;width:27%;height:126px;border:2px solid rgba(45,212,191,.25);background:rgba(45,212,191,.08);border-radius:18px;}
-    .strong-area.left{left:7%;}.strong-area.right{right:7%;}
-    .hash-line{position:absolute;top:0;bottom:0;width:1px;border-left:1px dashed rgba(255,255,255,.16);}.hash-1{left:33.33%;}.hash-2{left:66.66%;}
-    .los{position:absolute;left:8%;right:8%;top:49%;height:3px;background:rgba(255,255,255,.62);}
-    .los-label{position:absolute;left:50%;top:51%;transform:translateX(-50%);color:#dbeafe;font-size:.72rem;font-weight:950;letter-spacing:.06em;}
-    .ol,.skill,.dl-token,.lb-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5;}
-    .ol{width:46px;height:34px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#f8fafc;font-size:.8rem;}
-    .skill{width:42px;height:30px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.75rem;}
-    .dl-token{width:43px;height:34px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.9rem;}
-    .lb-token{width:48px;height:34px;background:linear-gradient(180deg,#bfdbfe,#60a5fa);border:2px solid rgba(219,234,254,.95);color:#0f172a;font-size:.78rem;}
-    .active-player{background:linear-gradient(180deg,#ffd166,#f59e0b)!important;color:#111827!important;transform:translate(-50%,-50%) scale(1.12)!important;box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);z-index:8;}
-    .wr-left-1{left:11%;top:23%;}.wr-left-2{left:23%;top:19%;}.wr-right-1{left:89%;top:23%;}.wr-right-2{left:77%;top:19%;}
-    .rb{left:50%;top:18%;}.qb{left:50%;top:28%;}.ot-l{left:30%;top:39%;}.g-l{left:40%;top:39%;}.c{left:50%;top:39%;}.g-r{left:60%;top:39%;}.ot-r{left:70%;top:39%;}
-    .hidden-token{display:none!important;}
-    .gap-target{position:absolute;width:26px;height:26px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);transform:translate(-50%,-50%);z-index:3;}
-    .target-LC{left:24%;top:45%;}.target-LB{left:35%;top:45%;}.target-LA{left:45%;top:45%;}.target-RA{left:55%;top:45%;}.target-RB{left:65%;top:45%;}.target-RC{left:76%;top:45%;}
-    .gap-row{position:absolute;left:7%;right:7%;top:76%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6;}
-    .gap-zone{min-height:70px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;user-select:none;transition:.15s;}
-    .gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13);}
-    .gap-zone strong{font-size:1rem;}.gap-zone span{font-size:.7rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.07em;}
-    .gap-zone.correct-zone{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22);}
-    .gap-zone.wrong-zone{border-color:rgba(255,107,107,.92);background:rgba(255,107,107,.2);animation:shake .22s linear 2;}
-    @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
-    .arrow-line{position:absolute;height:5px;border-radius:999px;transform-origin:left center;z-index:12;box-shadow:0 0 14px rgba(255,255,255,.23);}
-    .arrow-line.blue{background:#60a5fa;}.arrow-line.red{background:#ff6b6b;}.arrow-line.gold{background:#ffd166;}.arrow-line.green{background:#34d399;}.arrow-line.purple{background:#c084fc;}.arrow-line.orange{background:#fb923c;}
-    .arrow-head{position:absolute;width:0;height:0;border-left:13px solid currentColor;border-top:8px solid transparent;border-bottom:8px solid transparent;z-index:13;}
-    .arrow-head.blue{color:#60a5fa;}.arrow-head.red{color:#ff6b6b;}.arrow-head.gold{color:#ffd166;}.arrow-head.green{color:#34d399;}.arrow-head.purple{color:#c084fc;}.arrow-head.orange{color:#fb923c;}
-    .ghost-token{position:absolute;width:43px;height:34px;border-radius:12px;background:rgba(255,255,255,.2);border:1px dashed rgba(255,255,255,.38);transform:translate(-50%,-50%);z-index:4;}
-    .def-label{position:absolute;left:15px;bottom:13px;color:var(--muted);font-size:.74rem;font-weight:950;text-transform:uppercase;}
-    .def-left-right{position:absolute;right:15px;bottom:13px;color:var(--gold);font-size:.78rem;font-weight:950;text-align:right;}
-    .question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px;}
-    .question-card h2{font-size:1.42rem;margin-bottom:8px;color:white;}.question-card p{color:var(--muted);line-height:1.5;}
-    .responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45;}
-    .answer-grid{display:grid;gap:10px;margin-top:14px;}.answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800;}
-    .answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2);}.answer-btn.incorrect{border-color:rgba(255,107,107,.85);background:rgba(255,107,107,.18);}.answer-btn.disabled{pointer-events:none;opacity:.78;}
-    .choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950;}
-    .feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);}.feedback-box h3{margin-bottom:4px;color:white;}.feedback-box p{color:var(--muted);}
-    .ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px;}.ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);}.ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900;}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px;}
-    @media(max-width:980px){.sim-layout{grid-template-columns:1fr}.hud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    @media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gap-row{gap:6px;grid-template-columns:repeat(3,minmax(72px,1fr));top:73%;}.ticket-grid{grid-template-columns:1fr}}
+    :root {
+      --gold:#ffd166;
+      --green:#34d399;
+      --red:#ff6b6b;
+      --blue:#60a5fa;
+      --muted:#b7c6e6;
+      --text:#f8fafc;
+      --orange:#fb923c;
+      --purple:#c084fc;
+    }
+
+    .hidden { display:none !important; }
+
+    .game-topbar {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .mini-link {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,.12);
+      font-weight:800;
+    }
+
+    .badge-stack { display:flex; gap:8px; flex-wrap:wrap; }
+
+    .small-badge {
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.07);
+      font-size:.75rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .small-badge.live {
+      color:#d7fff0;
+      background:rgba(52,211,153,.15);
+      border-color:rgba(52,211,153,.42);
+    }
+
+    .start-card,
+    .ticket-card {
+      max-width:960px;
+      margin:0 auto;
+      background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(11,19,34,.96));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 18px 45px rgba(0,0,0,.35);
+    }
+
+    .start-card h1,
+    .ticket-card h1 { margin-bottom:10px; }
+
+    .start-card p,
+    .ticket-card p {
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .name-row {
+      display:flex;
+      gap:10px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .name-row input {
+      flex:1 1 280px;
+      min-width:240px;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.08);
+      color:white;
+      font-weight:800;
+      outline:none;
+    }
+
+    .coach-note {
+      margin-top:18px;
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,209,102,.1);
+      border:1px solid rgba(255,209,102,.25);
+      color:#fff0bf;
+      font-weight:760;
+      line-height:1.5;
+    }
+
+    .hud-grid {
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .hud-box {
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(30,47,88,.96),rgba(19,31,58,.96));
+      border:1px solid rgba(255,255,255,.12);
+      padding:13px;
+    }
+
+    .hud-box span {
+      display:block;
+      color:var(--muted);
+      font-size:.72rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .hud-box strong {
+      display:block;
+      color:#fff;
+      font-size:1.08rem;
+      margin-top:3px;
+    }
+
+    .sim-layout {
+      display:grid;
+      grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);
+      gap:14px;
+    }
+
+    .field-card,
+    .question-card {
+      background:linear-gradient(180deg,rgba(21,39,68,.95),rgba(11,19,34,.96));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      box-shadow:0 18px 45px rgba(0,0,0,.28);
+      overflow:hidden;
+    }
+
+    .call-banner {
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,.1);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .call-note {
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:750;
+    }
+
+    .question-card { padding:18px; }
+
+    .game-board {
+      position:relative;
+      min-height:540px;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        radial-gradient(circle at top,rgba(59,130,246,.13),transparent 55%),
+        rgba(7,16,31,.8);
+      background-size:72px 72px,72px 72px,100% 100%,100% 100%;
+      overflow:hidden;
+    }
+
+    .field-title {
+      position:absolute;
+      top:13px;
+      left:16px;
+      color:#c7d2fe;
+      font-size:.75rem;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .strength-box {
+      position:absolute;
+      top:22px;
+      right:18px;
+      z-index:7;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(20,184,166,.18);
+      border:1px solid rgba(45,212,191,.45);
+      color:#ccfbf1;
+      font-size:.76rem;
+      font-weight:950;
+    }
+
+    .strong-area {
+      position:absolute;
+      top:42px;
+      width:27%;
+      height:126px;
+      border:2px solid rgba(45,212,191,.25);
+      background:rgba(45,212,191,.08);
+      border-radius:18px;
+    }
+
+    .strong-area.left { left:7%; }
+    .strong-area.right { right:7%; }
+
+    .hash-line {
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:1px;
+      border-left:1px dashed rgba(255,255,255,.16);
+    }
+
+    .hash-1 { left:33.33%; }
+    .hash-2 { left:66.66%; }
+
+    .los {
+      position:absolute;
+      left:8%;
+      right:8%;
+      top:49%;
+      height:3px;
+      background:rgba(255,255,255,.62);
+    }
+
+    .los-label {
+      position:absolute;
+      left:50%;
+      top:51%;
+      transform:translateX(-50%);
+      color:#dbeafe;
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.06em;
+    }
+
+    .ol,
+    .skill,
+    .dl-token,
+    .lb-token {
+      position:absolute;
+      transform:translate(-50%,-50%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:12px;
+      font-weight:950;
+      box-shadow:0 10px 20px rgba(0,0,0,.25);
+      z-index:5;
+    }
+
+    .ol {
+      width:46px;
+      height:34px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.25);
+      color:#f8fafc;
+      font-size:.8rem;
+    }
+
+    .skill {
+      width:42px;
+      height:30px;
+      background:rgba(255,209,102,.25);
+      border:1px solid rgba(255,209,102,.45);
+      color:#fff4ca;
+      font-size:.75rem;
+    }
+
+    .dl-token {
+      width:43px;
+      height:34px;
+      background:linear-gradient(180deg,#f8fafc,#cbd5e1);
+      border:2px solid rgba(255,255,255,.85);
+      color:#0f172a;
+      font-size:.9rem;
+    }
+
+    .lb-token {
+      width:48px;
+      height:34px;
+      background:linear-gradient(180deg,#bfdbfe,#60a5fa);
+      border:2px solid rgba(219,234,254,.95);
+      color:#0f172a;
+      font-size:.78rem;
+    }
+
+    .active-player {
+      background:linear-gradient(180deg,#ffd166,#f59e0b) !important;
+      color:#111827 !important;
+      transform:translate(-50%,-50%) scale(1.12) !important;
+      box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);
+      z-index:8;
+    }
+
+    .wr-left-1 { left:11%; top:23%; }
+    .wr-left-2 { left:23%; top:19%; }
+    .wr-right-1 { left:89%; top:23%; }
+    .wr-right-2 { left:77%; top:19%; }
+    .rb { left:50%; top:18%; }
+    .qb { left:50%; top:28%; }
+    .ot-l { left:30%; top:39%; }
+    .g-l { left:40%; top:39%; }
+    .c { left:50%; top:39%; }
+    .g-r { left:60%; top:39%; }
+    .ot-r { left:70%; top:39%; }
+    .hidden-token { display:none !important; }
+
+    .gap-target {
+      position:absolute;
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      transform:translate(-50%,-50%);
+      z-index:3;
+    }
+
+    .target-LC { left:24%; top:45%; }
+    .target-LB { left:35%; top:45%; }
+    .target-LA { left:45%; top:45%; }
+    .target-RA { left:55%; top:45%; }
+    .target-RB { left:65%; top:45%; }
+    .target-RC { left:76%; top:45%; }
+
+    .gap-row {
+      position:absolute;
+      left:7%;
+      right:7%;
+      top:76%;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(64px,1fr));
+      gap:10px;
+      z-index:6;
+    }
+
+    .gap-zone {
+      min-height:70px;
+      border-radius:16px;
+      border:2px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.07);
+      color:white;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      cursor:pointer;
+      user-select:none;
+      transition:.15s;
+    }
+
+    .gap-zone:hover {
+      transform:translateY(-4px);
+      border-color:rgba(255,209,102,.72);
+      background:rgba(255,209,102,.13);
+    }
+
+    .gap-zone strong { font-size:1rem; }
+
+    .gap-zone span {
+      font-size:.7rem;
+      color:var(--muted);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.07em;
+    }
+
+    .gap-zone.correct-zone {
+      border-color:rgba(52,211,153,.9);
+      background:rgba(52,211,153,.22);
+    }
+
+    .gap-zone.wrong-zone {
+      border-color:rgba(255,107,107,.92);
+      background:rgba(255,107,107,.2);
+      animation:shake .22s linear 2;
+    }
+
+    @keyframes shake {
+      0% { transform:translateX(0); }
+      25% { transform:translateX(-3px); }
+      50% { transform:translateX(3px); }
+      75% { transform:translateX(-2px); }
+      100% { transform:translateX(0); }
+    }
+
+    .arrow-line {
+      position:absolute;
+      height:5px;
+      border-radius:999px;
+      transform-origin:left center;
+      z-index:12;
+      box-shadow:0 0 14px rgba(255,255,255,.23);
+    }
+
+    .arrow-line.blue { background:#60a5fa; }
+    .arrow-line.red { background:#ff6b6b; }
+    .arrow-line.gold { background:#ffd166; }
+    .arrow-line.green { background:#34d399; }
+    .arrow-line.purple { background:#c084fc; }
+    .arrow-line.orange { background:#fb923c; }
+
+    .arrow-head {
+      position:absolute;
+      width:0;
+      height:0;
+      border-left:13px solid currentColor;
+      border-top:8px solid transparent;
+      border-bottom:8px solid transparent;
+      z-index:13;
+    }
+
+    .arrow-head.blue { color:#60a5fa; }
+    .arrow-head.red { color:#ff6b6b; }
+    .arrow-head.gold { color:#ffd166; }
+    .arrow-head.green { color:#34d399; }
+    .arrow-head.purple { color:#c084fc; }
+    .arrow-head.orange { color:#fb923c; }
+
+    .ghost-token {
+      position:absolute;
+      width:43px;
+      height:34px;
+      border-radius:12px;
+      background:rgba(255,255,255,.2);
+      border:1px dashed rgba(255,255,255,.38);
+      transform:translate(-50%,-50%);
+      z-index:4;
+    }
+
+    .def-label {
+      position:absolute;
+      left:15px;
+      bottom:13px;
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      text-transform:uppercase;
+    }
+
+    .def-left-right {
+      position:absolute;
+      right:15px;
+      bottom:13px;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      text-align:right;
+    }
+
+    .question-kicker {
+      color:var(--gold);
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:.78rem;
+      margin-bottom:8px;
+    }
+
+    .question-card h2 {
+      font-size:1.42rem;
+      margin-bottom:8px;
+      color:white;
+    }
+
+    .question-card p {
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .responsibility-box {
+      margin-top:12px;
+      padding:12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.1);
+      color:#e2e8f0;
+      font-weight:760;
+      line-height:1.45;
+    }
+
+    .answer-grid {
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .answer-btn {
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      color:white;
+      text-align:left;
+      padding:13px 14px;
+      border-radius:16px;
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    .answer-btn.correct {
+      border-color:rgba(52,211,153,.85);
+      background:rgba(52,211,153,.2);
+    }
+
+    .answer-btn.incorrect {
+      border-color:rgba(255,107,107,.85);
+      background:rgba(255,107,107,.18);
+    }
+
+    .answer-btn.disabled {
+      pointer-events:none;
+      opacity:.78;
+    }
+
+    .choice-letter {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      margin-right:10px;
+      background:rgba(255,255,255,.12);
+      color:var(--gold);
+      font-weight:950;
+    }
+
+    .feedback-box {
+      margin-top:14px;
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+    }
+
+    .feedback-box h3 {
+      margin-bottom:4px;
+      color:white;
+    }
+
+    .feedback-box p { color:var(--muted); }
+
+    .ticket-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .ticket-item {
+      padding:12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.1);
+    }
+
+    .ticket-item .label {
+      display:block;
+      color:var(--muted);
+      font-size:.75rem;
+      text-transform:uppercase;
+      font-weight:900;
+    }
+
+    .ticket-item .value {
+      display:block;
+      color:white;
+      font-weight:900;
+      margin-top:4px;
+    }
+
+    @media(max-width:980px) {
+      .sim-layout { grid-template-columns:1fr; }
+      .hud-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    }
+
+    @media(max-width:640px) {
+      .hud-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .gap-row {
+        gap:6px;
+        grid-template-columns:repeat(3,minmax(72px,1fr));
+        top:73%;
+      }
+      .ticket-grid { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
   <div class="page-shell">
     <div class="game-topbar">
       <a class="mini-link" href="../index.html">← Back to Hub</a>
-      <div class="badge-stack"><span class="small-badge live">● Live</span><span class="small-badge">Game 14</span><span class="small-badge">Single Man Gap Exchange</span></div>
+      <div class="badge-stack">
+        <span class="small-badge live">● Live</span>
+        <span class="small-badge">Game 14</span>
+        <span class="small-badge">Single Man Exchange</span>
+      </div>
     </div>
+
     <section id="startScreen" class="start-card">
       <h1>Game 14 — Single Man Gap Exchange</h1>
-      <p>Single Man pressure forces a gap exchange. This game teaches the DL not to sit where they started when Sam or Jack is taking or replacing a gap.</p>
-      <div class="coach-note">Sam and Jack are outside linebackers. Base alignment is 4x4. Only Sam/Jack involved blitzes start from outside; DL stunts still use their normal paths. Texas = Tackle C-gap + Jack B-gap.</div>
-      <div class="name-row"><input id="playerName" type="text" placeholder="Player name" autocomplete="off" /><button class="btn" type="button" onclick="startGame()">Start Game</button></div>
+      <p>
+        Single Man pressure forces a gap exchange. This game teaches the defensive line and outside linebackers how the gap picture changes when Sam or Jack is coming.
+      </p>
+      <div class="coach-note">
+        Sam and Jack are outside linebackers in a 4x4 base alignment. Jack/Sam involved blitzes start from outside. Rule for this game: Jack blitzes same-side C on Jack pressures, except Texas, where Jack blitzes B and Tackle works C.
+      </div>
+      <div class="name-row">
+        <input id="playerName" type="text" placeholder="Player name" autocomplete="off" />
+        <button class="btn" type="button" onclick="startGame()">Start Game</button>
+      </div>
     </section>
+
     <section id="gameScreen" class="hidden">
       <div class="hud-grid">
-        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div><div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div><div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div><div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div><div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div><div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
+        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div>
+        <div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div>
+        <div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div>
+        <div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div>
+        <div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div>
+        <div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
       </div>
+
       <div class="sim-layout">
-        <div class="field-card"><div class="call-banner"><strong id="callTitle">OKIE RIP</strong><span class="call-note">Sam/Jack blitzes start from outside 4x4. DL movement still follows the stunt.</span></div>
+        <div class="field-card">
+          <div class="call-banner">
+            <strong id="callTitle">OKIE RIP</strong>
+            <span class="call-note">Sam/Jack start outside 4x4. Arrows finish in offensive-line gaps.</span>
+          </div>
           <div id="board" class="game-board">
-            <div class="field-title">Offense</div><div id="strengthTag" class="strength-box">Strength: defensive right</div><div id="strongArea" class="strong-area right"></div><div class="hash-line hash-1"></div><div class="hash-line hash-2"></div>
-            <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div><div id="wrL2" class="skill wr-left-2 hidden-token">WR</div><div id="wrR1" class="skill wr-right-1">WR</div><div id="wrR2" class="skill wr-right-2">WR</div><div class="skill rb">RB</div><div class="skill qb">QB</div>
-            <div class="ol ot-l">OT</div><div class="ol g-l">G</div><div class="ol c">C</div><div class="ol g-r">G</div><div class="ol ot-r">OT</div><div class="los"></div><div class="los-label">Line of Scrimmage</div>
-            <div class="gap-target target-LC"></div><div class="gap-target target-LB"></div><div class="gap-target target-LA"></div><div class="gap-target target-RA"></div><div class="gap-target target-RB"></div><div class="gap-target target-RC"></div>
-            <div id="dlE" class="dl-token">E</div><div id="dlN" class="dl-token">N</div><div id="dlT" class="dl-token">T</div><div id="lbJ" class="lb-token">J</div><div id="lbS" class="lb-token">S</div>
-            <div class="gap-row"><div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div></div>
-            <div class="def-label">Defense</div><div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
+            <div class="field-title">Offense</div>
+            <div id="strengthTag" class="strength-box">Strength: defensive right</div>
+            <div id="strongArea" class="strong-area right"></div>
+            <div class="hash-line hash-1"></div>
+            <div class="hash-line hash-2"></div>
+
+            <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div>
+            <div id="wrL2" class="skill wr-left-2 hidden-token">WR</div>
+            <div id="wrR1" class="skill wr-right-1">WR</div>
+            <div id="wrR2" class="skill wr-right-2">WR</div>
+            <div class="skill rb">RB</div>
+            <div class="skill qb">QB</div>
+
+            <div class="ol ot-l">OT</div>
+            <div class="ol g-l">G</div>
+            <div class="ol c">C</div>
+            <div class="ol g-r">G</div>
+            <div class="ol ot-r">OT</div>
+            <div class="los"></div>
+            <div class="los-label">Line of Scrimmage</div>
+
+            <div class="gap-target target-LC"></div>
+            <div class="gap-target target-LB"></div>
+            <div class="gap-target target-LA"></div>
+            <div class="gap-target target-RA"></div>
+            <div class="gap-target target-RB"></div>
+            <div class="gap-target target-RC"></div>
+
+            <div id="dlE" class="dl-token">E</div>
+            <div id="dlN" class="dl-token">N</div>
+            <div id="dlT" class="dl-token">T</div>
+            <div id="lbJ" class="lb-token">J</div>
+            <div id="lbS" class="lb-token">S</div>
+
+            <div class="gap-row">
+              <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div>
+              <div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div>
+              <div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
+            </div>
+
+            <div class="def-label">Defense</div>
+            <div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
           </div>
         </div>
-        <aside class="question-card"><div id="questionKicker" class="question-kicker">OKIE RIP</div><h2 id="questionStem">Click your responsibility.</h2><p id="questionCopy">Read the call and click the correct final gap.</p><div id="responsibilityBox" class="responsibility-box"></div><div id="mcAnswers" class="answer-grid hidden"></div><div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Correct</h3><p id="feedbackCopy">Good rep.</p></div></aside>
+
+        <aside class="question-card">
+          <div id="questionKicker" class="question-kicker">OKIE RIP</div>
+          <h2 id="questionStem">Click your responsibility.</h2>
+          <p id="questionCopy">Read the call and click the correct final gap.</p>
+          <div id="responsibilityBox" class="responsibility-box"></div>
+          <div id="mcAnswers" class="answer-grid hidden"></div>
+          <div id="feedbackBox" class="feedback-box hidden">
+            <h3 id="feedbackTitle">Correct</h3>
+            <p id="feedbackCopy">Good rep.</p>
+          </div>
+        </aside>
       </div>
     </section>
-    <section id="ticketScreen" class="ticket-card hidden"><h1>Game 14 — Single Man Gap Exchange Ticket</h1><p id="ticketMessage">Perfect run earned.</p><div id="ticketGrid" class="ticket-grid"></div><div class="name-row"><button class="btn" type="button" onclick="restartGame()">Restart for Another Attempt</button><a class="btn secondary-btn" href="../index.html">Back to Hub</a></div></section>
+
+    <section id="ticketScreen" class="ticket-card hidden">
+      <h1>Game 14 — Single Man Gap Exchange Ticket</h1>
+      <p id="ticketMessage">Perfect run earned.</p>
+      <div id="ticketGrid" class="ticket-grid"></div>
+      <div class="name-row">
+        <button class="btn" type="button" onclick="restartGame()">Restart for Another Attempt</button>
+        <a class="btn secondary-btn" href="../index.html">Back to Hub</a>
+      </div>
+    </section>
   </div>
-<script>
-const GAME_TITLE='Game 14 — Single Man Gap Exchange';
-const STORAGE_KEY='singleManGapExchangeAttempt';
-const PLAYER_LABELS={E:'End',N:'Nose',T:'Tackle',J:'Jack',S:'Sam'};
-const RAW_BANK=[
-  {stunt:'TEXAS Single Man',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'away',gap:'C',title:'TEXAS — Tackle. Jack is coming from outside. Click YOUR finish.',detail:'Texas is a Tackle C-gap / Jack B-gap blitz. Jack starts from outside 4x4, not inside the box.',coaching:'Texas: Tackle works C gap. Jack blitzes B gap from outside 4x4. Do not turn Jack into an inside linebacker.',involveJack:true,moves:[{player:'T',to:'LC',kind:'stunt',speed:720},{player:'J',to:'LB',kind:'olb',speed:820,offset:120},{player:'N',to:'RA',kind:'stunt',speed:760},{player:'E',to:'RC',kind:'contain',speed:860}]},
-  {stunt:'TEXAS Single Man',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'away',gap:'C',title:'TEXAS — Tackle. Jack is coming from outside. Click YOUR finish.',detail:'Texas is a Tackle C-gap / Jack B-gap blitz. Jack starts from outside 4x4, not inside the box.',coaching:'Texas: Tackle works C gap. Jack blitzes B gap from outside 4x4. Do not turn Jack into an inside linebacker.',involveJack:true,moves:[{player:'T',to:'RC',kind:'stunt',speed:720},{player:'J',to:'RB',kind:'olb',speed:820,offset:120},{player:'N',to:'LA',kind:'stunt',speed:760},{player:'E',to:'LC',kind:'contain',speed:860}]},
-  {stunt:'TEXAS Single Man',call:'OKIE RIP',formation:'rightTwoDetached',player:'J',answer:'LB',side:'away',gap:'B',title:'TEXAS — Jack. You are outside 4x4. Click your blitz gap.',detail:'You are not stacked inside. You are outside and blitzing into B.',coaching:'Texas: Jack blitzes B gap from outside 4x4. Tackle owns C gap.',involveJack:true,moves:[{player:'T',to:'LC',kind:'stunt',speed:720},{player:'J',to:'LB',kind:'olb',speed:820,offset:120},{player:'N',to:'RA',kind:'stunt',speed:760},{player:'E',to:'RC',kind:'contain',speed:860}]},
-  {stunt:'TEXAS Single Man',call:'OKIE LIZ',formation:'leftTwoDetached',player:'J',answer:'RB',side:'away',gap:'B',title:'TEXAS — Jack. You are outside 4x4. Click your blitz gap.',detail:'You are not stacked inside. You are outside and blitzing into B.',coaching:'Texas: Jack blitzes B gap from outside 4x4. Tackle owns C gap.',involveJack:true,moves:[{player:'T',to:'RC',kind:'stunt',speed:720},{player:'J',to:'RB',kind:'olb',speed:820,offset:120},{player:'N',to:'LA',kind:'stunt',speed:760},{player:'E',to:'LC',kind:'contain',speed:860}]},
-  {stunt:'JACK Single Man',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',side:'call',gap:'B',title:'JACK Single Man — End. Jack replaces outside. Click YOUR finish.',detail:'Jack comes from outside 4x4 and becomes the new C-gap player. End closes B.',coaching:'Single Man exchange: End closes B. Jack replaces C from outside 4x4.',involveJack:true,moves:[{player:'E',to:'RB',kind:'exchange',speed:650},{player:'J',to:'RC',kind:'olb',speed:850,offset:150},{player:'N',to:'RA',kind:'stunt',speed:760},{player:'T',to:'LB',kind:'stunt',speed:820}]},
-  {stunt:'JACK Single Man',call:'OKIE LIZ',formation:'leftTwoDetached',player:'E',side:'call',gap:'B',title:'JACK Single Man — End. Jack replaces outside. Click YOUR finish.',detail:'Jack comes from outside 4x4 and becomes the new C-gap player. End closes B.',coaching:'Single Man exchange: End closes B. Jack replaces C from outside 4x4.',involveJack:true,moves:[{player:'E',to:'LB',kind:'exchange',speed:650},{player:'J',to:'LC',kind:'olb',speed:850,offset:150},{player:'N',to:'LA',kind:'stunt',speed:760},{player:'T',to:'RB',kind:'stunt',speed:820}]},
-  {stunt:'SAM Single Man',call:'OKIE RIP',formation:'rightTwoDetached',player:'T',side:'away',gap:'B',title:'SAM Single Man — Tackle. Sam replaces outside from 4x4. Click YOUR finish.',detail:'Sam is an outside linebacker. He comes from outside 4x4; the DL closes the exchanged gap.',coaching:'Single Man exchange: Sam comes from outside. Tackle closes B while Sam replaces C.',involveSam:true,moves:[{player:'T',to:'LB',kind:'exchange',speed:650},{player:'S',to:'LC',kind:'olb',speed:850,offset:150},{player:'N',to:'RA',kind:'stunt',speed:760},{player:'E',to:'RC',kind:'contain',speed:820}]},
-  {stunt:'SAM Single Man',call:'OKIE LIZ',formation:'leftTwoDetached',player:'T',side:'away',gap:'B',title:'SAM Single Man — Tackle. Sam replaces outside from 4x4. Click YOUR finish.',detail:'Sam is an outside linebacker. He comes from outside 4x4; the DL closes the exchanged gap.',coaching:'Single Man exchange: Sam comes from outside. Tackle closes B while Sam replaces C.',involveSam:true,moves:[{player:'T',to:'RB',kind:'exchange',speed:650},{player:'S',to:'RC',kind:'olb',speed:850,offset:150},{player:'N',to:'LA',kind:'stunt',speed:760},{player:'E',to:'LC',kind:'contain',speed:820}]},
-  {stunt:'NAW Single Man',call:'OKIE RIP',formation:'rightTwoDetached',player:'N',side:'away',gap:'A',title:'NAW Single Man — Nose. Click your away-side A control.',detail:'The LB pressure creates an exchange outside of you. Nose cannot open the middle.',coaching:'NAW: Nose stays tight and controls away-side A. Keep the middle clean while the outside pressure comes.',showJack:true,moves:[{player:'E',to:'RC',kind:'contain',speed:840},{player:'J',to:'RB',kind:'olb',speed:740,offset:120},{player:'N',to:'LA',kind:'stunt',speed:640},{player:'T',to:'LB',kind:'stunt',speed:800}]},
-  {mode:'choice',stunt:'Single Man Rule',call:'OKIE RIP',formation:'rightTwoDetached',player:'E',title:'Single Man with Sam or Jack involved — where does the blitz start?',detail:'This is a recognition rep.',answers:[{text:'From outside 4x4. Sam and Jack are outside linebackers.',correct:true},{text:'Stacked inside like a 30 linebacker.',correct:false},{text:'Head-up over the center.',correct:false},{text:'It starts wherever the ball is going.',correct:false}],coaching:'Sam and Jack are outside linebackers. If they are blitzing, the path starts outside and works in.',moves:[{player:'E',to:'RB',kind:'exchange',speed:640},{player:'J',to:'RC',kind:'olb',speed:820,offset:140},{player:'N',to:'RA',kind:'stunt',speed:760},{player:'T',to:'LB',kind:'stunt',speed:800}]}
-];
-let BANK;
-function byId(id){return document.getElementById(id)}
-function shuffleArray(array){const copy=array.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
-function sidePrefix(call,side){const callSide=call.includes('RIP')?'R':'L';const awaySide=call.includes('RIP')?'L':'R';return side==='call'?callSide:awaySide}
-function sideGap(call,side,gap){return sidePrefix(call,side)+gap}
-function sideText(call,side){return sidePrefix(call,side)==='R'?'defensive right':'defensive left'}
-function pathColor(gap,type){if(type==='contain')return 'gold'; if(type==='exchange')return 'purple'; if(type==='olb')return 'orange'; if(type==='sameSide')return 'red'; if(gap==='A')return 'blue'; if(gap==='B')return 'red'; if(gap==='C')return 'gold'; return 'green'}
-function makeBank(raw){return raw.map(q=>{if(q.mode==='choice')return Object.assign({strength:q.call.includes('RIP')?'defensive right':'defensive left'},q);const answer=q.answer || sideGap(q.call,q.side,q.gap);return Object.assign({},q,{mode:'gap',answer,strength:q.call.includes('RIP')?'defensive right':'defensive left',detail:q.detail+' Side: '+(q.side==='call'?'CALL SIDE':'AWAY SIDE')+' ('+sideText(q.call,q.side)+').'});});}
-BANK=makeBank(RAW_BANK);
-let QUESTIONS=[],playerName='',currentIndex=0,correctCount=0,missCount=0,totalAttempts=0,attemptNumber=Number(localStorage.getItem(STORAGE_KEY)||'1'),startTime=null,locked=false;
-function currentQuestion(){return QUESTIONS[currentIndex]}
-function buildQuestionSet(){return shuffleArray(BANK).slice(0, Math.min(14,BANK.length))}
-function startGame(){playerName=byId('playerName').value.trim();if(!playerName){alert('Type your name first.');return}QUESTIONS=buildQuestionSet();startTime=new Date();currentIndex=0;correctCount=0;missCount=0;totalAttempts=0;locked=false;byId('hudName').textContent=playerName;byId('hudAttempt').textContent=attemptNumber;byId('startScreen').classList.add('hidden');byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.remove('hidden');loadQuestion()}
-function restartGame(){attemptNumber+=1;localStorage.setItem(STORAGE_KEY,String(attemptNumber));byId('ticketScreen').classList.add('hidden');byId('startScreen').classList.remove('hidden');byId('gameScreen').classList.add('hidden')}
-function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length;byId('hudCorrect').textContent=correctCount;byId('hudMisses').textContent=missCount;const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);byId('hudAccuracy').textContent=accuracy+'%';byId('hudAttempt').textContent=attemptNumber}
-function loadQuestion(){locked=false;clearBoard();const q=currentQuestion();applyFormation(q.formation,q.call,q.strength);showOkieStuntFront(q.call);showOutsideBackers(q);highlightPlayer(q.player);byId('callTitle').textContent=q.call+' — '+q.stunt+' — '+PLAYER_LABELS[q.player];byId('questionKicker').textContent=q.call+' • '+q.stunt+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent=q.mode==='gap'?'Click YOUR final gap below. On correct, watch the full line and any Sam/Jack outside-in blitz path.':'Choose the correct coaching response. On correct, watch the full movement picture.';if(q.mode==='choice')renderChoices(q.answers);else byId('mcAnswers').classList.add('hidden');updateHud()}
-function applyFormation(formation,call,strength){const leftStrong=formation==='leftTwoDetached';byId('strongArea').className='strong-area '+(leftStrong?'left':'right');byId('strengthTag').textContent='Strength: '+strength;byId('wrL1').classList.toggle('hidden-token',!leftStrong);byId('wrL2').classList.toggle('hidden-token',!leftStrong);byId('wrR1').classList.toggle('hidden-token',leftStrong);byId('wrR2').classList.toggle('hidden-token',leftStrong)}
-function place(el,left,top){el.style.left=left+'%';el.style.top=top+'%';el.style.transform='translate(-50%,-50%)';}
-function showOkieStuntFront(call){const rip=call.includes('RIP');place(byId('dlE'), rip?73:27, 63);place(byId('dlN'), rip?54:46, 63);place(byId('dlT'), rip?36:64, 63);}
-function showOutsideBackers(q){const rip=q.call.includes('RIP');place(byId('lbJ'), rip?84:16, 66);place(byId('lbS'), rip?16:84, 66);byId('lbJ').classList.remove('hidden-token');byId('lbS').classList.remove('hidden-token');if(!(q.showSam||q.involveSam||playerInMoves('S',q)))byId('lbS').classList.add('hidden-token');if(!(q.showJack||q.involveJack||playerInMoves('J',q)))byId('lbJ').classList.add('hidden-token')}
-function playerInMoves(p,q){return (q.moves||[]).some(m=>m.player===p)}
-function highlightPlayer(player){['dlE','dlN','dlT','lbJ','lbS'].forEach(id=>byId(id).classList.remove('active-player'));if(player==='E')byId('dlE').classList.add('active-player');if(player==='N')byId('dlN').classList.add('active-player');if(player==='T')byId('dlT').classList.add('active-player');if(player==='J')byId('lbJ').classList.add('active-player');if(player==='S')byId('lbS').classList.add('active-player')}
-function selectGap(gap){if(locked)return;const q=currentQuestion();if(q.mode!=='gap')return;totalAttempts+=1;const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]');if(gap===q.answer){correctCount+=1;locked=true;if(zone)zone.classList.add('correct-zone');showFeedback('Correct — watch the full movement picture.',q.coaching,true);animateFullLine(q);updateHud();setTimeout(nextQuestion,6000)}else{missCount+=1;if(zone){zone.classList.add('wrong-zone');setTimeout(()=>zone.classList.remove('wrong-zone'),650)}showFeedback('Not it.','Click YOUR final gap from the call, player, and exchange/stunt rule. Sam/Jack blitzes come from outside 4x4 only when they are involved.',false);updateHud()}}
-function renderChoices(answers){const grid=byId('mcAnswers');grid.innerHTML='';grid.classList.remove('hidden');shuffleArray(answers).forEach((answer,index)=>{const button=document.createElement('button');button.className='answer-btn';button.type='button';button.innerHTML='<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text;button.onclick=function(){chooseAnswer(button,answer)};grid.appendChild(button)})}
-function chooseAnswer(button,answer){if(locked)return;const q=currentQuestion();totalAttempts+=1;if(answer.correct){correctCount+=1;locked=true;button.classList.add('correct');document.querySelectorAll('.answer-btn').forEach(btn=>btn.classList.add('disabled'));showFeedback('Correct — watch the full movement picture.',q.coaching,true);animateFullLine(q);updateHud();setTimeout(nextQuestion,6000)}else{missCount+=1;button.classList.add('incorrect');button.classList.add('disabled');showFeedback('Not it.','Use the call, front, player and stunt rule. Do not turn Sam/Jack into inside linebackers.',false);updateHud()}}
-function tokenId(player){return player==='E'?'dlE':player==='N'?'dlN':player==='T'?'dlT':player==='J'?'lbJ':'lbS'}
-function gapPoint(gap){const el=document.querySelector('.gap-target.target-'+gap);const board=byId('board').getBoundingClientRect();const r=el.getBoundingClientRect();return {x:r.left+r.width/2-board.left,y:r.top+r.height/2-board.top}}
-function tokenPoint(el){const board=byId('board').getBoundingClientRect();const r=el.getBoundingClientRect();return {x:r.left+r.width/2-board.left,y:r.top+r.height/2-board.top}}
-function drawArrow(start,end,color,delay){const board=byId('board');const dx=end.x-start.x,dy=end.y-start.y,dist=Math.hypot(dx,dy),angle=Math.atan2(dy,dx)*180/Math.PI;const line=document.createElement('div');line.className='arrow-line '+color;line.style.width=dist+'px';line.style.left=start.x+'px';line.style.top=start.y+'px';line.style.transform='rotate('+angle+'deg) scaleX(0)';line.style.transition='transform '+delay+'ms ease';const head=document.createElement('div');head.className='arrow-head '+color;head.style.left=end.x+'px';head.style.top=end.y+'px';head.style.transform='rotate('+angle+'deg) translate(-50%,-50%)';head.style.opacity='0';head.style.transition='opacity '+Math.max(260,delay-160)+'ms ease';board.appendChild(line);board.appendChild(head);requestAnimationFrame(()=>{line.style.transform='rotate('+angle+'deg) scaleX(1)';head.style.opacity='1'})}
-function ghost(el){const board=byId('board');const p=tokenPoint(el);const g=document.createElement('div');g.className='ghost-token';g.style.left=p.x+'px';g.style.top=p.y+'px';board.appendChild(g)}
-function moveToken(player,gap,kind,offset=0,delay=650){const el=byId(tokenId(player));if(!el)return;el.classList.remove('hidden-token');const start=tokenPoint(el);const end=gapPoint(gap);const color=pathColor(gap,kind);setTimeout(()=>{ghost(el);drawArrow(start,end,color,delay);const board=byId('board').getBoundingClientRect();const r=el.getBoundingClientRect();const fromX=r.left+r.width/2-board.left;const fromY=r.top+r.height/2-board.top;const dx=end.x-fromX,dy=end.y-fromY;el.style.transition='transform '+delay+'ms ease';el.style.transform='translate(calc(-50% + '+dx+'px), calc(-50% + '+dy+'px))';},offset)}
-function animateFullLine(q){(q.moves||[]).forEach(m=>moveToken(m.player,m.to,m.kind||'stunt',m.offset||0,m.speed||650))}
-function clearBoard(){byId('feedbackBox').classList.add('hidden');byId('mcAnswers').classList.add('hidden');document.querySelectorAll('.gap-zone').forEach(z=>z.classList.remove('correct-zone','wrong-zone'));document.querySelectorAll('.arrow-line,.arrow-head,.ghost-token').forEach(el=>el.remove());['dlE','dlN','dlT','lbJ','lbS'].forEach(id=>{const el=byId(id);el.style.transition='';el.style.transform='translate(-50%,-50%)';})}
-function showFeedback(title,copy,isCorrect){byId('feedbackTitle').textContent=title;byId('feedbackCopy').textContent=copy;byId('feedbackBox').classList.remove('hidden');byId('feedbackBox').style.borderColor=isCorrect?'rgba(52,211,153,0.6)':'rgba(255,107,107,0.6)'}
-function nextQuestion(){currentIndex+=1;if(currentIndex>=QUESTIONS.length)finishGame();else loadQuestion()}
-function finishGame(){byId('gameScreen').classList.add('hidden');byId('ticketScreen').classList.remove('hidden');byId('ticketMessage').textContent=missCount>0?'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.':'Perfect run earned. Screenshot or print this ticket.';const endTime=new Date();const elapsedSeconds=Math.round((endTime-startTime)/1000);const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);const result=missCount===0?'TICKET EARNED':'REPLAY REQUIRED';const items=[['Player',playerName],['Game',GAME_TITLE],['Date',endTime.toLocaleDateString()],['Start Time',startTime.toLocaleTimeString()],['End Time',endTime.toLocaleTimeString()],['Runtime',elapsedSeconds+' seconds'],['Correct First-Time Answers',correctCount+' / '+QUESTIONS.length],['Misses',missCount],['Accuracy',accuracy+'%'],['Attempt',attemptNumber],['Result',result]];byId('ticketGrid').innerHTML=items.map(item=>'<div class="ticket-item"><span class="label">'+item[0]+'</span><span class="value">'+item[1]+'</span></div>').join('')}
-</script>
+
+  <script>
+    const GAME_TITLE = 'Game 14 — Single Man Gap Exchange';
+    const STORAGE_KEY = 'singleManGapExchangeAttempt';
+
+    const PLAYER_LABELS = {
+      E: 'End',
+      N: 'Nose',
+      T: 'Tackle',
+      J: 'Jack',
+      S: 'Sam'
+    };
+
+    const RAW_BANK = [
+      {
+        stunt: 'JACK Single Man',
+        call: 'OKIE RIP',
+        formation: 'rightTwoDetached',
+        player: 'J',
+        answer: 'LC',
+        title: 'JACK Single Man — Jack. You are outside 4x4. Click your blitz gap.',
+        detail: 'Jack is an outside linebacker. Except Texas, Jack pressures come from outside into same-side C.',
+        coaching: 'Jack pressure rule: Jack comes from outside 4x4 to his same-side C gap. Texas is the exception.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'LC', kind: 'olb', speed: 850 },
+          { player: 'T', to: 'LB', kind: 'exchange', speed: 700, offset: 120 },
+          { player: 'N', to: 'RA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'RC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'JACK Single Man',
+        call: 'OKIE LIZ',
+        formation: 'leftTwoDetached',
+        player: 'J',
+        answer: 'RC',
+        title: 'JACK Single Man — Jack. You are outside 4x4. Click your blitz gap.',
+        detail: 'Jack is an outside linebacker. Except Texas, Jack pressures come from outside into same-side C.',
+        coaching: 'Jack pressure rule: Jack comes from outside 4x4 to his same-side C gap. Texas is the exception.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'RC', kind: 'olb', speed: 850 },
+          { player: 'T', to: 'RB', kind: 'exchange', speed: 700, offset: 120 },
+          { player: 'N', to: 'LA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'LC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'JACK Single Man',
+        call: 'OKIE RIP',
+        formation: 'rightTwoDetached',
+        player: 'T',
+        side: 'away',
+        gap: 'B',
+        title: 'JACK Single Man — Tackle. Jack is coming same-side C. Click YOUR exchange fit.',
+        detail: 'Jack takes same-side C from outside 4x4. Tackle closes B behind that pressure.',
+        coaching: 'When Jack comes C, the Tackle cannot float. Tackle closes B and keeps the exchange sound.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'LC', kind: 'olb', speed: 850 },
+          { player: 'T', to: 'LB', kind: 'exchange', speed: 700, offset: 120 },
+          { player: 'N', to: 'RA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'RC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'JACK Single Man',
+        call: 'OKIE LIZ',
+        formation: 'leftTwoDetached',
+        player: 'T',
+        side: 'away',
+        gap: 'B',
+        title: 'JACK Single Man — Tackle. Jack is coming same-side C. Click YOUR exchange fit.',
+        detail: 'Jack takes same-side C from outside 4x4. Tackle closes B behind that pressure.',
+        coaching: 'When Jack comes C, the Tackle cannot float. Tackle closes B and keeps the exchange sound.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'RC', kind: 'olb', speed: 850 },
+          { player: 'T', to: 'RB', kind: 'exchange', speed: 700, offset: 120 },
+          { player: 'N', to: 'LA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'LC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'TEXAS Single Man',
+        call: 'OKIE RIP',
+        formation: 'rightTwoDetached',
+        player: 'J',
+        answer: 'LB',
+        title: 'TEXAS — Jack. You are outside 4x4. Click your blitz gap.',
+        detail: 'Texas is the exception. Jack comes from outside but blitzes B, while the Tackle works C.',
+        coaching: 'Texas: Jack blitzes B from outside 4x4. Tackle works C. Texas is NOT the same-side C rule.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'LB', kind: 'olb', speed: 820 },
+          { player: 'T', to: 'LC', kind: 'stunt', speed: 720, offset: 100 },
+          { player: 'N', to: 'RA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'RC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'TEXAS Single Man',
+        call: 'OKIE LIZ',
+        formation: 'leftTwoDetached',
+        player: 'J',
+        answer: 'RB',
+        title: 'TEXAS — Jack. You are outside 4x4. Click your blitz gap.',
+        detail: 'Texas is the exception. Jack comes from outside but blitzes B, while the Tackle works C.',
+        coaching: 'Texas: Jack blitzes B from outside 4x4. Tackle works C. Texas is NOT the same-side C rule.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'RB', kind: 'olb', speed: 820 },
+          { player: 'T', to: 'RC', kind: 'stunt', speed: 720, offset: 100 },
+          { player: 'N', to: 'LA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'LC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'TEXAS Single Man',
+        call: 'OKIE RIP',
+        formation: 'rightTwoDetached',
+        player: 'T',
+        answer: 'LC',
+        title: 'TEXAS — Tackle. Jack is blitzing B. Click YOUR gap.',
+        detail: 'Texas is a Tackle C-gap / Jack B-gap blitz.',
+        coaching: 'Texas: Tackle works C. Jack blitzes B from outside 4x4.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'LB', kind: 'olb', speed: 820 },
+          { player: 'T', to: 'LC', kind: 'stunt', speed: 720, offset: 100 },
+          { player: 'N', to: 'RA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'RC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'TEXAS Single Man',
+        call: 'OKIE LIZ',
+        formation: 'leftTwoDetached',
+        player: 'T',
+        answer: 'RC',
+        title: 'TEXAS — Tackle. Jack is blitzing B. Click YOUR gap.',
+        detail: 'Texas is a Tackle C-gap / Jack B-gap blitz.',
+        coaching: 'Texas: Tackle works C. Jack blitzes B from outside 4x4.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'RB', kind: 'olb', speed: 820 },
+          { player: 'T', to: 'RC', kind: 'stunt', speed: 720, offset: 100 },
+          { player: 'N', to: 'LA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'LC', kind: 'contain', speed: 860 }
+        ]
+      },
+      {
+        stunt: 'SAM Single Man',
+        call: 'OKIE RIP',
+        formation: 'rightTwoDetached',
+        player: 'S',
+        answer: 'RC',
+        title: 'SAM Single Man — Sam. You are outside 4x4. Click your blitz gap.',
+        detail: 'Sam is an outside linebacker. Sam involved pressure comes from outside into same-side C.',
+        coaching: 'Sam comes from outside 4x4 to same-side C. End fits off that pressure.',
+        involveSam: true,
+        moves: [
+          { player: 'S', to: 'RC', kind: 'olb', speed: 850 },
+          { player: 'E', to: 'RB', kind: 'exchange', speed: 690, offset: 140 },
+          { player: 'N', to: 'RA', kind: 'stunt', speed: 760 },
+          { player: 'T', to: 'LB', kind: 'stunt', speed: 820 }
+        ]
+      },
+      {
+        stunt: 'SAM Single Man',
+        call: 'OKIE LIZ',
+        formation: 'leftTwoDetached',
+        player: 'S',
+        answer: 'LC',
+        title: 'SAM Single Man — Sam. You are outside 4x4. Click your blitz gap.',
+        detail: 'Sam is an outside linebacker. Sam involved pressure comes from outside into same-side C.',
+        coaching: 'Sam comes from outside 4x4 to same-side C. End fits off that pressure.',
+        involveSam: true,
+        moves: [
+          { player: 'S', to: 'LC', kind: 'olb', speed: 850 },
+          { player: 'E', to: 'LB', kind: 'exchange', speed: 690, offset: 140 },
+          { player: 'N', to: 'LA', kind: 'stunt', speed: 760 },
+          { player: 'T', to: 'RB', kind: 'stunt', speed: 820 }
+        ]
+      },
+      {
+        mode: 'choice',
+        stunt: 'Jack Rule Check',
+        call: 'OKIE RIP',
+        formation: 'rightTwoDetached',
+        player: 'J',
+        title: 'Rule Check — Jack involved blitzes. What is the rule?',
+        detail: 'This checks the install rule before the animation runs.',
+        answers: [
+          { text: 'Jack comes from outside 4x4 to same-side C, except Texas.', correct: true },
+          { text: 'Jack always blitzes B gap.', correct: false },
+          { text: 'Jack starts stacked behind the Nose.', correct: false },
+          { text: 'Jack always crosses the center.', correct: false }
+        ],
+        coaching: 'Correct. Jack comes same-side C from outside 4x4. Texas is the exception: Jack B, Tackle C.',
+        involveJack: true,
+        moves: [
+          { player: 'J', to: 'LC', kind: 'olb', speed: 850 },
+          { player: 'T', to: 'LB', kind: 'exchange', speed: 700, offset: 120 },
+          { player: 'N', to: 'RA', kind: 'stunt', speed: 760 },
+          { player: 'E', to: 'RC', kind: 'contain', speed: 860 }
+        ]
+      }
+    ];
+
+    let BANK = makeBank(RAW_BANK);
+    let QUESTIONS = [];
+    let playerName = '';
+    let currentIndex = 0;
+    let correctCount = 0;
+    let missCount = 0;
+    let totalAttempts = 0;
+    let attemptNumber = Number(localStorage.getItem(STORAGE_KEY) || '1');
+    let startTime = null;
+    let locked = false;
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function shuffleArray(array) {
+      const copy = array.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function sidePrefix(call, side) {
+      const callSide = call.includes('RIP') ? 'R' : 'L';
+      const awaySide = call.includes('RIP') ? 'L' : 'R';
+      return side === 'call' ? callSide : awaySide;
+    }
+
+    function sideGap(call, side, gap) {
+      return sidePrefix(call, side) + gap;
+    }
+
+    function sideText(call, side) {
+      return sidePrefix(call, side) === 'R' ? 'defensive right' : 'defensive left';
+    }
+
+    function makeBank(raw) {
+      return raw.map(q => {
+        const strength = q.call.includes('RIP') ? 'defensive right' : 'defensive left';
+        if (q.mode === 'choice') {
+          return Object.assign({ strength }, q);
+        }
+        const answer = q.answer || sideGap(q.call, q.side, q.gap);
+        const sideNote = q.side ? ' Side: ' + (q.side === 'call' ? 'CALL SIDE' : 'AWAY SIDE') + ' (' + sideText(q.call, q.side) + ').' : '';
+        return Object.assign({}, q, {
+          mode: 'gap',
+          answer,
+          strength,
+          detail: q.detail + sideNote
+        });
+      });
+    }
+
+    function currentQuestion() {
+      return QUESTIONS[currentIndex];
+    }
+
+    function buildQuestionSet() {
+      return shuffleArray(BANK).slice(0, Math.min(12, BANK.length));
+    }
+
+    function startGame() {
+      playerName = byId('playerName').value.trim();
+      if (!playerName) {
+        alert('Type your name first.');
+        return;
+      }
+      QUESTIONS = buildQuestionSet();
+      startTime = new Date();
+      currentIndex = 0;
+      correctCount = 0;
+      missCount = 0;
+      totalAttempts = 0;
+      locked = false;
+      byId('hudName').textContent = playerName;
+      byId('hudAttempt').textContent = attemptNumber;
+      byId('startScreen').classList.add('hidden');
+      byId('ticketScreen').classList.add('hidden');
+      byId('gameScreen').classList.remove('hidden');
+      loadQuestion();
+    }
+
+    function restartGame() {
+      attemptNumber += 1;
+      localStorage.setItem(STORAGE_KEY, String(attemptNumber));
+      byId('ticketScreen').classList.add('hidden');
+      byId('startScreen').classList.remove('hidden');
+      byId('gameScreen').classList.add('hidden');
+    }
+
+    function updateHud() {
+      byId('hudQuestion').textContent = (currentIndex + 1) + ' / ' + QUESTIONS.length;
+      byId('hudCorrect').textContent = correctCount;
+      byId('hudMisses').textContent = missCount;
+      const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+      byId('hudAccuracy').textContent = accuracy + '%';
+      byId('hudAttempt').textContent = attemptNumber;
+    }
+
+    function loadQuestion() {
+      locked = false;
+      clearBoard();
+      const q = currentQuestion();
+      applyFormation(q.formation, q.call, q.strength);
+      showOkieStuntFront(q.call);
+      setBackers(q.call, q.involveJack, q.involveSam);
+      highlightPlayer(q.player);
+      byId('callTitle').textContent = q.call + ' — ' + q.stunt + ' — ' + PLAYER_LABELS[q.player];
+      byId('questionKicker').textContent = q.call + ' • ' + q.stunt + ' • Strength: ' + q.strength;
+      byId('questionStem').textContent = q.title;
+      byId('questionCopy').textContent = q.detail;
+      byId('responsibilityBox').textContent = q.mode === 'gap'
+        ? 'Click YOUR final gap below. On correct, watch the full pressure exchange into the OL gaps.'
+        : 'Choose the correct coaching response. On correct, the full pressure picture will run.';
+      if (q.mode === 'choice') renderChoices(q.answers);
+      else byId('mcAnswers').classList.add('hidden');
+      updateHud();
+    }
+
+    function applyFormation(formation, call, strength) {
+      const leftStrong = formation === 'leftTwoDetached';
+      byId('strongArea').className = 'strong-area ' + (leftStrong ? 'left' : 'right');
+      byId('strengthTag').textContent = 'Strength: ' + strength;
+      byId('wrL1').classList.toggle('hidden-token', !leftStrong);
+      byId('wrL2').classList.toggle('hidden-token', !leftStrong);
+      byId('wrR1').classList.toggle('hidden-token', leftStrong);
+      byId('wrR2').classList.toggle('hidden-token', leftStrong);
+    }
+
+    function place(el, left, top) {
+      el.style.left = left + '%';
+      el.style.top = top + '%';
+      el.style.transform = 'translate(-50%,-50%)';
+    }
+
+    function showOkieStuntFront(call) {
+      const rip = call.includes('RIP');
+      place(byId('dlE'), rip ? 73 : 27, 63);     // strong 5
+      place(byId('dlN'), rip ? 54 : 46, 63);     // strong shade
+      place(byId('dlT'), rip ? 36 : 64, 63);     // weak 4i
+    }
+
+    function setBackers(call, involveJack, involveSam) {
+      const rip = call.includes('RIP');
+      const jack = byId('lbJ');
+      const sam = byId('lbS');
+
+      // Jack is weak-side outside linebacker in 4x4.
+      place(jack, rip ? 20 : 80, 69);
+
+      // Sam is strong-side outside linebacker in 4x4.
+      place(sam, rip ? 80 : 20, 69);
+
+      jack.classList.toggle('hidden-token', !involveJack);
+      sam.classList.toggle('hidden-token', !involveSam);
+    }
+
+    function highlightPlayer(player) {
+      ['dlE', 'dlN', 'dlT', 'lbJ', 'lbS'].forEach(id => byId(id).classList.remove('active-player'));
+      if (player === 'E') byId('dlE').classList.add('active-player');
+      if (player === 'N') byId('dlN').classList.add('active-player');
+      if (player === 'T') byId('dlT').classList.add('active-player');
+      if (player === 'J') byId('lbJ').classList.add('active-player');
+      if (player === 'S') byId('lbS').classList.add('active-player');
+    }
+
+    function selectGap(gap) {
+      if (locked) return;
+      const q = currentQuestion();
+      if (q.mode !== 'gap') return;
+      totalAttempts += 1;
+      const zone = document.querySelector('.gap-zone[data-gap="' + gap + '"]');
+      if (gap === q.answer) {
+        correctCount += 1;
+        locked = true;
+        if (zone) zone.classList.add('correct-zone');
+        showFeedback('Correct — watch the pressure exchange.', q.coaching, true);
+        animateFullLine(q);
+        updateHud();
+        setTimeout(nextQuestion, 5600);
+      } else {
+        missCount += 1;
+        if (zone) {
+          zone.classList.add('wrong-zone');
+          setTimeout(() => zone.classList.remove('wrong-zone'), 650);
+        }
+        showFeedback('Not it.', 'Use the pressure rule. Jack is same-side C except Texas. Texas is Jack B / Tackle C.', false);
+        updateHud();
+      }
+    }
+
+    function renderChoices(answers) {
+      const grid = byId('mcAnswers');
+      grid.innerHTML = '';
+      grid.classList.remove('hidden');
+      shuffleArray(answers).forEach((answer, index) => {
+        const button = document.createElement('button');
+        button.className = 'answer-btn';
+        button.type = 'button';
+        button.innerHTML = '<span class="choice-letter">' + String.fromCharCode(65 + index) + '</span>' + answer.text;
+        button.onclick = function() { chooseAnswer(button, answer); };
+        grid.appendChild(button);
+      });
+    }
+
+    function chooseAnswer(button, answer) {
+      if (locked) return;
+      const q = currentQuestion();
+      totalAttempts += 1;
+      if (answer.correct) {
+        correctCount += 1;
+        locked = true;
+        button.classList.add('correct');
+        document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
+        showFeedback('Correct — watch the pressure exchange.', q.coaching, true);
+        animateFullLine(q);
+        updateHud();
+        setTimeout(nextQuestion, 5600);
+      } else {
+        missCount += 1;
+        button.classList.add('incorrect');
+        button.classList.add('disabled');
+        showFeedback('Not it.', 'Jack rule: same-side C except Texas. Texas: Jack B, Tackle C.', false);
+        updateHud();
+      }
+    }
+
+    function tokenId(player) {
+      if (player === 'E') return 'dlE';
+      if (player === 'N') return 'dlN';
+      if (player === 'T') return 'dlT';
+      if (player === 'J') return 'lbJ';
+      if (player === 'S') return 'lbS';
+      return 'dlE';
+    }
+
+    function gapPoint(gap) {
+      const el = document.querySelector('.gap-target.target-' + gap);
+      const board = byId('board').getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - board.left, y: r.top + r.height / 2 - board.top };
+    }
+
+    function tokenPoint(el) {
+      const board = byId('board').getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - board.left, y: r.top + r.height / 2 - board.top };
+    }
+
+    function pathColor(gap, type) {
+      if (type === 'olb') return 'orange';
+      if (type === 'contain') return 'gold';
+      if (type === 'exchange') return 'purple';
+      if (gap.endsWith('A')) return 'blue';
+      if (gap.endsWith('B')) return 'red';
+      if (gap.endsWith('C')) return 'gold';
+      return 'green';
+    }
+
+    function drawArrow(start, end, color, delay) {
+      const board = byId('board');
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const dist = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      const line = document.createElement('div');
+      line.className = 'arrow-line ' + color;
+      line.style.width = dist + 'px';
+      line.style.left = start.x + 'px';
+      line.style.top = start.y + 'px';
+      line.style.transform = 'rotate(' + angle + 'deg) scaleX(0)';
+      line.style.transition = 'transform ' + delay + 'ms ease';
+      const head = document.createElement('div');
+      head.className = 'arrow-head ' + color;
+      head.style.left = end.x + 'px';
+      head.style.top = end.y + 'px';
+      head.style.transform = 'rotate(' + angle + 'deg) translate(-50%,-50%)';
+      head.style.opacity = '0';
+      head.style.transition = 'opacity ' + Math.max(260, delay - 160) + 'ms ease';
+      board.appendChild(line);
+      board.appendChild(head);
+      requestAnimationFrame(() => {
+        line.style.transform = 'rotate(' + angle + 'deg) scaleX(1)';
+        head.style.opacity = '1';
+      });
+    }
+
+    function ghost(el) {
+      const board = byId('board');
+      const p = tokenPoint(el);
+      const g = document.createElement('div');
+      g.className = 'ghost-token';
+      g.style.left = p.x + 'px';
+      g.style.top = p.y + 'px';
+      board.appendChild(g);
+    }
+
+    function moveToken(player, gap, kind, offset = 0, delay = 650) {
+      const el = byId(tokenId(player));
+      if (!el) return;
+      el.classList.remove('hidden-token');
+      const start = tokenPoint(el);
+      const end = gapPoint(gap);
+      const color = pathColor(gap, kind);
+      setTimeout(() => {
+        ghost(el);
+        drawArrow(start, end, color, delay);
+        const board = byId('board').getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        const fromX = r.left + r.width / 2 - board.left;
+        const fromY = r.top + r.height / 2 - board.top;
+        const dx = end.x - fromX;
+        const dy = end.y - fromY;
+        el.style.transition = 'transform ' + delay + 'ms ease';
+        el.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
+      }, offset);
+    }
+
+    function animateFullLine(q) {
+      (q.moves || []).forEach(m => moveToken(m.player, m.to, m.kind || 'stunt', m.offset || 0, m.speed || 650));
+    }
+
+    function clearBoard() {
+      byId('feedbackBox').classList.add('hidden');
+      byId('mcAnswers').classList.add('hidden');
+      document.querySelectorAll('.gap-zone').forEach(z => z.classList.remove('correct-zone', 'wrong-zone'));
+      document.querySelectorAll('.arrow-line,.arrow-head,.ghost-token').forEach(el => el.remove());
+      ['dlE', 'dlN', 'dlT', 'lbJ', 'lbS'].forEach(id => {
+        const el = byId(id);
+        el.style.transition = '';
+        el.style.transform = 'translate(-50%,-50%)';
+      });
+    }
+
+    function showFeedback(title, copy, isCorrect) {
+      byId('feedbackTitle').textContent = title;
+      byId('feedbackCopy').textContent = copy;
+      byId('feedbackBox').classList.remove('hidden');
+      byId('feedbackBox').style.borderColor = isCorrect ? 'rgba(52,211,153,0.6)' : 'rgba(255,107,107,0.6)';
+    }
+
+    function nextQuestion() {
+      currentIndex += 1;
+      if (currentIndex >= QUESTIONS.length) finishGame();
+      else loadQuestion();
+    }
+
+    function finishGame() {
+      byId('gameScreen').classList.add('hidden');
+      byId('ticketScreen').classList.remove('hidden');
+      byId('ticketMessage').textContent = missCount > 0
+        ? 'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.'
+        : 'Perfect run earned. Screenshot or print this ticket.';
+      const endTime = new Date();
+      const elapsedSeconds = Math.round((endTime - startTime) / 1000);
+      const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+      const result = missCount === 0 ? 'TICKET EARNED' : 'REPLAY REQUIRED';
+      const items = [
+        ['Player', playerName],
+        ['Game', GAME_TITLE],
+        ['Date', endTime.toLocaleDateString()],
+        ['Start Time', startTime.toLocaleTimeString()],
+        ['End Time', endTime.toLocaleTimeString()],
+        ['Runtime', elapsedSeconds + ' seconds'],
+        ['Correct First-Time Answers', correctCount + ' / ' + QUESTIONS.length],
+        ['Misses', missCount],
+        ['Accuracy', accuracy + '%'],
+        ['Attempt', attemptNumber],
+        ['Result', result]
+      ];
+      byId('ticketGrid').innerHTML = items.map(item => '<div class="ticket-item"><span class="label">' + item[0] + '</span><span class="value">' + item[1] + '</span></div>').join('');
+    }
+  </script>
 </body>
 </html>
