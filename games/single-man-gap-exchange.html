@@ -5,78 +5,634 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Game 14 — Single Man Gap Exchange</title>
 <link rel="stylesheet" href="../styles.css" />
+
 <style>
-:root{
-  --gold:#ffd166; --green:#34d399; --red:#ff6b6b; --blue:#60a5fa; --purple:#c084fc;
-  --muted:#b7c6e6; --text:#f8fafc; --panel:#152744;
+:root {
+  --gold:#ffd166;
+  --green:#34d399;
+  --red:#ff6b6b;
+  --blue:#60a5fa;
+  --muted:#b7c6e6;
+  --text:#f8fafc;
+  --purple:#c084fc;
 }
-.hidden{display:none!important}
-.game-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-.mini-link{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--text);text-decoration:none;border:1px solid rgba(255,255,255,.12);font-weight:800}
-.badge-stack{display:flex;gap:8px;flex-wrap:wrap}
-.small-badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
-.small-badge.live{color:#d7fff0;background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.42)}
-.start-card,.ticket-card{max-width:960px;margin:0 auto;background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
-.start-card p,.ticket-card p{color:var(--muted);line-height:1.55}
-.name-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-.name-row input{flex:1 1 280px;min-width:240px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;font-weight:800;outline:none}
-.coach-note{margin-top:18px;padding:14px;border-radius:16px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.25);color:#fff0bf;font-weight:760;line-height:1.5}
-.hud-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:12px}
-.hud-box{border-radius:18px;background:linear-gradient(180deg,rgba(30,47,88,.96),rgba(19,31,58,.96));border:1px solid rgba(255,255,255,.12);padding:13px}
-.hud-box span{display:block;color:var(--muted);font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.hud-box strong{display:block;color:#fff;font-size:1.08rem;margin-top:3px}
-.sim-layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);gap:14px}
-.field-card,.question-card{background:linear-gradient(180deg,rgba(21,39,68,.95),rgba(11,19,34,.96));border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 18px 45px rgba(0,0,0,.28);overflow:hidden}
-.call-banner{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.call-note{color:var(--muted);font-size:.82rem;font-weight:750}.question-card{padding:18px}
-.game-board{position:relative;min-height:560px;background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at top,rgba(59,130,246,.13),transparent 55%),rgba(7,16,31,.8);background-size:72px 72px,72px 72px,100% 100%,100% 100%;overflow:hidden}
-.field-title{position:absolute;top:13px;left:16px;color:#c7d2fe;font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
-.strength-box{position:absolute;top:22px;right:18px;z-index:7;padding:8px 12px;border-radius:999px;background:rgba(20,184,166,.18);border:1px solid rgba(45,212,191,.45);color:#ccfbf1;font-size:.76rem;font-weight:950}
-.strong-area{position:absolute;top:42px;width:27%;height:126px;border:2px solid rgba(45,212,191,.25);background:rgba(45,212,191,.08);border-radius:18px}.strong-area.left{left:7%}.strong-area.right{right:7%}
-.hash-line{position:absolute;top:0;bottom:0;width:1px;border-left:1px dashed rgba(255,255,255,.16)}.hash-1{left:33.33%}.hash-2{left:66.66%}
-.los{position:absolute;left:8%;right:8%;top:49%;height:3px;background:rgba(255,255,255,.62)}.los-label{position:absolute;left:50%;top:51%;transform:translateX(-50%);color:#dbeafe;font-size:.72rem;font-weight:950;letter-spacing:.06em}
-.ol,.skill,.dl-token,.lb-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5}
-.ol{width:46px;height:34px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#f8fafc;font-size:.8rem}
-.skill{width:42px;height:30px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.75rem}
-.dl-token{width:43px;height:34px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.9rem}
-.lb-token{width:45px;height:34px;background:linear-gradient(180deg,#bfdbfe,#60a5fa);border:2px solid rgba(219,234,254,.95);color:#0f172a;font-size:.78rem}
-.active-player{background:linear-gradient(180deg,#ffd166,#f59e0b)!important;color:#111827!important;transform:translate(-50%,-50%) scale(1.12)!important;box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);z-index:8}
-.wr-left-1{left:11%;top:23%}.wr-left-2{left:23%;top:19%}.wr-right-1{left:89%;top:23%}.wr-right-2{left:77%;top:19%}.rb{left:50%;top:18%}.qb{left:50%;top:28%}.ot-l{left:30%;top:39%}.g-l{left:40%;top:39%}.c{left:50%;top:39%}.g-r{left:60%;top:39%}.ot-r{left:70%;top:39%}.hidden-token{display:none!important}
-.gap-target{position:absolute;width:26px;height:26px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);transform:translate(-50%,-50%);z-index:3}.target-LC{left:24%;top:45%}.target-LB{left:35%;top:45%}.target-LA{left:45%;top:45%}.target-RA{left:55%;top:45%}.target-RB{left:65%;top:45%}.target-RC{left:76%;top:45%}
-.gap-row{position:absolute;left:7%;right:7%;top:76%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6}
-.gap-zone{min-height:70px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;user-select:none;transition:.15s}
-.gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13)}
-.gap-zone strong{font-size:1rem}.gap-zone span{font-size:.7rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.07em}.gap-zone.correct-zone{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22)}.gap-zone.wrong-zone{border-color:rgba(255,107,107,.92);background:rgba(255,107,107,.2);animation:shake .22s linear 2}@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
-.arrow-line{position:absolute;height:5px;border-radius:999px;transform-origin:left center;z-index:12;box-shadow:0 0 14px rgba(255,255,255,.23)}.arrow-line.blue{background:#60a5fa}.arrow-line.red{background:#ff6b6b}.arrow-line.gold{background:#ffd166}.arrow-line.green{background:#34d399}.arrow-line.purple{background:#c084fc}
-.arrow-head{position:absolute;width:0;height:0;border-left:13px solid currentColor;border-top:8px solid transparent;border-bottom:8px solid transparent;z-index:13}.arrow-head.blue{color:#60a5fa}.arrow-head.red{color:#ff6b6b}.arrow-head.gold{color:#ffd166}.arrow-head.green{color:#34d399}.arrow-head.purple{color:#c084fc}
-.ghost-token{position:absolute;width:43px;height:34px;border-radius:12px;background:rgba(255,255,255,.2);border:1px dashed rgba(255,255,255,.38);transform:translate(-50%,-50%);z-index:4}
-.def-label{position:absolute;left:15px;bottom:13px;color:var(--muted);font-size:.74rem;font-weight:950;text-transform:uppercase}.def-left-right{position:absolute;right:15px;bottom:13px;color:var(--gold);font-size:.78rem;font-weight:950;text-align:right}
-.question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px}.question-card h2{font-size:1.42rem;margin-bottom:8px;color:white}.question-card p{color:var(--muted);line-height:1.5}
-.responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45}
-.answer-grid{display:grid;gap:10px;margin-top:14px}.answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800}.answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2)}.answer-btn.incorrect{border-color:rgba(255,107,107,.85);background:rgba(255,107,107,.18)}.answer-btn.disabled{pointer-events:none;opacity:.78}.choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950}
-.feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}.feedback-box h3{margin-bottom:4px;color:white}.feedback-box p{color:var(--muted)}
-.ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px}
-@media(max-width:980px){.sim-layout{grid-template-columns:1fr}.hud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gap-row{gap:6px;grid-template-columns:repeat(3,minmax(72px,1fr));top:73%}.ticket-grid{grid-template-columns:1fr}}
+
+.hidden { display:none !important; }
+
+.game-wrap {
+  max-width:1200px;
+  margin:0 auto;
+  padding:18px;
+}
+
+.game-topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.badges {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.badge {
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  color:white;
+  font-size:.75rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+.badge.live {
+  color:#d7fff0;
+  background:rgba(52,211,153,.14);
+  border-color:rgba(52,211,153,.45);
+}
+
+.start-card,
+.ticket-card,
+.field-card,
+.question-card {
+  background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(11,19,34,.96));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  box-shadow:0 18px 45px rgba(0,0,0,.32);
+}
+
+.start-card,
+.ticket-card {
+  padding:24px;
+}
+
+.start-card p,
+.ticket-card p,
+.question-card p {
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.coach-note {
+  margin-top:16px;
+  padding:14px;
+  border-radius:16px;
+  background:rgba(255,209,102,.1);
+  border:1px solid rgba(255,209,102,.28);
+  color:#fff0bf;
+  font-weight:800;
+}
+
+.name-row {
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+
+.name-row input {
+  flex:1 1 260px;
+  min-width:220px;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.08);
+  color:white;
+  font-weight:800;
+}
+
+.btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  border-radius:14px;
+  padding:12px 16px;
+  background:linear-gradient(180deg,#60a5fa,#2563eb);
+  color:white;
+  font-weight:900;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.secondary-btn,
+.ghost-btn {
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+}
+
+.hud-grid {
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.hud-box {
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(30,47,88,.96),rgba(19,31,58,.96));
+  border:1px solid rgba(255,255,255,.12);
+  padding:12px;
+}
+
+.hud-box span {
+  display:block;
+  color:var(--muted);
+  font-size:.72rem;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.hud-box strong {
+  display:block;
+  color:white;
+  font-size:1.05rem;
+  margin-top:4px;
+}
+
+.layout {
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:14px;
+}
+
+.field-card {
+  overflow:hidden;
+}
+
+.call-banner {
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.call-note {
+  color:var(--muted);
+  font-size:.82rem;
+  font-weight:800;
+}
+
+.board {
+  position:relative;
+  min-height:540px;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),
+    radial-gradient(circle at top,rgba(59,130,246,.13),transparent 55%),
+    rgba(7,16,31,.82);
+  background-size:72px 72px,72px 72px,100% 100%,100% 100%;
+  overflow:hidden;
+}
+
+.field-title {
+  position:absolute;
+  top:13px;
+  left:16px;
+  color:#c7d2fe;
+  font-size:.75rem;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+.strength-box {
+  position:absolute;
+  top:18px;
+  right:18px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(20,184,166,.18);
+  border:1px solid rgba(45,212,191,.45);
+  color:#ccfbf1;
+  font-size:.76rem;
+  font-weight:950;
+  z-index:10;
+}
+
+.strong-area {
+  position:absolute;
+  top:42px;
+  width:27%;
+  height:126px;
+  border:2px solid rgba(45,212,191,.25);
+  background:rgba(45,212,191,.08);
+  border-radius:18px;
+}
+
+.strong-area.left { left:7%; }
+.strong-area.right { right:7%; }
+
+.los {
+  position:absolute;
+  left:8%;
+  right:8%;
+  top:49%;
+  height:3px;
+  background:rgba(255,255,255,.62);
+}
+
+.los-label {
+  position:absolute;
+  left:50%;
+  top:51%;
+  transform:translateX(-50%);
+  color:#dbeafe;
+  font-size:.72rem;
+  font-weight:950;
+}
+
+.hash-line {
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:1px;
+  border-left:1px dashed rgba(255,255,255,.16);
+}
+
+.hash-1 { left:33.33%; }
+.hash-2 { left:66.66%; }
+
+.ol,
+.skill,
+.dl-token,
+.lb-token {
+  position:absolute;
+  transform:translate(-50%,-50%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  font-weight:950;
+  box-shadow:0 10px 20px rgba(0,0,0,.25);
+  z-index:5;
+}
+
+.ol {
+  width:46px;
+  height:34px;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.25);
+  color:#f8fafc;
+  font-size:.8rem;
+}
+
+.skill {
+  width:42px;
+  height:30px;
+  background:rgba(255,209,102,.25);
+  border:1px solid rgba(255,209,102,.45);
+  color:#fff4ca;
+  font-size:.75rem;
+}
+
+.dl-token {
+  width:43px;
+  height:34px;
+  background:linear-gradient(180deg,#f8fafc,#cbd5e1);
+  border:2px solid rgba(255,255,255,.85);
+  color:#0f172a;
+  font-size:.9rem;
+}
+
+.lb-token {
+  width:45px;
+  height:34px;
+  background:linear-gradient(180deg,#bfdbfe,#60a5fa);
+  border:2px solid rgba(219,234,254,.95);
+  color:#0f172a;
+  font-size:.78rem;
+}
+
+.active-player {
+  background:linear-gradient(180deg,#ffd166,#f59e0b) !important;
+  color:#111827 !important;
+  transform:translate(-50%,-50%) scale(1.12) !important;
+  box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);
+  z-index:8;
+}
+
+.hidden-token { display:none !important; }
+
+.wr-left-1 { left:11%; top:23%; }
+.wr-left-2 { left:23%; top:19%; }
+.wr-right-1 { left:89%; top:23%; }
+.wr-right-2 { left:77%; top:19%; }
+.rb { left:50%; top:18%; }
+.qb { left:50%; top:28%; }
+
+.ot-l { left:30%; top:39%; }
+.g-l { left:40%; top:39%; }
+.c { left:50%; top:39%; }
+.g-r { left:60%; top:39%; }
+.ot-r { left:70%; top:39%; }
+
+.gap-target {
+  position:absolute;
+  width:26px;
+  height:26px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  transform:translate(-50%,-50%);
+  z-index:3;
+}
+
+.target-LC { left:24%; top:45%; }
+.target-LB { left:35%; top:45%; }
+.target-LA { left:45%; top:45%; }
+.target-RA { left:55%; top:45%; }
+.target-RB { left:65%; top:45%; }
+.target-RC { left:76%; top:45%; }
+
+.gap-row {
+  position:absolute;
+  left:7%;
+  right:7%;
+  top:75%;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(64px,1fr));
+  gap:10px;
+  z-index:6;
+}
+
+.gap-zone {
+  min-height:70px;
+  border-radius:16px;
+  border:2px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.07);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  cursor:pointer;
+  user-select:none;
+  transition:.15s;
+}
+
+.gap-zone:hover {
+  transform:translateY(-4px);
+  border-color:rgba(255,209,102,.72);
+  background:rgba(255,209,102,.13);
+}
+
+.gap-zone strong { font-size:1rem; }
+.gap-zone span {
+  font-size:.7rem;
+  color:var(--muted);
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.gap-zone.correct-zone {
+  border-color:rgba(52,211,153,.9);
+  background:rgba(52,211,153,.22);
+}
+
+.gap-zone.wrong-zone {
+  border-color:rgba(255,107,107,.92);
+  background:rgba(255,107,107,.2);
+  animation:shake .22s linear 2;
+}
+
+@keyframes shake {
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-3px)}
+  50%{transform:translateX(3px)}
+  75%{transform:translateX(-2px)}
+  100%{transform:translateX(0)}
+}
+
+.arrow-line {
+  position:absolute;
+  height:5px;
+  border-radius:999px;
+  transform-origin:left center;
+  z-index:12;
+  box-shadow:0 0 14px rgba(255,255,255,.23);
+}
+
+.arrow-line.blue { background:#60a5fa; }
+.arrow-line.red { background:#ff6b6b; }
+.arrow-line.gold { background:#ffd166; }
+.arrow-line.green { background:#34d399; }
+.arrow-line.purple { background:#c084fc; }
+
+.arrow-head {
+  position:absolute;
+  width:0;
+  height:0;
+  border-left:13px solid currentColor;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  z-index:13;
+}
+
+.arrow-head.blue { color:#60a5fa; }
+.arrow-head.red { color:#ff6b6b; }
+.arrow-head.gold { color:#ffd166; }
+.arrow-head.green { color:#34d399; }
+.arrow-head.purple { color:#c084fc; }
+
+.ghost-token {
+  position:absolute;
+  width:43px;
+  height:34px;
+  border-radius:12px;
+  background:rgba(255,255,255,.2);
+  border:1px dashed rgba(255,255,255,.38);
+  transform:translate(-50%,-50%);
+  z-index:4;
+}
+
+.def-label {
+  position:absolute;
+  left:15px;
+  bottom:13px;
+  color:var(--muted);
+  font-size:.74rem;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+.def-left-right {
+  position:absolute;
+  right:15px;
+  bottom:13px;
+  color:var(--gold);
+  font-size:.78rem;
+  font-weight:950;
+  text-align:right;
+}
+
+.question-card {
+  padding:18px;
+}
+
+.question-kicker {
+  color:var(--gold);
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:.78rem;
+  margin-bottom:8px;
+}
+
+.question-card h2 {
+  font-size:1.42rem;
+  margin-bottom:8px;
+  color:white;
+}
+
+.responsibility-box {
+  margin-top:12px;
+  padding:12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:#e2e8f0;
+  font-weight:760;
+  line-height:1.45;
+}
+
+.answer-grid {
+  display:grid;
+  gap:10px;
+  margin-top:14px;
+}
+
+.answer-btn {
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);
+  color:white;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:16px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.answer-btn.correct {
+  border-color:rgba(52,211,153,.85);
+  background:rgba(52,211,153,.2);
+}
+
+.answer-btn.incorrect {
+  border-color:rgba(255,107,107,.85);
+  background:rgba(255,107,107,.18);
+}
+
+.answer-btn.disabled {
+  pointer-events:none;
+  opacity:.78;
+}
+
+.choice-letter {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  margin-right:10px;
+  background:rgba(255,255,255,.12);
+  color:var(--gold);
+  font-weight:950;
+}
+
+.feedback-box {
+  margin-top:14px;
+  border-radius:18px;
+  padding:14px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.13);
+}
+
+.feedback-box h3 { margin-bottom:4px; color:white; }
+.feedback-box p { color:var(--muted); }
+
+.ticket-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:16px;
+}
+
+.ticket-item {
+  padding:12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.ticket-item .label {
+  display:block;
+  color:var(--muted);
+  font-size:.75rem;
+  text-transform:uppercase;
+  font-weight:900;
+}
+
+.ticket-item .value {
+  display:block;
+  color:white;
+  font-weight:900;
+  margin-top:4px;
+}
+
+@media(max-width:980px){
+  .layout { grid-template-columns:1fr; }
+  .hud-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+@media(max-width:640px){
+  .hud-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .gap-row {
+    gap:6px;
+    grid-template-columns:repeat(3,minmax(72px,1fr));
+    top:73%;
+  }
+  .ticket-grid { grid-template-columns:1fr; }
+}
 </style>
 </head>
+
 <body>
-<div class="page-shell">
+<div class="game-wrap">
+
   <div class="game-topbar">
-    <a class="mini-link" href="../index.html">← Back to Hub</a>
-    <div class="badge-stack">
-      <span class="small-badge live">● Live</span>
-      <span class="small-badge">Game 14</span>
-      <span class="small-badge">Single Man Exchange</span>
+    <a class="btn secondary-btn" href="../index.html">← Back to Hub</a>
+    <div class="badges">
+      <span class="badge live">● Live</span>
+      <span class="badge">Game 14</span>
+      <span class="badge">Single Man Exchange</span>
     </div>
   </div>
 
   <section id="startScreen" class="start-card">
     <h1>Game 14 — Single Man Gap Exchange</h1>
-    <p>Single Man pressure forces a gap exchange. This version covers the Single Man family: JACK, TEXAS, MOP, NAW, MISSILE, and NAIL. No coverage thinking — just who is coming and where the DL finishes.</p>
+    <p>
+      Single Man pressure forces a gap exchange or a pressure fit. This game teaches the defensive line
+      and blitzing linebacker relationship without coverage or backend thinking.
+    </p>
+
     <div class="coach-note">
-      Key rules: Jack/Sam are outside linebackers. Base alignment is 4x4. Jack pressures come from outside to same-side C, except TEXAS: Jack = B and Tackle = C.
+      Built from the Single Man rules: JACK, TEXAS, MOP, NAW, MISSILE, and NAIL.
+      M and W align over their respective guards. Sam and Jack are outside linebackers.
     </div>
+
     <div class="name-row">
-      <input id="playerName" type="text" placeholder="Player name" autocomplete="off">
+      <input id="playerName" type="text" placeholder="Player name" autocomplete="off" />
       <button class="btn" type="button" onclick="startGame()">Start Game</button>
     </div>
   </section>
@@ -90,23 +646,55 @@
       <div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div>
       <div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
     </div>
-    <div class="sim-layout">
+
+    <div class="layout">
       <div class="field-card">
-        <div class="call-banner"><strong id="callTitle">OKIE RIP</strong><span class="call-note">Offense on top. Defense on bottom. Arrows finish in the offensive-line gaps.</span></div>
-        <div id="board" class="game-board">
+        <div class="call-banner">
+          <strong id="callTitle">OKIE RIP</strong>
+          <span class="call-note">Offense on top. Defense on bottom. Arrows finish in the offensive-line gaps.</span>
+        </div>
+
+        <div id="board" class="board">
           <div class="field-title">Offense</div>
           <div id="strengthTag" class="strength-box">Strength: defensive right</div>
           <div id="strongArea" class="strong-area right"></div>
-          <div class="hash-line hash-1"></div><div class="hash-line hash-2"></div>
-          <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div><div id="wrL2" class="skill wr-left-2 hidden-token">WR</div>
-          <div id="wrR1" class="skill wr-right-1">WR</div><div id="wrR2" class="skill wr-right-2">WR</div>
-          <div class="skill rb">RB</div><div class="skill qb">QB</div>
-          <div class="ol ot-l">OT</div><div class="ol g-l">G</div><div class="ol c">C</div><div class="ol g-r">G</div><div class="ol ot-r">OT</div>
-          <div class="los"></div><div class="los-label">Line of Scrimmage</div>
-          <div class="gap-target target-LC"></div><div class="gap-target target-LB"></div><div class="gap-target target-LA"></div>
-          <div class="gap-target target-RA"></div><div class="gap-target target-RB"></div><div class="gap-target target-RC"></div>
-          <div id="dlE" class="dl-token">E</div><div id="dlN" class="dl-token">N</div><div id="dlT" class="dl-token">T</div>
-          <div id="lbS" class="lb-token">S</div><div id="lbM" class="lb-token">M</div><div id="lbW" class="lb-token">W</div><div id="lbJ" class="lb-token">J</div>
+
+          <div class="hash-line hash-1"></div>
+          <div class="hash-line hash-2"></div>
+
+          <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div>
+          <div id="wrL2" class="skill wr-left-2 hidden-token">WR</div>
+          <div id="wrR1" class="skill wr-right-1">WR</div>
+          <div id="wrR2" class="skill wr-right-2">WR</div>
+
+          <div class="skill rb">RB</div>
+          <div class="skill qb">QB</div>
+
+          <div class="ol ot-l">OT</div>
+          <div class="ol g-l">G</div>
+          <div class="ol c">C</div>
+          <div class="ol g-r">G</div>
+          <div class="ol ot-r">OT</div>
+
+          <div class="los"></div>
+          <div class="los-label">Line of Scrimmage</div>
+
+          <div class="gap-target target-LC"></div>
+          <div class="gap-target target-LB"></div>
+          <div class="gap-target target-LA"></div>
+          <div class="gap-target target-RA"></div>
+          <div class="gap-target target-RB"></div>
+          <div class="gap-target target-RC"></div>
+
+          <div id="dlE" class="dl-token">E</div>
+          <div id="dlN" class="dl-token">N</div>
+          <div id="dlT" class="dl-token">T</div>
+
+          <div id="sam" class="lb-token">S</div>
+          <div id="mike" class="lb-token">M</div>
+          <div id="will" class="lb-token">W</div>
+          <div id="jack" class="lb-token">J</div>
+
           <div class="gap-row">
             <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div>
             <div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div>
@@ -115,16 +703,25 @@
             <div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div>
             <div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
           </div>
-          <div class="def-label">Defense</div><div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
+
+          <div class="def-label">Defense</div>
+          <div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
         </div>
       </div>
+
       <aside class="question-card">
         <div id="questionKicker" class="question-kicker">OKIE RIP</div>
         <h2 id="questionStem">Click your responsibility.</h2>
-        <p id="questionCopy">Read the single-man call and click the correct final gap.</p>
+        <p id="questionCopy">Read the call and click the correct final gap.</p>
+
         <div id="responsibilityBox" class="responsibility-box"></div>
+
         <div id="mcAnswers" class="answer-grid hidden"></div>
-        <div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Correct</h3><p id="feedbackCopy">Good rep.</p></div>
+
+        <div id="feedbackBox" class="feedback-box hidden">
+          <h3 id="feedbackTitle">Correct</h3>
+          <p id="feedbackCopy">Good rep.</p>
+        </div>
       </aside>
     </div>
   </section>
@@ -133,246 +730,707 @@
     <h1>Game 14 — Single Man Gap Exchange Ticket</h1>
     <p id="ticketMessage">Perfect run earned.</p>
     <div id="ticketGrid" class="ticket-grid"></div>
+
     <div class="name-row">
       <button class="btn" type="button" onclick="restartGame()">Restart for Another Attempt</button>
       <a class="btn secondary-btn" href="../index.html">Back to Hub</a>
     </div>
   </section>
+
 </div>
 
 <script>
-const GAME_TITLE='Game 14 — Single Man Gap Exchange';
-const STORAGE_KEY='singleManGapExchangeAttempt_v2';
-const PLAYER_LABELS={E:'End',N:'Nose',T:'Tackle',S:'Sam',M:'Mike',W:'Will',J:'Jack'};
-function byId(id){return document.getElementById(id)}
-function sidePrefix(call,side){const callSide=call.includes('RIP')?'R':'L';const awaySide=call.includes('RIP')?'L':'R';return side==='call'?callSide:awaySide}
-function sideGap(call,side,gap){return sidePrefix(call,side)+gap}
-function sideText(call,side){return sidePrefix(call,side)==='R'?'defensive right':'defensive left'}
-function oppSide(side){return side==='R'?'L':'R'}
-function pathColor(gap,type){if(type==='contain')return 'gold'; if(type==='exchange')return 'purple'; if(gap.endsWith('A'))return 'blue'; if(gap.endsWith('B'))return 'red'; if(gap.endsWith('C'))return 'gold'; return 'green'}
-function shuffleArray(array){const copy=array.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
+const GAME_TITLE = 'Game 14 — Single Man Gap Exchange';
+const STORAGE_KEY = 'singleManGapExchangeAttempt';
 
-const RAW_BANK=[
-  {family:'JACK',call:'OKIE RIP',formation:'rightTwoDetached',ask:'E',side:'call',gap:'B',
-   title:'JACK Single Man — You are the End. Jack is coming from outside. Where do you finish?',
-   detail:'Jack aligns outside 4x4 and comes same-side C. End closes B inside him.',
-   coaching:'JACK: Jack is outside-to-same-side C. End closes B. Do not sit wide.',
-   moves:[{p:'J',to:'RC',kind:'contain',speed:820},{p:'E',to:'RB',kind:'exchange',speed:660},{p:'N',to:'RA',kind:'stunt',speed:760},{p:'T',to:'LB',kind:'stunt',speed:820}]},
-  {family:'JACK',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'J',side:'call',gap:'C',
-   title:'JACK Single Man — You are the Jack. Where do you blitz?',
-   detail:'Jack comes from outside 4x4 to same-side C.',
-   coaching:'JACK: same-side C from outside. Texas is the only exception.',
-   moves:[{p:'J',to:'LC',kind:'contain',speed:820},{p:'E',to:'LB',kind:'exchange',speed:660},{p:'N',to:'LA',kind:'stunt',speed:760},{p:'T',to:'RB',kind:'stunt',speed:820}]},
-  {family:'TEXAS',call:'OKIE RIP',formation:'rightTwoDetached',ask:'J',side:'call',gap:'B',
-   title:'TEXAS Single Man — You are the Jack. Where do you blitz?',
-   detail:'Texas is the exception: Jack comes B, Tackle comes C.',
-   coaching:'TEXAS: Jack = B gap from outside. Tackle = C gap.',
-   moves:[{p:'J',to:'RB',kind:'exchange',speed:760},{p:'T',to:'RC',kind:'contain',speed:740},{p:'E',to:'RC',kind:'contain',speed:840},{p:'N',to:'RA',kind:'stunt',speed:760}]},
-  {family:'TEXAS',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'T',side:'call',gap:'C',
-   title:'TEXAS Single Man — You are the Tackle. Jack is B. Where do you finish?',
-   detail:'Texas: Jack is B. Tackle wraps/works to C.',
-   coaching:'TEXAS: Tackle = C gap. Jack = B gap. That is the exception to the Jack C rule.',
-   moves:[{p:'J',to:'LB',kind:'exchange',speed:760},{p:'T',to:'LC',kind:'contain',speed:740},{p:'E',to:'LC',kind:'contain',speed:840},{p:'N',to:'LA',kind:'stunt',speed:760}]},
-  {family:'MOP',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'away',gap:'A',
-   title:'MOP Single Man — You are the Nose. Interior pressure hits. Where do you control?',
-   detail:'MOP is in the Single Man family. Nose stays tight and controls away-side A.',
-   coaching:'MOP: Nose controls away-side A while the pressure hits. Keep the middle clean.',
-   moves:[{p:'M',to:'RB',kind:'exchange',speed:760},{p:'N',to:'LA',kind:'stunt',speed:640},{p:'E',to:'RC',kind:'contain',speed:830},{p:'T',to:'LB',kind:'stunt',speed:800}]},
-  {family:'MOP',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'away',gap:'A',
-   title:'MOP Single Man — You are the Nose. Where do you finish?',
-   detail:'Nose works away-side A opposite the pressure picture.',
-   coaching:'MOP: Nose controls away-side A. Stay square.',
-   moves:[{p:'M',to:'LB',kind:'exchange',speed:760},{p:'N',to:'RA',kind:'stunt',speed:640},{p:'E',to:'LC',kind:'contain',speed:830},{p:'T',to:'RB',kind:'stunt',speed:800}]},
-  {family:'NAW',call:'OKIE RIP',formation:'rightTwoDetached',ask:'W',side:'away',gap:'B',
-   title:'NAW Single Man — You are the Will. What gap are you reading into?',
-   detail:'NAW: Will reads the guard. This rep trains the pressure path and the DL around it.',
-   coaching:'NAW: Will is the single-man trigger. Read the OG and fit the path; DL keeps inside integrity.',
-   moves:[{p:'W',to:'LB',kind:'exchange',speed:780},{p:'N',to:'LA',kind:'stunt',speed:700},{p:'E',to:'RC',kind:'contain',speed:840},{p:'T',to:'LB',kind:'stunt',speed:810}]},
-  {family:'NAW',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'T',side:'away',gap:'B',
-   title:'NAW Single Man — You are the Tackle away from the call. Where do you stay sound?',
-   detail:'Will is reading the guard. Tackle cannot get washed out of weak B.',
-   coaching:'NAW: Tackle keeps weak-side B integrity while Will reads the guard.',
-   moves:[{p:'W',to:'RB',kind:'exchange',speed:780},{p:'N',to:'RA',kind:'stunt',speed:700},{p:'E',to:'LC',kind:'contain',speed:840},{p:'T',to:'RB',kind:'stunt',speed:810}]},
-  {family:'MISSILE',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'call',gap:'A',
-   title:'MISSILE Single Man — You are the Nose. Mike reads the center. Where do you stay strong?',
-   detail:'Missile is a Mike-read-center single man. Nose protects the call-side A picture.',
-   coaching:'MISSILE: Mike reads the center. Nose keeps A-gap integrity.',
-   moves:[{p:'M',to:'RA',kind:'exchange',speed:780},{p:'N',to:'RA',kind:'stunt',speed:680},{p:'E',to:'RC',kind:'contain',speed:830},{p:'T',to:'LB',kind:'stunt',speed:810}]},
-  {family:'MISSILE',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'E',side:'call',gap:'B',
-   title:'MISSILE Single Man — You are the End. Interior pressure hits. Where do you close?',
-   detail:'Mike is reading the center. End must not drift; close B inside the edge.',
-   coaching:'MISSILE: End closes B when the interior pressure changes the fit.',
-   moves:[{p:'M',to:'LA',kind:'exchange',speed:780},{p:'E',to:'LB',kind:'exchange',speed:650},{p:'N',to:'LA',kind:'stunt',speed:700},{p:'T',to:'RB',kind:'stunt',speed:810}]},
-  {family:'NAIL',call:'OKIE RIP',formation:'rightTwoDetached',ask:'W',side:'away',gap:'A',
-   title:'NAIL Single Man — You are the Will. Will reads the center. Where do you attack?',
-   detail:'Nail is a Will-read-center single man. Attack the away-side A picture.',
-   coaching:'NAIL: Will reads the center and attacks the away-side A path.',
-   moves:[{p:'W',to:'LA',kind:'exchange',speed:780},{p:'N',to:'RA',kind:'stunt',speed:700},{p:'E',to:'RC',kind:'contain',speed:830},{p:'T',to:'LB',kind:'stunt',speed:810}]},
-  {family:'NAIL',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'call',gap:'A',
-   title:'NAIL Single Man — You are the Nose. Will reads the center. Where do you protect?',
-   detail:'Will is the single-man player. Nose keeps the call-side A from opening.',
-   coaching:'NAIL: Nose protects A-gap integrity while Will reads the center.',
-   moves:[{p:'W',to:'RA',kind:'exchange',speed:780},{p:'N',to:'LA',kind:'stunt',speed:700},{p:'E',to:'LC',kind:'contain',speed:830},{p:'T',to:'RB',kind:'stunt',speed:810}]},
-  {mode:'choice',family:'Rule Check',call:'OKIE RIP',formation:'rightTwoDetached',ask:'J',
-   title:'Rule Check — Jack single-man pressure. What is the normal Jack path?',
-   detail:'This is a recognition rep.',
-   answers:[
-    {text:'Outside 4x4 to same-side C gap.',correct:true},
-    {text:'Inside stack to A gap every time.',correct:false},
-    {text:'Outside 4x4 to B gap on every call.',correct:false},
-    {text:'Jack never blitzes in Single Man.',correct:false}
-   ],
-   coaching:'Normal Jack single-man path is outside 4x4 to same-side C. Texas is the exception.',
-   moves:[{p:'J',to:'RC',kind:'contain',speed:820},{p:'E',to:'RB',kind:'exchange',speed:660},{p:'N',to:'RA',kind:'stunt',speed:760},{p:'T',to:'LB',kind:'stunt',speed:820}]},
-  {mode:'choice',family:'Texas Check',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'T',
-   title:'Texas Check — What makes Texas different?',
-   detail:'This is a recognition rep.',
-   answers:[
-    {text:'Jack goes B; Tackle goes C.',correct:true},
-    {text:'Jack goes C; Tackle stays B.',correct:false},
-    {text:'Nose crosses the center.',correct:false},
-    {text:'End long-sticks to A.',correct:false}
-   ],
-   coaching:'Texas is the exception: Jack B, Tackle C.',
-   moves:[{p:'J',to:'LB',kind:'exchange',speed:760},{p:'T',to:'LC',kind:'contain',speed:740},{p:'E',to:'LC',kind:'contain',speed:840},{p:'N',to:'LA',kind:'stunt',speed:760}]}
+const PLAYER_LABELS = {
+  E:'End',
+  N:'Nose',
+  T:'Tackle',
+  S:'Sam',
+  M:'Mike',
+  W:'Will',
+  J:'Jack'
+};
+
+const RAW_BANK = [
+  {
+    call:'OKIE RIP',
+    formation:'rightTwoDetached',
+    stunt:'JACK',
+    player:'T',
+    side:'away',
+    gap:'B',
+    title:'JACK — Tackle. Click your alignment-side B rush.',
+    detail:'Tackle is alignment-side B rush. Jack comes from outside to his alignment-side C contain rush.',
+    coaching:'JACK: T = alignment-side B. Jack = same-side C contain rush. E/N/M/W key read.',
+    moves:[
+      {player:'T', to:'LB', kind:'stunt', speed:650},
+      {player:'J', to:'LC', kind:'contain', speed:840, offset:140}
+    ]
+  },
+  {
+    call:'OKIE LIZ',
+    formation:'leftTwoDetached',
+    stunt:'JACK',
+    player:'J',
+    side:'away',
+    gap:'C',
+    title:'JACK — Jack. Click your same-side C contain rush.',
+    detail:'Jack is an outside linebacker. He comes from outside to same-side C.',
+    coaching:'JACK: Jack = alignment-side C contain rush. T = alignment-side B.',
+    moves:[
+      {player:'T', to:'RB', kind:'stunt', speed:650},
+      {player:'J', to:'RC', kind:'contain', speed:840, offset:140}
+    ]
+  },
+  {
+    call:'OKIE RIP',
+    formation:'rightTwoDetached',
+    stunt:'TEXAS',
+    player:'T',
+    side:'away',
+    gap:'C',
+    title:'TEXAS — Tackle. Click your same-side C contain rush.',
+    detail:'Texas is the exception: Tackle goes same-side C. Jack goes same-side B. Nobody crosses the ball.',
+    coaching:'TEXAS: T = C gap contain rush. Jack = same-side B from outside. No crossing center.',
+    moves:[
+      {player:'T', to:'LC', kind:'contain', speed:760},
+      {player:'J', to:'LB', kind:'stunt', speed:720, offset:140}
+    ]
+  },
+  {
+    call:'OKIE LIZ',
+    formation:'leftTwoDetached',
+    stunt:'TEXAS',
+    player:'J',
+    side:'away',
+    gap:'B',
+    title:'TEXAS — Jack. Click your same-side B gap blitz.',
+    detail:'Texas exception: Jack blitzes B from outside. Tackle contains C. Nobody crosses the ball.',
+    coaching:'TEXAS: Jack = B gap. Tackle = C gap contain rush.',
+    moves:[
+      {player:'T', to:'RC', kind:'contain', speed:760},
+      {player:'J', to:'RB', kind:'stunt', speed:720, offset:140}
+    ]
+  },
+  {
+    call:'OKIE RIP',
+    formation:'rightTwoDetached',
+    stunt:'MOP',
+    player:'E',
+    side:'call',
+    gap:'B',
+    title:'MOP — End. Click your B gap rush.',
+    detail:'MOP gives the End a B gap rush. Mike gets the BB call to the End and contains same-side C.',
+    coaching:'MOP: E = B gap rush. Mike = contain blitz same-side C.',
+    moves:[
+      {player:'E', to:'RB', kind:'stunt', speed:650},
+      {player:'M', to:'RC', kind:'contain', speed:820, offset:160}
+    ]
+  },
+  {
+    call:'OKIE LIZ',
+    formation:'leftTwoDetached',
+    stunt:'MOP',
+    player:'M',
+    side:'call',
+    gap:'C',
+    title:'MOP — Mike. Click your same-side C contain blitz.',
+    detail:'Mike gets the BB call to the End and contains same-side C.',
+    coaching:'MOP: Mike = contain blitz same-side C. E = B gap rush.',
+    moves:[
+      {player:'E', to:'LB', kind:'stunt', speed:650},
+      {player:'M', to:'LC', kind:'contain', speed:820, offset:160}
+    ]
+  },
+  {
+    call:'OKIE RIP',
+    formation:'rightTwoDetached',
+    stunt:'NAW',
+    player:'N',
+    side:'away',
+    gap:'A',
+    title:'NAW — Nose. Click your opposite A. You go first.',
+    detail:'NAW: Nose goes opposite A first. Will goes opposite A second and reads opposite guard for course.',
+    coaching:'NAW: N = opposite A first. W = opposite A second.',
+    moves:[
+      {player:'N', to:'LA', kind:'stunt', speed:640},
+      {player:'W', to:'LA', kind:'exchange', speed:780, offset:430}
+    ]
+  },
+  {
+    call:'OKIE LIZ',
+    formation:'leftTwoDetached',
+    stunt:'NAW',
+    player:'W',
+    side:'away',
+    gap:'A',
+    title:'NAW — Will. Click your opposite A. You go second.',
+    detail:'Will goes opposite A second and reads the opposite guard for course.',
+    coaching:'NAW: Nose goes opposite A first. Will goes opposite A second.',
+    moves:[
+      {player:'N', to:'RA', kind:'stunt', speed:640},
+      {player:'W', to:'RA', kind:'exchange', speed:780, offset:430}
+    ]
+  },
+  {
+    call:'OKIE RIP',
+    formation:'rightTwoDetached',
+    stunt:'MISSILE',
+    player:'N',
+    side:'call',
+    gap:'B',
+    title:'MISSILE — Nose. Click your strong-side B.',
+    detail:'Missile: Nose controls strong-side B. Mike blitzes strong A and reads the center.',
+    coaching:'MISSILE: N = strong-side B. Mike = strong A blitz.',
+    moves:[
+      {player:'N', to:'RB', kind:'stunt', speed:650},
+      {player:'M', to:'RA', kind:'exchange', speed:760, offset:160}
+    ]
+  },
+  {
+    call:'OKIE LIZ',
+    formation:'leftTwoDetached',
+    stunt:'MISSILE',
+    player:'M',
+    side:'call',
+    gap:'A',
+    title:'MISSILE — Mike. Click your strong A gap blitz.',
+    detail:'Mike blitzes strong A and reads the center to determine strong or weak A path.',
+    coaching:'MISSILE: Mike = strong A gap blitz. Nose = strong-side B.',
+    moves:[
+      {player:'N', to:'LB', kind:'stunt', speed:650},
+      {player:'M', to:'LA', kind:'exchange', speed:760, offset:160}
+    ]
+  },
+  {
+    call:'OKIE RIP',
+    formation:'rightTwoDetached',
+    stunt:'NAIL',
+    player:'N',
+    side:'call',
+    gap:'B',
+    title:'NAIL — Nose. Click your strong-side B.',
+    detail:'Nail: Nose controls strong-side B. Will blitzes weak A and reads the center.',
+    coaching:'NAIL: N = strong-side B. Will = weak A blitz.',
+    moves:[
+      {player:'N', to:'RB', kind:'stunt', speed:650},
+      {player:'W', to:'LA', kind:'exchange', speed:760, offset:160}
+    ]
+  },
+  {
+    call:'OKIE LIZ',
+    formation:'leftTwoDetached',
+    stunt:'NAIL',
+    player:'W',
+    side:'away',
+    gap:'A',
+    title:'NAIL — Will. Click your weak A gap blitz.',
+    detail:'Will blitzes weak A and reads the center to determine strong or weak A path.',
+    coaching:'NAIL: Will = weak A gap blitz. Nose = strong-side B.',
+    moves:[
+      {player:'N', to:'LB', kind:'stunt', speed:650},
+      {player:'W', to:'RA', kind:'exchange', speed:760, offset:160}
+    ]
+  },
+  {
+    mode:'choice',
+    call:'OKIE RIP',
+    formation:'rightTwoDetached',
+    stunt:'Texas Check',
+    player:'T',
+    title:'Texas Check — What makes Texas different?',
+    detail:'This is a recognition rep.',
+    answers:[
+      {text:'Jack goes B; Tackle goes C.', correct:true},
+      {text:'Jack goes C; Tackle stays B.', correct:false},
+      {text:'Nose crosses the center.', correct:false},
+      {text:'End long-sticks to A.', correct:false}
+    ],
+    coaching:'Texas is the exception: Jack B, Tackle C.',
+    moves:[
+      {player:'T', to:'LC', kind:'contain', speed:760},
+      {player:'J', to:'LB', kind:'stunt', speed:720, offset:140}
+    ]
+  },
+  {
+    mode:'choice',
+    call:'OKIE LIZ',
+    formation:'leftTwoDetached',
+    stunt:'Single Man Recognition',
+    player:'M',
+    title:'Which Single Man sends Nose first and Will second to opposite A?',
+    detail:'This is a recognition rep.',
+    answers:[
+      {text:'NAW', correct:true},
+      {text:'MOP', correct:false},
+      {text:'Texas', correct:false},
+      {text:'Jack', correct:false}
+    ],
+    coaching:'NAW: Nose opposite A first. Will opposite A second.',
+    moves:[
+      {player:'N', to:'RA', kind:'stunt', speed:640},
+      {player:'W', to:'RA', kind:'exchange', speed:780, offset:430}
+    ]
+  }
 ];
 
-function makeBank(raw){
-  return raw.map(q=>{
-    if(q.mode==='choice') return Object.assign({strength:q.call.includes('RIP')?'defensive right':'defensive left'}, q);
-    const answer=sideGap(q.call,q.side,q.gap);
-    return Object.assign({}, q, {
+let BANK;
+let QUESTIONS = [];
+let playerName = '';
+let currentIndex = 0;
+let correctCount = 0;
+let missCount = 0;
+let totalAttempts = 0;
+let attemptNumber = Number(localStorage.getItem(STORAGE_KEY) || '1');
+let startTime = null;
+let locked = false;
+
+function byId(id) {
+  return document.getElementById(id);
+}
+
+function sidePrefix(call, side) {
+  const callSide = call.includes('RIP') ? 'R' : 'L';
+  const awaySide = call.includes('RIP') ? 'L' : 'R';
+  return side === 'call' ? callSide : awaySide;
+}
+
+function sideGap(call, side, gap) {
+  return sidePrefix(call, side) + gap;
+}
+
+function sideText(call, side) {
+  return sidePrefix(call, side) === 'R' ? 'defensive right' : 'defensive left';
+}
+
+function makeBank(raw) {
+  return raw.map(q => {
+    if (q.mode === 'choice') {
+      return {
+        ...q,
+        strength: q.call.includes('RIP') ? 'defensive right' : 'defensive left'
+      };
+    }
+
+    const answer = sideGap(q.call, q.side, q.gap);
+
+    return {
+      ...q,
       mode:'gap',
       answer,
-      strength:q.call.includes('RIP')?'defensive right':'defensive left',
-      detail:q.detail+' Side: '+(q.side==='call'?'CALL SIDE':'AWAY SIDE')+' ('+sideText(q.call,q.side)+').'
-    });
+      strength: q.call.includes('RIP') ? 'defensive right' : 'defensive left',
+      detail: q.detail + ' Side: ' + (q.side === 'call' ? 'CALL SIDE' : 'AWAY SIDE') + ' (' + sideText(q.call, q.side) + ').'
+    };
   });
 }
-const BANK=makeBank(RAW_BANK);
-let QUESTIONS=[],playerName='',currentIndex=0,correctCount=0,missCount=0,totalAttempts=0,attemptNumber=Number(localStorage.getItem(STORAGE_KEY)||'1'),startTime=null,locked=false;
 
-function currentQuestion(){return QUESTIONS[currentIndex]}
-function buildQuestionSet(){return shuffleArray(BANK).slice(0, Math.min(14,BANK.length))}
-function startGame(){
-  playerName=byId('playerName').value.trim();
-  if(!playerName){alert('Type your name first.');return}
-  QUESTIONS=buildQuestionSet(); startTime=new Date(); currentIndex=0; correctCount=0; missCount=0; totalAttempts=0; locked=false;
-  byId('hudName').textContent=playerName; byId('hudAttempt').textContent=attemptNumber;
-  byId('startScreen').classList.add('hidden'); byId('ticketScreen').classList.add('hidden'); byId('gameScreen').classList.remove('hidden');
+BANK = makeBank(RAW_BANK);
+
+function shuffleArray(array) {
+  const copy = array.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function buildQuestionSet() {
+  return shuffleArray(BANK).slice(0, Math.min(14, BANK.length));
+}
+
+function currentQuestion() {
+  return QUESTIONS[currentIndex];
+}
+
+function startGame() {
+  playerName = byId('playerName').value.trim();
+
+  if (!playerName) {
+    alert('Type your name first.');
+    return;
+  }
+
+  QUESTIONS = buildQuestionSet();
+  startTime = new Date();
+  currentIndex = 0;
+  correctCount = 0;
+  missCount = 0;
+  totalAttempts = 0;
+  locked = false;
+
+  byId('hudName').textContent = playerName;
+  byId('hudAttempt').textContent = attemptNumber;
+  byId('startScreen').classList.add('hidden');
+  byId('ticketScreen').classList.add('hidden');
+  byId('gameScreen').classList.remove('hidden');
+
   loadQuestion();
 }
-function restartGame(){attemptNumber+=1;localStorage.setItem(STORAGE_KEY,String(attemptNumber));byId('ticketScreen').classList.add('hidden');byId('startScreen').classList.remove('hidden');byId('gameScreen').classList.add('hidden')}
-function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length;byId('hudCorrect').textContent=correctCount;byId('hudMisses').textContent=missCount;const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);byId('hudAccuracy').textContent=accuracy+'%';byId('hudAttempt').textContent=attemptNumber}
-function loadQuestion(){
-  locked=false; clearBoard();
-  const q=currentQuestion();
-  applyFormation(q.formation,q.call,q.strength);
-  showOkieBase(q.call);
-  highlightPlayer(q.ask);
-  byId('callTitle').textContent=q.call+' — '+q.family+' — '+PLAYER_LABELS[q.ask];
-  byId('questionKicker').textContent=q.call+' • '+q.family+' • Strength: '+q.strength;
-  byId('questionStem').textContent=q.title;
-  byId('questionCopy').textContent=q.detail;
-  byId('responsibilityBox').textContent=q.mode==='gap'?'Click YOUR final gap below. On correct, watch the full Single Man exchange picture.':'Choose the correct coaching response. On correct, the full picture will run.';
-  if(q.mode==='choice') renderChoices(q.answers); else byId('mcAnswers').classList.add('hidden');
+
+function restartGame() {
+  attemptNumber += 1;
+  localStorage.setItem(STORAGE_KEY, String(attemptNumber));
+  byId('ticketScreen').classList.add('hidden');
+  byId('startScreen').classList.remove('hidden');
+  byId('gameScreen').classList.add('hidden');
+}
+
+function updateHud() {
+  byId('hudQuestion').textContent = (currentIndex + 1) + ' / ' + QUESTIONS.length;
+  byId('hudCorrect').textContent = correctCount;
+  byId('hudMisses').textContent = missCount;
+
+  const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+  byId('hudAccuracy').textContent = accuracy + '%';
+  byId('hudAttempt').textContent = attemptNumber;
+}
+
+function loadQuestion() {
+  locked = false;
+  clearBoard();
+
+  const q = currentQuestion();
+
+  applyFormation(q.formation, q.call, q.strength);
+  showOkieFront(q.call);
+  highlightPlayer(q.player);
+
+  byId('callTitle').textContent = q.call + ' — ' + q.stunt + ' — ' + PLAYER_LABELS[q.player];
+  byId('questionKicker').textContent = q.call + ' • ' + q.stunt + ' • Strength: ' + q.strength;
+  byId('questionStem').textContent = q.title;
+  byId('questionCopy').textContent = q.detail;
+  byId('responsibilityBox').textContent =
+    q.mode === 'gap'
+      ? 'Click YOUR final gap below. On correct, watch the full movement.'
+      : 'Choose the correct coaching response. On correct, the movement picture will run.';
+
+  if (q.mode === 'choice') {
+    renderChoices(q.answers);
+  } else {
+    byId('mcAnswers').classList.add('hidden');
+  }
+
   updateHud();
 }
-function applyFormation(formation,call,strength){
-  const leftStrong=formation==='leftTwoDetached';
-  byId('strongArea').className='strong-area '+(leftStrong?'left':'right');
-  byId('strengthTag').textContent='Strength: '+strength;
-  byId('wrL1').classList.toggle('hidden-token',!leftStrong); byId('wrL2').classList.toggle('hidden-token',!leftStrong);
-  byId('wrR1').classList.toggle('hidden-token',leftStrong); byId('wrR2').classList.toggle('hidden-token',leftStrong);
+
+function applyFormation(formation, call, strength) {
+  const leftStrong = formation === 'leftTwoDetached';
+
+  byId('strongArea').className = 'strong-area ' + (leftStrong ? 'left' : 'right');
+  byId('strengthTag').textContent = 'Strength: ' + strength;
+
+  byId('wrL1').classList.toggle('hidden-token', !leftStrong);
+  byId('wrL2').classList.toggle('hidden-token', !leftStrong);
+  byId('wrR1').classList.toggle('hidden-token', leftStrong);
+  byId('wrR2').classList.toggle('hidden-token', leftStrong);
 }
-function place(el,left,top){el.style.left=left+'%';el.style.top=top+'%';el.style.transform='translate(-50%,-50%)'}
-function showOkieBase(call){
-  const rip=call.includes('RIP');
-  // OKIE single-man teaching picture: strong End 5, strong shade Nose, weak 4i Tackle; Sam/Jack outside 4x4.
-  place(byId('dlE'), rip?73:27, 63);
-  place(byId('dlN'), rip?54:46, 63);
-  place(byId('dlT'), rip?36:64, 63);
-  place(byId('lbS'), 18, 67);
-  place(byId('lbM'), 44, 72);
-  place(byId('lbW'), 56, 72);
-  place(byId('lbJ'), 82, 67);
+
+function place(el, left, top) {
+  el.style.left = left + '%';
+  el.style.top = top + '%';
+  el.style.transform = 'translate(-50%,-50%)';
 }
-function highlightPlayer(player){
-  ['dlE','dlN','dlT','lbS','lbM','lbW','lbJ'].forEach(id=>byId(id).classList.remove('active-player'));
-  const map={E:'dlE',N:'dlN',T:'dlT',S:'lbS',M:'lbM',W:'lbW',J:'lbJ'};
-  if(map[player]) byId(map[player]).classList.add('active-player');
+
+function showOkieFront(call) {
+  const rip = call.includes('RIP');
+
+  /*
+    OKIE:
+    E = strong 5
+    N = strong shade
+    T = weak 4i
+    Sam = strong OLB
+    Jack = weak OLB
+    Mike = over strong guard
+    Will = over weak guard
+  */
+
+  place(byId('dlE'), rip ? 73 : 27, 63);
+  place(byId('dlN'), rip ? 54 : 46, 63);
+  place(byId('dlT'), rip ? 36 : 64, 63);
+
+  place(byId('sam'), rip ? 82 : 18, 66);
+  place(byId('jack'), rip ? 18 : 82, 66);
+
+  place(byId('mike'), rip ? 60 : 40, 71);
+  place(byId('will'), rip ? 40 : 60, 71);
 }
-function selectGap(gap){
-  if(locked)return;
-  const q=currentQuestion();
-  if(q.mode!=='gap')return;
-  totalAttempts+=1;
-  const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]');
-  if(gap===q.answer){
-    correctCount+=1; locked=true;
-    if(zone)zone.classList.add('correct-zone');
-    showFeedback('Correct — watch the full exchange.',q.coaching,true);
+
+function highlightPlayer(player) {
+  ['dlE','dlN','dlT','sam','mike','will','jack'].forEach(id => byId(id).classList.remove('active-player'));
+
+  if (player === 'E') byId('dlE').classList.add('active-player');
+  if (player === 'N') byId('dlN').classList.add('active-player');
+  if (player === 'T') byId('dlT').classList.add('active-player');
+  if (player === 'S') byId('sam').classList.add('active-player');
+  if (player === 'M') byId('mike').classList.add('active-player');
+  if (player === 'W') byId('will').classList.add('active-player');
+  if (player === 'J') byId('jack').classList.add('active-player');
+}
+
+function selectGap(gap) {
+  if (locked) return;
+
+  const q = currentQuestion();
+  if (q.mode !== 'gap') return;
+
+  totalAttempts += 1;
+  const zone = document.querySelector('.gap-zone[data-gap="' + gap + '"]');
+
+  if (gap === q.answer) {
+    correctCount += 1;
+    locked = true;
+
+    if (zone) zone.classList.add('correct-zone');
+
+    showFeedback('Correct — watch the movement.', q.coaching, true);
     animateFullLine(q);
     updateHud();
-    setTimeout(nextQuestion,5600);
-  }else{
-    missCount+=1;
-    if(zone){zone.classList.add('wrong-zone');setTimeout(()=>zone.classList.remove('wrong-zone'),650)}
-    showFeedback('Not it.','Use the single-man call, your player, and the exception rule. Jack is same-side C except Texas; Texas is Jack B and Tackle C.',false);
+
+    setTimeout(nextQuestion, 5600);
+  } else {
+    missCount += 1;
+
+    if (zone) {
+      zone.classList.add('wrong-zone');
+      setTimeout(() => zone.classList.remove('wrong-zone'), 650);
+    }
+
+    showFeedback(
+      'Not it.',
+      'Use the single-man rule: call, player, call side / away side, and final responsibility.',
+      false
+    );
+
     updateHud();
   }
 }
-function renderChoices(answers){
-  const grid=byId('mcAnswers');grid.innerHTML='';grid.classList.remove('hidden');
-  shuffleArray(answers).forEach((answer,index)=>{
-    const button=document.createElement('button');button.className='answer-btn';button.type='button';
-    button.innerHTML='<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text;
-    button.onclick=function(){chooseAnswer(button,answer)};
+
+function renderChoices(answers) {
+  const grid = byId('mcAnswers');
+  grid.innerHTML = '';
+  grid.classList.remove('hidden');
+
+  shuffleArray(answers).forEach((answer, index) => {
+    const button = document.createElement('button');
+    button.className = 'answer-btn';
+    button.type = 'button';
+    button.innerHTML = '<span class="choice-letter">' + String.fromCharCode(65 + index) + '</span>' + answer.text;
+    button.onclick = function () { chooseAnswer(button, answer); };
     grid.appendChild(button);
   });
 }
-function chooseAnswer(button,answer){
-  if(locked)return;
-  const q=currentQuestion(); totalAttempts+=1;
-  if(answer.correct){
-    correctCount+=1; locked=true; button.classList.add('correct'); document.querySelectorAll('.answer-btn').forEach(btn=>btn.classList.add('disabled'));
-    showFeedback('Correct — watch the full exchange.',q.coaching,true); animateFullLine(q); updateHud(); setTimeout(nextQuestion,5600);
-  }else{
-    missCount+=1; button.classList.add('incorrect'); button.classList.add('disabled');
-    showFeedback('Not it.','Stay with the single-man rule and the Texas exception.',false); updateHud();
+
+function chooseAnswer(button, answer) {
+  if (locked) return;
+
+  const q = currentQuestion();
+  totalAttempts += 1;
+
+  if (answer.correct) {
+    correctCount += 1;
+    locked = true;
+
+    button.classList.add('correct');
+    document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
+
+    showFeedback('Correct — watch the movement.', q.coaching, true);
+    animateFullLine(q);
+    updateHud();
+
+    setTimeout(nextQuestion, 5600);
+  } else {
+    missCount += 1;
+    button.classList.add('incorrect');
+    button.classList.add('disabled');
+
+    showFeedback('Not it.', 'Use the rule. Do not guess from the picture.', false);
+    updateHud();
   }
 }
-function tokenId(player){return {E:'dlE',N:'dlN',T:'dlT',S:'lbS',M:'lbM',W:'lbW',J:'lbJ'}[player]}
-function gapPoint(gap){const el=document.querySelector('.gap-target.target-'+gap);const board=byId('board').getBoundingClientRect();const r=el.getBoundingClientRect();return {x:r.left+r.width/2-board.left,y:r.top+r.height/2-board.top}}
-function tokenPoint(el){const board=byId('board').getBoundingClientRect();const r=el.getBoundingClientRect();return {x:r.left+r.width/2-board.left,y:r.top+r.height/2-board.top}}
-function drawArrow(start,end,color,delay){
-  const board=byId('board'); const dx=end.x-start.x,dy=end.y-start.y,dist=Math.hypot(dx,dy),angle=Math.atan2(dy,dx)*180/Math.PI;
-  const line=document.createElement('div'); line.className='arrow-line '+color; line.style.width=dist+'px'; line.style.left=start.x+'px'; line.style.top=start.y+'px'; line.style.transform='rotate('+angle+'deg) scaleX(0)'; line.style.transition='transform '+delay+'ms ease';
-  const head=document.createElement('div'); head.className='arrow-head '+color; head.style.left=end.x+'px'; head.style.top=end.y+'px'; head.style.transform='rotate('+angle+'deg) translate(-50%,-50%)'; head.style.opacity='0'; head.style.transition='opacity '+Math.max(260,delay-160)+'ms ease';
-  board.appendChild(line); board.appendChild(head);
-  requestAnimationFrame(()=>{line.style.transform='rotate('+angle+'deg) scaleX(1)';head.style.opacity='1'});
+
+function tokenId(player) {
+  if (player === 'E') return 'dlE';
+  if (player === 'N') return 'dlN';
+  if (player === 'T') return 'dlT';
+  if (player === 'S') return 'sam';
+  if (player === 'M') return 'mike';
+  if (player === 'W') return 'will';
+  if (player === 'J') return 'jack';
+  return 'dlE';
 }
-function ghost(el){const board=byId('board');const p=tokenPoint(el);const g=document.createElement('div');g.className='ghost-token';g.style.left=p.x+'px';g.style.top=p.y+'px';board.appendChild(g)}
-function moveToken(player,gap,kind,offset=0,delay=650){
-  const el=byId(tokenId(player)); if(!el)return;
-  const start=tokenPoint(el); const end=gapPoint(gap); const color=pathColor(gap,kind);
-  setTimeout(()=>{ghost(el); drawArrow(start,end,color,delay); const board=byId('board').getBoundingClientRect(); const r=el.getBoundingClientRect(); const fromX=r.left+r.width/2-board.left; const fromY=r.top+r.height/2-board.top; const dx=end.x-fromX,dy=end.y-fromY; el.style.transition='transform '+delay+'ms ease'; el.style.transform='translate(calc(-50% + '+dx+'px), calc(-50% + '+dy+'px))';},offset);
+
+function gapPoint(gap) {
+  const el = document.querySelector('.gap-target.target-' + gap);
+  const board = byId('board').getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+
+  return {
+    x: r.left + r.width / 2 - board.left,
+    y: r.top + r.height / 2 - board.top
+  };
 }
-function animateFullLine(q){(q.moves||[]).forEach(m=>moveToken(m.p,m.to,m.kind||'stunt',m.offset||0,m.speed||650))}
-function clearBoard(){
-  byId('feedbackBox').classList.add('hidden'); byId('mcAnswers').classList.add('hidden');
-  document.querySelectorAll('.gap-zone').forEach(z=>z.classList.remove('correct-zone','wrong-zone'));
-  document.querySelectorAll('.arrow-line,.arrow-head,.ghost-token').forEach(el=>el.remove());
-  ['dlE','dlN','dlT','lbS','lbM','lbW','lbJ'].forEach(id=>{const el=byId(id);el.style.transition='';el.style.transform='translate(-50%,-50%)';});
+
+function tokenPoint(el) {
+  const board = byId('board').getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+
+  return {
+    x: r.left + r.width / 2 - board.left,
+    y: r.top + r.height / 2 - board.top
+  };
 }
-function showFeedback(title,copy,isCorrect){byId('feedbackTitle').textContent=title;byId('feedbackCopy').textContent=copy;byId('feedbackBox').classList.remove('hidden');byId('feedbackBox').style.borderColor=isCorrect?'rgba(52,211,153,0.6)':'rgba(255,107,107,0.6)'}
-function nextQuestion(){currentIndex+=1;if(currentIndex>=QUESTIONS.length)finishGame();else loadQuestion()}
-function finishGame(){
-  byId('gameScreen').classList.add('hidden'); byId('ticketScreen').classList.remove('hidden');
-  byId('ticketMessage').textContent=missCount>0?'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.':'Perfect run earned. Screenshot or print this ticket.';
-  const endTime=new Date(); const elapsedSeconds=Math.round((endTime-startTime)/1000); const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100); const result=missCount===0?'TICKET EARNED':'REPLAY REQUIRED';
-  const items=[['Player',playerName],['Game',GAME_TITLE],['Date',endTime.toLocaleDateString()],['Start Time',startTime.toLocaleTimeString()],['End Time',endTime.toLocaleTimeString()],['Runtime',elapsedSeconds+' seconds'],['Correct First-Time Answers',correctCount+' / '+QUESTIONS.length],['Misses',missCount],['Accuracy',accuracy+'%'],['Attempt',attemptNumber],['Result',result]];
-  byId('ticketGrid').innerHTML=items.map(item=>'<div class="ticket-item"><span class="label">'+item[0]+'</span><span class="value">'+item[1]+'</span></div>').join('');
+
+function pathColor(gap, type) {
+  if (type === 'contain') return 'gold';
+  if (type === 'exchange') return 'purple';
+  if (gap.endsWith('A')) return 'blue';
+  if (gap.endsWith('B')) return 'red';
+  if (gap.endsWith('C')) return 'gold';
+  return 'green';
+}
+
+function drawArrow(start, end, color, delay) {
+  const board = byId('board');
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const dist = Math.hypot(dx, dy);
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+  const line = document.createElement('div');
+  line.className = 'arrow-line ' + color;
+  line.style.width = dist + 'px';
+  line.style.left = start.x + 'px';
+  line.style.top = start.y + 'px';
+  line.style.transform = 'rotate(' + angle + 'deg) scaleX(0)';
+  line.style.transition = 'transform ' + delay + 'ms ease';
+
+  const head = document.createElement('div');
+  head.className = 'arrow-head ' + color;
+  head.style.left = end.x + 'px';
+  head.style.top = end.y + 'px';
+  head.style.transform = 'rotate(' + angle + 'deg) translate(-50%,-50%)';
+  head.style.opacity = '0';
+  head.style.transition = 'opacity ' + Math.max(260, delay - 160) + 'ms ease';
+
+  board.appendChild(line);
+  board.appendChild(head);
+
+  requestAnimationFrame(() => {
+    line.style.transform = 'rotate(' + angle + 'deg) scaleX(1)';
+    head.style.opacity = '1';
+  });
+}
+
+function ghost(el) {
+  const board = byId('board');
+  const p = tokenPoint(el);
+
+  const g = document.createElement('div');
+  g.className = 'ghost-token';
+  g.style.left = p.x + 'px';
+  g.style.top = p.y + 'px';
+
+  board.appendChild(g);
+}
+
+function moveToken(player, gap, kind, offset = 0, delay = 650) {
+  const el = byId(tokenId(player));
+  if (!el) return;
+
+  const start = tokenPoint(el);
+  const end = gapPoint(gap);
+  const color = pathColor(gap, kind);
+
+  setTimeout(() => {
+    ghost(el);
+    drawArrow(start, end, color, delay);
+
+    const board = byId('board').getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+
+    const fromX = r.left + r.width / 2 - board.left;
+    const fromY = r.top + r.height / 2 - board.top;
+
+    const dx = end.x - fromX;
+    const dy = end.y - fromY;
+
+    el.style.transition = 'transform ' + delay + 'ms ease';
+    el.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
+  }, offset);
+}
+
+function animateFullLine(q) {
+  (q.moves || []).forEach(m => {
+    moveToken(m.player, m.to, m.kind || 'stunt', m.offset || 0, m.speed || 650);
+  });
+}
+
+function clearBoard() {
+  byId('feedbackBox').classList.add('hidden');
+  byId('mcAnswers').classList.add('hidden');
+
+  document.querySelectorAll('.gap-zone').forEach(z => z.classList.remove('correct-zone','wrong-zone'));
+  document.querySelectorAll('.arrow-line,.arrow-head,.ghost-token').forEach(el => el.remove());
+
+  ['dlE','dlN','dlT','sam','mike','will','jack'].forEach(id => {
+    const el = byId(id);
+    el.style.transition = '';
+    el.style.transform = 'translate(-50%,-50%)';
+  });
+}
+
+function showFeedback(title, copy, isCorrect) {
+  byId('feedbackTitle').textContent = title;
+  byId('feedbackCopy').textContent = copy;
+  byId('feedbackBox').classList.remove('hidden');
+  byId('feedbackBox').style.borderColor = isCorrect ? 'rgba(52,211,153,.6)' : 'rgba(255,107,107,.6)';
+}
+
+function nextQuestion() {
+  currentIndex += 1;
+
+  if (currentIndex >= QUESTIONS.length) {
+    finishGame();
+  } else {
+    loadQuestion();
+  }
+}
+
+function finishGame() {
+  byId('gameScreen').classList.add('hidden');
+  byId('ticketScreen').classList.remove('hidden');
+
+  byId('ticketMessage').textContent =
+    missCount > 0
+      ? 'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.'
+      : 'Perfect run earned. Screenshot or print this ticket.';
+
+  const endTime = new Date();
+  const elapsedSeconds = Math.round((endTime - startTime) / 1000);
+  const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+  const result = missCount === 0 ? 'TICKET EARNED' : 'REPLAY REQUIRED';
+
+  const items = [
+    ['Player', playerName],
+    ['Game', GAME_TITLE],
+    ['Date', endTime.toLocaleDateString()],
+    ['Start Time', startTime.toLocaleTimeString()],
+    ['End Time', endTime.toLocaleTimeString()],
+    ['Runtime', elapsedSeconds + ' seconds'],
+    ['Correct First-Time Answers', correctCount + ' / ' + QUESTIONS.length],
+    ['Misses', missCount],
+    ['Accuracy', accuracy + '%'],
+    ['Attempt', attemptNumber],
+    ['Result', result]
+  ];
+
+  byId('ticketGrid').innerHTML = items.map(item =>
+    '<div class="ticket-item"><span class="label">' + item[0] + '</span><span class="value">' + item[1] + '</span></div>'
+  ).join('');
 }
 </script>
 </body>
