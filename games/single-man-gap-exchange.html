@@ -7,84 +7,59 @@
 <link rel="stylesheet" href="../styles.css">
 
 <style>
+body{background:#0b1f33;color:white;font-family:Arial;margin:0;padding:20px}
 
-/* ===== FIELD ===== */
-#board {
-  position: relative;
-  width: 100%;
-  height: 320px;
-  background: linear-gradient(#0b1f33, #0a1929);
-  border-radius: 12px;
-  margin-bottom: 20px;
-  overflow: hidden;
+#board{
+  position:relative;
+  height:320px;
+  background:#081a2c;
+  border-radius:12px;
+  margin-bottom:20px;
 }
 
-/* DL TOKENS */
-.dl {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #1e90ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  transform: translate(-50%, -50%);
+/* DL */
+.dl{
+  position:absolute;
+  width:40px;height:40px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:bold;
 }
 
-/* ALIGNMENT */
-.e-strong { left: 73%; top: 63%; }
-.n-shade  { left: 54%; top: 63%; }
-.t-weak   { left: 66%; top: 63%; } /* TRUE 4I */
+/* COLORS */
+.e{left:73%;top:63%;background:#1e90ff}
+.n{left:54%;top:63%;background:#1e90ff}
+.t{left:66%;top:63%;background:#1e90ff} /* TRUE 4I */
 
-/* GAP BUTTONS */
-.gaps {
-  display: grid;
-  grid-template-columns: repeat(6,1fr);
-  gap: 10px;
+.sm{position:absolute;left:18%;top:65%;background:#34d399;color:black}
+
+/* GAPS */
+.gaps{display:flex;gap:10px}
+.gap{padding:10px;background:#142c44;border-radius:8px;cursor:pointer}
+.gap:hover{background:#1e4d7a}
+
+/* LINES */
+.line{
+  position:absolute;
+  height:4px;
+  transform-origin:left center;
 }
 
-.gap {
-  padding: 10px;
-  background: #142c44;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.gap:hover {
-  background: #1e4d7a;
-}
-
-/* HUD */
-.hud {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
-}
+.green{background:#34d399}
+.blue{background:#60a5fa}
 
 </style>
 </head>
 
 <body>
 
-<div class="wrap">
-
-<a href="../index.html">← Back to Hub</a>
-
-<div class="hud">
-  <div>Player: <span id="playerName"></span></div>
-  <div>Question: <span id="qNum"></span></div>
-  <div>Misses: <span id="misses">0</span></div>
-</div>
-
 <h2>Game 14 — Single Man Gap Exchange</h2>
 
 <div id="board">
-  <div id="E" class="dl e-strong">E</div>
-  <div id="N" class="dl n-shade">N</div>
-  <div id="T" class="dl t-weak">T</div>
+  <div id="E" class="dl e">E</div>
+  <div id="N" class="dl n">N</div>
+  <div id="T" class="dl t">T</div>
+  <div id="SM" class="dl sm">SM</div>
 </div>
 
 <div id="question"></div>
@@ -95,63 +70,132 @@
   <div class="gap" onclick="answer('C')">C</div>
 </div>
 
-</div>
-
 <script>
 
-let player = prompt("Enter Player Name:");
-document.getElementById("playerName").innerText = player;
+const questions = [
 
-let questions = [
-  {
-    stunt: "New England",
-    player: "E",
-    answer: "A",
-    text: "New England — End long stick. Where do you finish?"
-  },
-  {
-    stunt: "Boston",
-    player: "N",
-    answer: "A",
-    text: "Boston — Nose. Where do you finish?"
-  },
-  {
-    stunt: "Storm",
-    player: "N",
-    answer: "B",
-    text: "Storm — Nose strong B. Where do you finish?"
-  },
-  {
-    stunt: "Cobra",
-    player: "T",
-    answer: "A",
-    text: "Cobra — T weak A. Where do you finish?"
-  }
+/* JACK */
+{
+ text:"JACK — Tackle closes B. Where do you finish?",
+ answer:"B",
+ moves:[
+  {p:"SM",to:"C",color:"green"},
+  {p:"T",to:"B",color:"blue"},
+  {p:"E",to:"C",color:"blue"}
+ ]
+},
+
+/* TEXAS */
+{
+ text:"TEXAS — Tackle goes C. Where do you finish?",
+ answer:"C",
+ moves:[
+  {p:"SM",to:"B",color:"green"},
+  {p:"T",to:"C",color:"blue"},
+  {p:"E",to:"C",color:"blue"}
+ ]
+},
+
+/* MOP */
+{
+ text:"MOP — End closes B. Where do you finish?",
+ answer:"B",
+ moves:[
+  {p:"SM",to:"C",color:"green"},
+  {p:"E",to:"B",color:"blue"},
+  {p:"T",to:"B",color:"blue"}
+ ]
+},
+
+/* NAW */
+{
+ text:"NAW — Nose opposite A. Where do you finish?",
+ answer:"A",
+ moves:[
+  {p:"SM",to:"A",color:"green"},
+  {p:"N",to:"A",color:"blue"},
+  {p:"T",to:"B",color:"blue"}
+ ]
+},
+
+/* MISSILE */
+{
+ text:"MISSILE — Nose strong B. Where do you finish?",
+ answer:"B",
+ moves:[
+  {p:"SM",to:"A",color:"green"},
+  {p:"N",to:"B",color:"blue"},
+  {p:"T",to:"B",color:"blue"}
+ ]
+},
+
+/* NAIL */
+{
+ text:"NAIL — Nose strong B. Where do you finish?",
+ answer:"B",
+ moves:[
+  {p:"SM",to:"A",color:"green"},
+  {p:"N",to:"B",color:"blue"},
+  {p:"T",to:"B",color:"blue"}
+ ]
+}
+
 ];
 
-let current = 0;
-let misses = 0;
+let q=0;
 
-function loadQ() {
-  document.getElementById("qNum").innerText = (current+1) + "/" + questions.length;
-  document.getElementById("question").innerText = questions[current].text;
+function load(){
+ document.getElementById("question").innerText=questions[q].text;
+ clearLines();
 }
 
-function answer(choice) {
-  if (choice === questions[current].answer) {
-    current++;
-    if (current >= questions.length) {
-      alert("Done! Misses: " + misses);
-      return;
-    }
-    loadQ();
-  } else {
-    misses++;
-    document.getElementById("misses").innerText = misses;
-  }
+function answer(a){
+ if(a===questions[q].answer){
+   animate();
+   setTimeout(()=>{
+     q++;
+     if(q>=questions.length){alert("Done");return;}
+     load();
+   },2000);
+ } else {
+   alert("Nope — read it again");
+ }
 }
 
-loadQ();
+function animate(){
+ clearLines();
+ questions[q].moves.forEach(m=>{
+   draw(m.p,m.to,m.color);
+ });
+}
+
+function draw(player,gap,color){
+ const el=document.getElementById(player);
+ const start=el.getBoundingClientRect();
+ const board=document.getElementById("board").getBoundingClientRect();
+
+ const target={
+   A:150,
+   B:220,
+   C:290
+ }[gap];
+
+ const line=document.createElement("div");
+ line.className="line "+color;
+
+ line.style.left=(start.left-board.left)+"px";
+ line.style.top=(start.top-board.top)+"px";
+ line.style.width="120px";
+ line.style.transform="rotate(0deg)";
+
+ document.getElementById("board").appendChild(line);
+}
+
+function clearLines(){
+ document.querySelectorAll(".line").forEach(l=>l.remove());
+}
+
+load();
 
 </script>
 
