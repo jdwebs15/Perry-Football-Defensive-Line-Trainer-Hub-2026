@@ -8,9 +8,8 @@
 <style>
   :root{
     --bg:#071323;
-    --card:#12213a;
-    --card2:#0b1729;
-    --line:#2a3c61;
+    --panel:#10213b;
+    --panel2:#16294a;
     --text:#f8fafc;
     --muted:#b7c6e6;
     --gold:#ffd166;
@@ -24,7 +23,6 @@
   .hidden{display:none!important;}
 
   .wrap{max-width:1220px;margin:0 auto;padding:18px;}
-
   .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
   .ghost-btn,.btn,.secondary-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:14px;padding:11px 15px;text-decoration:none;font-weight:900;cursor:pointer;border:1px solid rgba(255,255,255,.16);color:white;}
   .ghost-btn,.secondary-btn{background:rgba(255,255,255,.08);}
@@ -73,7 +71,6 @@
   .wr-left-1{left:11%;top:23%;}.wr-left-2{left:23%;top:19%;}.wr-right-1{left:89%;top:23%;}.wr-right-2{left:77%;top:19%;}
   .rb{left:50%;top:18%;}.qb{left:50%;top:28%;}
   .ot-l{left:30%;top:39%;}.g-l{left:40%;top:39%;}.c{left:50%;top:39%;}.g-r{left:60%;top:39%;}.ot-r{left:70%;top:39%;}
-
   .gap-target{position:absolute;width:26px;height:26px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);transform:translate(-50%,-50%);z-index:3;}
   .target-LC{left:24%;top:45%;}.target-LB{left:35%;top:45%;}.target-LA{left:45%;top:45%;}.target-RA{left:55%;top:45%;}.target-RB{left:65%;top:45%;}.target-RC{left:76%;top:45%;}
 
@@ -155,35 +152,19 @@
           <div id="strongArea" class="strong-area right"></div>
           <div class="hash-line hash-1"></div>
           <div class="hash-line hash-2"></div>
-
           <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div>
           <div id="wrL2" class="skill wr-left-2 hidden-token">WR</div>
           <div id="wrR1" class="skill wr-right-1">WR</div>
           <div id="wrR2" class="skill wr-right-2">WR</div>
           <div class="skill rb">RB</div>
           <div class="skill qb">QB</div>
-
-          <div class="ol ot-l">OT</div>
-          <div class="ol g-l">G</div>
-          <div class="ol c">C</div>
-          <div class="ol g-r">G</div>
-          <div class="ol ot-r">OT</div>
-
-          <div class="los"></div>
-          <div class="los-label">Line of Scrimmage</div>
-
-          <div class="gap-target target-LC"></div>
-          <div class="gap-target target-LB"></div>
-          <div class="gap-target target-LA"></div>
-          <div class="gap-target target-RA"></div>
-          <div class="gap-target target-RB"></div>
-          <div class="gap-target target-RC"></div>
-
+          <div class="ol ot-l">OT</div><div class="ol g-l">G</div><div class="ol c">C</div><div class="ol g-r">G</div><div class="ol ot-r">OT</div>
+          <div class="los"></div><div class="los-label">Line of Scrimmage</div>
+          <div class="gap-target target-LC"></div><div class="gap-target target-LB"></div><div class="gap-target target-LA"></div><div class="gap-target target-RA"></div><div class="gap-target target-RB"></div><div class="gap-target target-RC"></div>
           <div id="dlE" class="dl-token">E</div>
           <div id="dlN" class="dl-token">N</div>
           <div id="dlT" class="dl-token">T</div>
           <div id="singleBlitzer" class="single-token hidden-token">SM</div>
-
           <div class="gap-row">
             <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div>
             <div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div>
@@ -192,9 +173,7 @@
             <div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div>
             <div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
           </div>
-
-          <div class="def-label">Defense</div>
-          <div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
+          <div class="def-label">Defense</div><div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
         </div>
       </div>
 
@@ -212,10 +191,7 @@
     <h1>Game 14 — Single Man Gap Exchange Ticket</h1>
     <p id="ticketMessage">Perfect run earned.</p>
     <div id="ticketGrid" class="ticket-grid"></div>
-    <div class="name-row">
-      <button class="btn" type="button" onclick="restartGame()">Restart for Another Attempt</button>
-      <a class="btn secondary-btn" href="../index.html">Back to Hub</a>
-    </div>
+    <div class="name-row"><button class="btn" type="button" onclick="restartGame()">Restart for Another Attempt</button><a class="btn secondary-btn" href="../index.html">Back to Hub</a></div>
   </section>
 </div>
 
@@ -223,7 +199,6 @@
 const GAME_TITLE='Game 14 — Single Man Gap Exchange';
 const STORAGE_KEY='singleManGapExchangeAttempt';
 const PLAYER_LABELS={E:'End',N:'Nose',T:'Tackle'};
-
 function byId(id){return document.getElementById(id)}
 function shuffleArray(array){const copy=array.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
 function sidePrefix(call,side){const callSide=call.includes('RIP')?'R':'L';const awaySide=call.includes('RIP')?'L':'R';return side==='call'?callSide:awaySide}
@@ -231,40 +206,33 @@ function sideGap(call,side,gap){return sidePrefix(call,side)+gap}
 function sideText(call,side){return sidePrefix(call,side)==='R'?'defensive right':'defensive left'}
 
 const RAW_BANK=[
-  {family:'JACK',call:'OKIE RIP',formation:'rightTwoDetached',ask:'T',side:'away',gap:'B',singleLabel:'J',singleFrom:'away',singleGap:'C',title:'JACK — Tackle. Jack is the single man.',detail:'Jack comes from outside to same-side C. Tackle closes weak B. End and Nose keep their side sound.',coaching:'JACK: single man = Jack to C. Tackle closes B.',moves:[{p:'E',to:'RC'},{p:'N',to:'RA'},{p:'T',to:'LB'}]},
-  {family:'JACK',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'T',side:'away',gap:'B',singleLabel:'J',singleFrom:'away',singleGap:'C',title:'JACK — Tackle. Jack is the single man.',detail:'Jack comes from outside to same-side C. Tackle closes weak B. End and Nose keep their side sound.',coaching:'JACK: single man = Jack to C. Tackle closes B.',moves:[{p:'E',to:'LC'},{p:'N',to:'LA'},{p:'T',to:'RB'}]},
-
-  {family:'TEXAS',call:'OKIE RIP',formation:'rightTwoDetached',ask:'T',side:'away',gap:'C',singleLabel:'J',singleFrom:'away',singleGap:'B',title:'TEXAS — Tackle. Texas is the exception.',detail:'Texas: Jack comes B. Tackle becomes the C-gap player. No crossing the center.',coaching:'TEXAS: Jack B, Tackle C.',moves:[{p:'E',to:'RC'},{p:'N',to:'RA'},{p:'T',to:'LC'}]},
-  {family:'TEXAS',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'T',side:'away',gap:'C',singleLabel:'J',singleFrom:'away',singleGap:'B',title:'TEXAS — Tackle. Texas is the exception.',detail:'Texas: Jack comes B. Tackle becomes the C-gap player. No crossing the center.',coaching:'TEXAS: Jack B, Tackle C.',moves:[{p:'E',to:'LC'},{p:'N',to:'LA'},{p:'T',to:'RC'}]},
-
-  {family:'MOP',call:'OKIE RIP',formation:'rightTwoDetached',ask:'E',side:'away',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'C',title:'MOP — End. Mike is the single man.',detail:'Mike is the single man. End closes B; the pressure becomes the new C-gap player.',coaching:'MOP: End closes B while the single man fits C.',moves:[{p:'E',to:'LB'},{p:'N',to:'RA'},{p:'T',to:'LB'}]},
-  {family:'MOP',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'E',side:'away',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'C',title:'MOP — End. Mike is the single man.',detail:'Mike is the single man. End closes B; the pressure becomes the new C-gap player.',coaching:'MOP: End closes B while the single man fits C.',moves:[{p:'E',to:'RB'},{p:'N',to:'LA'},{p:'T',to:'RB'}]},
-
-  {family:'NAW',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'away',gap:'A',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAW — Nose. Will is the single man.',detail:'NAW: Nose and Will work opposite A. End and Tackle key read and play their alignment gaps.',coaching:'NAW: Nose opposite A. Will opposite A. T and E play alignment gaps.',moves:[{p:'E',to:'RC'},{p:'N',to:'LA'},{p:'T',to:'LB'}]},
-  {family:'NAW',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'away',gap:'A',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAW — Nose. Will is the single man.',detail:'NAW: Nose and Will work opposite A. End and Tackle key read and play their alignment gaps.',coaching:'NAW: Nose opposite A. Will opposite A. T and E play alignment gaps.',moves:[{p:'E',to:'LC'},{p:'N',to:'RA'},{p:'T',to:'RB'}]},
-
-  {family:'MISSILE',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'A',title:'MISSILE — Nose. Mike is the single man.',detail:'Missile: Nose works strong B. Mike reads the center into strong A. End/Tackle keep their gaps.',coaching:'MISSILE: Nose strong B. Mike is the single man inside.',moves:[{p:'E',to:'RC'},{p:'N',to:'RB'},{p:'T',to:'LB'}]},
-  {family:'MISSILE',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'A',title:'MISSILE — Nose. Mike is the single man.',detail:'Missile: Nose works strong B. Mike reads the center into strong A. End/Tackle keep their gaps.',coaching:'MISSILE: Nose strong B. Mike is the single man inside.',moves:[{p:'E',to:'LC'},{p:'N',to:'LB'},{p:'T',to:'RB'}]},
-
-  {family:'NAIL',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAIL — Nose. Will is the single man.',detail:'Nail: Nose works strong B. Will reads the center into weak A. End/Tackle keep their gaps.',coaching:'NAIL: Nose strong B. Will is the single man inside.',moves:[{p:'E',to:'RC'},{p:'N',to:'RB'},{p:'T',to:'LB'}]},
-  {family:'NAIL',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAIL — Nose. Will is the single man.',detail:'Nail: Nose works strong B. Will reads the center into weak A. End/Tackle keep their gaps.',coaching:'NAIL: Nose strong B. Will is the single man inside.',moves:[{p:'E',to:'LC'},{p:'N',to:'LB'},{p:'T',to:'RB'}]}
+{family:'JACK',call:'OKIE RIP',formation:'rightTwoDetached',ask:'T',side:'away',gap:'B',singleLabel:'J',singleFrom:'away',singleGap:'C',title:'JACK — Tackle. Jack is the single man.',detail:'Jack comes from outside to same-side C. Tackle closes weak B.',coaching:'JACK: single man = Jack to C. Tackle closes B.',moves:[{p:'E',to:'RC'},{p:'N',to:'RA'},{p:'T',to:'LB'}]},
+{family:'JACK',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'T',side:'away',gap:'B',singleLabel:'J',singleFrom:'away',singleGap:'C',title:'JACK — Tackle. Jack is the single man.',detail:'Jack comes from outside to same-side C. Tackle closes weak B.',coaching:'JACK: single man = Jack to C. Tackle closes B.',moves:[{p:'E',to:'LC'},{p:'N',to:'LA'},{p:'T',to:'RB'}]},
+{family:'TEXAS',call:'OKIE RIP',formation:'rightTwoDetached',ask:'T',side:'away',gap:'C',singleLabel:'J',singleFrom:'away',singleGap:'B',title:'TEXAS — Tackle. Texas is the exception.',detail:'Texas: Jack comes B. Tackle becomes the C-gap player.',coaching:'TEXAS: Jack B, Tackle C.',moves:[{p:'E',to:'RC'},{p:'N',to:'RA'},{p:'T',to:'LC'}]},
+{family:'TEXAS',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'T',side:'away',gap:'C',singleLabel:'J',singleFrom:'away',singleGap:'B',title:'TEXAS — Tackle. Texas is the exception.',detail:'Texas: Jack comes B. Tackle becomes the C-gap player.',coaching:'TEXAS: Jack B, Tackle C.',moves:[{p:'E',to:'LC'},{p:'N',to:'LA'},{p:'T',to:'RC'}]},
+{family:'MOP',call:'OKIE RIP',formation:'rightTwoDetached',ask:'E',side:'away',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'C',title:'MOP — End. Mike is the single man.',detail:'Mike is the single man. End closes B; the pressure becomes the new C-gap player.',coaching:'MOP: End closes B while the single man fits C.',moves:[{p:'E',to:'LB'},{p:'N',to:'RA'},{p:'T',to:'LB'}]},
+{family:'MOP',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'E',side:'away',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'C',title:'MOP — End. Mike is the single man.',detail:'Mike is the single man. End closes B; the pressure becomes the new C-gap player.',coaching:'MOP: End closes B while the single man fits C.',moves:[{p:'E',to:'RB'},{p:'N',to:'LA'},{p:'T',to:'RB'}]},
+{family:'NAW',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'away',gap:'A',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAW — Nose. Will is the single man.',detail:'NAW: Nose and Will work opposite A. End and Tackle key read and play their alignment gaps.',coaching:'NAW: Nose opposite A. Will opposite A. T and E play alignment gaps.',moves:[{p:'E',to:'RC'},{p:'N',to:'LA'},{p:'T',to:'LB'}]},
+{family:'NAW',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'away',gap:'A',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAW — Nose. Will is the single man.',detail:'NAW: Nose and Will work opposite A. End and Tackle key read and play their alignment gaps.',coaching:'NAW: Nose opposite A. Will opposite A. T and E play alignment gaps.',moves:[{p:'E',to:'LC'},{p:'N',to:'RA'},{p:'T',to:'RB'}]},
+{family:'MISSILE',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'A',title:'MISSILE — Nose. Mike is the single man.',detail:'Missile: Nose works strong B. Mike reads the center into strong A. End/Tackle keep their gaps.',coaching:'MISSILE: Nose strong B. Mike is the single man inside.',moves:[{p:'E',to:'RC'},{p:'N',to:'RB'},{p:'T',to:'LB'}]},
+{family:'MISSILE',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'M',singleFrom:'call',singleGap:'A',title:'MISSILE — Nose. Mike is the single man.',detail:'Missile: Nose works strong B. Mike reads the center into strong A. End/Tackle keep their gaps.',coaching:'MISSILE: Nose strong B. Mike is the single man inside.',moves:[{p:'E',to:'LC'},{p:'N',to:'LB'},{p:'T',to:'RB'}]},
+{family:'NAIL',call:'OKIE RIP',formation:'rightTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAIL — Nose. Will is the single man.',detail:'Nail: Nose works strong B. Will reads the center into weak A. End/Tackle keep their gaps.',coaching:'NAIL: Nose strong B. Will is the single man inside.',moves:[{p:'E',to:'RC'},{p:'N',to:'RB'},{p:'T',to:'LB'}]},
+{family:'NAIL',call:'OKIE LIZ',formation:'leftTwoDetached',ask:'N',side:'call',gap:'B',singleLabel:'W',singleFrom:'away',singleGap:'A',title:'NAIL — Nose. Will is the single man.',detail:'Nail: Nose works strong B. Will reads the center into weak A. End/Tackle keep their gaps.',coaching:'NAIL: Nose strong B. Will is the single man inside.',moves:[{p:'E',to:'LC'},{p:'N',to:'LB'},{p:'T',to:'RB'}]}
 ];
 
-function makeBank(raw){return raw.map(q=>{const answer=sideGap(q.call,q.side,q.gap);const singleTo=sideGap(q.call,q.singleFrom,q.singleGap);return Object.assign({},q,{mode:'gap',answer,singleTo,strength:q.call.includes('RIP')?'defensive right':'defensive left',detail:q.detail+' Side: '+(q.side==='call'?'CALL SIDE':'AWAY SIDE')+' ('+sideText(q.call,q.side)+').'})})}
-
+function makeBank(raw){return raw.map(q=>{const answer=sideGap(q.call,q.side,q.gap);const singleTo=sideGap(q.call,q.singleFrom,q.singleGap);return Object.assign({},q,{answer,singleTo,strength:q.call.includes('RIP')?'defensive right':'defensive left',detail:q.detail+' Side: '+(q.side==='call'?'CALL SIDE':'AWAY SIDE')+' ('+sideText(q.call,q.side)+').'})})}
 const BANK=makeBank(RAW_BANK);
 let QUESTIONS=[],playerName='',currentIndex=0,correctCount=0,missCount=0,totalAttempts=0,attemptNumber=Number(localStorage.getItem(STORAGE_KEY)||'1'),startTime=null,locked=false;
-
 function currentQuestion(){return QUESTIONS[currentIndex]}
 function buildQuestionSet(){return shuffleArray(BANK)}
 function startGame(){playerName=byId('playerName').value.trim();if(!playerName){alert('Type your name first.');return}QUESTIONS=buildQuestionSet();startTime=new Date();currentIndex=0;correctCount=0;missCount=0;totalAttempts=0;locked=false;byId('hudName').textContent=playerName;byId('hudAttempt').textContent=attemptNumber;byId('startScreen').classList.add('hidden');byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.remove('hidden');loadQuestion()}
 function restartGame(){attemptNumber+=1;localStorage.setItem(STORAGE_KEY,String(attemptNumber));byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.add('hidden');byId('startScreen').classList.remove('hidden')}
 function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length;byId('hudCorrect').textContent=correctCount;byId('hudMisses').textContent=missCount;const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);byId('hudAccuracy').textContent=accuracy+'%';byId('hudAttempt').textContent=attemptNumber}
-function loadQuestion(){locked=false;clearBoard();const q=currentQuestion();applyFormation(q.formation,q.call,q.strength);showFront(q.call);highlightPlayer(q.ask);byId('callTitle').textContent=q.call+' — '+q.family+' — '+PLAYER_LABELS[q.ask];byId('questionKicker').textContent=q.call+' • '+q.family+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent='Click YOUR final DL responsibility. On correct: green line = single man; blue lines = E/N/T.';updateHud()}
-function applyFormation(formation,call,strength){const leftStrong=formation==='leftTwoDetached';byId('strongArea').className='strong-area '+(leftStrong?'left':'right');byId('strengthTag').textContent='Strength: '+strength;byId('wrL1').classList.toggle('hidden-token',!leftStrong);byId('wrL2').classList.toggle('hidden-token',!leftStrong);byId('wrR1').classList.toggle('hidden-token',leftStrong);byId('wrR2').classList.toggle('hidden-token',leftStrong)}
+function loadQuestion(){locked=false;clearBoard();const q=currentQuestion();applyFormation(q.formation,q.strength);showFront(q.call);highlightPlayer(q.ask);byId('callTitle').textContent=q.call+' — '+q.family+' — '+PLAYER_LABELS[q.ask];byId('questionKicker').textContent=q.call+' • '+q.family+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent='Click YOUR final DL responsibility. On correct: green line = single man; blue lines = E/N/T.';updateHud()}
+function applyFormation(formation,strength){const leftStrong=formation==='leftTwoDetached';byId('strongArea').className='strong-area '+(leftStrong?'left':'right');byId('strengthTag').textContent='Strength: '+strength;byId('wrL1').classList.toggle('hidden-token',!leftStrong);byId('wrL2').classList.toggle('hidden-token',!leftStrong);byId('wrR1').classList.toggle('hidden-token',leftStrong);byId('wrR2').classList.toggle('hidden-token',leftStrong)}
 function place(el,left,top){el.style.left=left+'%';el.style.top=top+'%';el.style.transform='translate(-50%,-50%)'}
 function showFront(call){const rip=call.includes('RIP');place(byId('dlE'),rip?73:27,63);place(byId('dlN'),rip?54:46,63);place(byId('dlT'),rip?34:66,63)}
-function singleStart(q){const rip=q.call.includes('RIP');let left=50,top=69;if(q.singleLabel==='J'){left=rip?18:82;top=67}else if(q.singleLabel==='M'){left=rip?60:40;top=70}else if(q.singleLabel==='W'){left=rip?40:60;top=70}else if(q.singleLabel==='S'){left=rip?82:18;top=67}return{left,top}}
+function singleStart(q){const rip=q.call.includes('RIP');if(q.singleLabel==='J')return{left:rip?18:82,top:67};if(q.singleLabel==='M')return{left:rip?60:40,top:70};if(q.singleLabel==='W')return{left:rip?40:60,top:70};return{left:50,top:69}}
 function showSingle(q){const el=byId('singleBlitzer');const start=singleStart(q);el.textContent=q.singleLabel;place(el,start.left,start.top);el.classList.remove('hidden-token')}
 function highlightPlayer(player){['dlE','dlN','dlT'].forEach(id=>byId(id).classList.remove('active-player'));if(player==='E')byId('dlE').classList.add('active-player');if(player==='N')byId('dlN').classList.add('active-player');if(player==='T')byId('dlT').classList.add('active-player')}
 function selectGap(gap){if(locked)return;const q=currentQuestion();totalAttempts+=1;const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]');if(gap===q.answer){correctCount+=1;locked=true;if(zone)zone.classList.add('correct-zone');showSingle(q);animateQuestion(q);showFeedback('Correct — watch the single man and DL movement.',q.coaching,true);updateHud();setTimeout(nextQuestion,5600)}else{missCount+=1;if(zone){zone.classList.add('wrong-zone');setTimeout(()=>zone.classList.remove('wrong-zone'),650)}showFeedback('Not it.','Read the single-man call, identify your DL player, then click the final gap.',false);updateHud()}}
