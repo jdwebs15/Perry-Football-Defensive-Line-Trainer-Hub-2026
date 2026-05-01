@@ -940,15 +940,15 @@ const RAW_BANK = [
     call:'OKIE LIZ',
     tag:'SEATTLE 3 HOT',
     formation:'leftTwoDetached',
-    player:'E',
-    side:'call',
+    player:'N',
+    side:'away',
     gap:'A',
-    title:'Seattle 3 Hot — End. Click your long-stick finish.',
-    detail:'Seattle keeps the End long-stick to A. Backer timing is removed here so the DL rule is clean.',
-    coaching:'Seattle: E = long-stick A. N = alignment A. T = weak B.',
+    title:'Seattle 3 Hot — Nose. Click your opposite A.',
+    detail:'Seattle: Nose works opposite A. End long-sticks strong A. Tackle controls weak B.',
+    coaching:'Seattle: N = opposite A. E = strong A long stick. T = weak B.',
     moves:[
       {player:'E', to:'LA', kind:'cross', speed:660},
-      {player:'N', to:'LA', kind:'stunt', speed:740},
+      {player:'N', to:'RA', kind:'stunt', speed:690},
       {player:'T', to:'RB', kind:'stunt', speed:760}
     ]
   },
@@ -972,15 +972,15 @@ const RAW_BANK = [
     call:'OKIE LIZ',
     tag:'STORM 6 HOT',
     formation:'leftTwoDetached',
-    player:'T',
-    side:'away',
-    gap:'A',
-    title:'Storm 6 Hot — Tackle. Click your long-stick finish.',
-    detail:'Storm shows the Tackle long-stick to A. Linebacker movements are not part of this DL-only version.',
-    coaching:'Storm: T = A long stick. Keep the DL rule separate from the backer pressure.',
+    player:'N',
+    side:'call',
+    gap:'B',
+    title:'Storm 6 Hot — Nose. Click your strong B.',
+    detail:'Storm: Nose works strong-side B. Tackle long-sticks to A. End controls edge/contain.',
+    coaching:'Storm: N = strong B. T = A long stick. E = contain.',
     moves:[
       {player:'E', to:'LC', kind:'contain', speed:780},
-      {player:'N', to:'LA', kind:'stunt', speed:740},
+      {player:'N', to:'LB', kind:'stunt', speed:640},
       {player:'T', to:'RA', kind:'cross', speed:660}
     ]
   },
@@ -988,32 +988,32 @@ const RAW_BANK = [
     call:'OKIE RIP',
     tag:'MOW BUZZ',
     formation:'rightTwoDetached',
-    player:'E',
-    side:'call',
-    gap:'B',
-    title:'Mow Buzz — End. Click your B-gap rush.',
-    detail:'Mow/Mow Buzz: End BBs into B. Nose works weak A. Tackle controls weak B/contain based on tag.',
-    coaching:'Mow Buzz: E = B, N = weak A, T = weak B/contain.',
+    player:'T',
+    side:'away',
+    gap:'C',
+    title:'Mow Buzz — Tackle. Click your C-gap contain.',
+    detail:'Mow Buzz: Tackle contains C gap. End BBs into B. Nose works weak A.',
+    coaching:'Mow Buzz: T = C contain. E = B. N = weak A.',
     moves:[
       {player:'E', to:'RB', kind:'stunt', speed:620},
       {player:'N', to:'LA', kind:'stunt', speed:740},
-      {player:'T', to:'LB', kind:'stunt', speed:760}
+      {player:'T', to:'LC', kind:'contain', speed:780}
     ]
   },
   {
     call:'OKIE LIZ',
     tag:'MOW BUZZ 3x1',
     formation:'leftTwoDetached',
-    player:'N',
+    player:'T',
     side:'away',
-    gap:'A',
-    title:'Mow Buzz 3x1 — Nose. Click your weak A control.',
-    detail:'Nose works weak-side A. End BBs into B. Tackle controls weak B/contain.',
-    coaching:'Mow Buzz: N = weak A. E = B. T = weak B/contain.',
+    gap:'C',
+    title:'Mow Buzz 3x1 — Tackle. Click your C-gap contain.',
+    detail:'Tackle contains C gap. End BBs into B. Nose works weak-side A.',
+    coaching:'Mow Buzz: T = C contain. N = weak A. E = B.',
     moves:[
       {player:'E', to:'LB', kind:'stunt', speed:620},
       {player:'N', to:'RA', kind:'stunt', speed:740},
-      {player:'T', to:'RB', kind:'stunt', speed:760}
+      {player:'T', to:'RC', kind:'contain', speed:780}
     ]
   },
   {
@@ -1085,15 +1085,15 @@ const RAW_BANK = [
     tag:'COBRA SILVER',
     formation:'rightTwoDetached',
     player:'T',
-    side:'call',
+    side:'away',
     gap:'A',
-    title:'Cobra Silver — Tackle. Click your WHIP-to-A finish.',
-    detail:'Cobra Silver: Tackle is 3-technique and WHIPs to A. This rep asks only the Tackle responsibility.',
-    coaching:'Cobra Silver: T = WHIP to A. Backer movement removed.',
+    title:'Cobra Silver — Tackle. Click your weak A.',
+    detail:'Cobra: Tackle WHIPs to weak A.',
+    coaching:'Cobra: T = weak A.',
     moves:[
       {player:'E', to:'RC', kind:'contain', speed:780},
       {player:'N', to:'RA', kind:'stunt', speed:740},
-      {player:'T', to:'RA', kind:'cross', speed:660}
+      {player:'T', to:'LA', kind:'cross', speed:660}
     ]
   },
   {
@@ -1116,29 +1116,7 @@ const RAW_BANK = [
       {player:'N', to:'RA', kind:'stunt', speed:740},
       {player:'T', to:'LA', kind:'cross', speed:660}
     ]
-  },
-  {
-    mode:'choice',
-    call:'OKIE LIZ',
-    tag:'DL-ONLY CHECK',
-    formation:'leftTwoDetached',
-    player:'T',
-    title:'DL-Only Version — What movement is removed from this game?',
-    detail:'This keeps the teaching focus narrow.',
-    answers:[
-      {text:'All inside linebacker and outside linebacker movement.', correct:true},
-      {text:'All defensive line movement.', correct:false},
-      {text:'All Nose movement.', correct:false},
-      {text:'All answer shuffling.', correct:false}
-    ],
-    coaching:'Correct. Game 13 now shows E/N/T only so backer movement cannot teach the wrong picture.',
-    moves:[
-      {player:'E', to:'LA', kind:'cross', speed:660},
-      {player:'N', to:'RA', kind:'stunt', speed:740},
-      {player:'T', to:'RB', kind:'stunt', speed:760}
-    ]
-  }
-];
+  }];
 
 let BANK;
 let QUESTIONS = [];
