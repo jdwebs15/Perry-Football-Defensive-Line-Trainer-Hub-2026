@@ -94,6 +94,7 @@
         <h2>Completion Ticket</h2>
         <p>Screenshot this ticket after a perfect run. Any miss means the player finished the rep work, but has to run it back clean.</p>
         <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Game</span><span id="ticketGame" class="value">Game 3 — Down Block Trainer</span></div>
           <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
@@ -104,6 +105,7 @@
           <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
         </div>
         <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+        <div id="logStatus" class="feedback-copy" style="margin-top:10px;font-size:0.9rem;"></div>
         <div class="btn-row" style="margin-top:16px;">
           <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
           <a class="btn" href="../index.html">Back to Hub</a>
@@ -113,12 +115,26 @@
   </div>
 
   <script>
+    /***************************************************************
+     * GAME SETTINGS
+     * Paste your deployed Google Apps Script Web App URL below.
+     * Deploy as: Web App → Execute as Me → Anyone with the link.
+     ***************************************************************/
+    const GAME_TITLE = 'Game 3 — Down Block Trainer';
+    const GAME_SHORT_TITLE = 'Down Block Trainer';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDFe0mBo_14KFpN-zXN16kDfetGYBY3qfxRinf8d2hrMnX6SggkufbC8_m4jBvmPOTOg/exec';
+
     const QUESTION_BANK = [
       {
         id: 1,
         stem: 'Your key blocks down and you immediately see a kick-out puller coming at you. What is the reaction?',
         copy: 'This is the classic down with puller answer.',
         correct: 'Throw the wrong arm and back hip through the kick out',
+        distractors: [
+          'Box the puller with your outside shoulder and try to keep the ball inside of you',
+          'Sit on the line of scrimmage and wait until the ball carrier declares his path',
+          'Work straight upfield around the puller and try to make the tackle from behind'
+        ],
         hint: 'Do not box it. Spill it with the technique Coach wants.',
         explanation: 'Correct. On recognition of a kick out, throw the wrong arm through the kick out as well as the back hip, turn vertical in B Gap.'
       },
@@ -127,6 +143,11 @@
         stem: 'On a down block, what body position prepares you to spill a puller?',
         copy: 'Think about your shoulder relationship to the line of scrimmage.',
         correct: 'Keep moving with the down through the hip of your key, shoulder at 45 degrees to the LOS',
+        distractors: [
+          'Turn your shoulders completely parallel to the line right away and stop your feet',
+          'Open your hips toward the sideline so you can box any block that appears outside',
+          'Square up immediately in the original alignment gap and wait for the back to choose'
+        ],
         hint: 'You are not turning flat and you are not stopping your feet.',
         explanation: 'Correct. Keep the body moving with the down and shoulder at a 45 degree angle to the LOS to prepare to spill a puller.'
       },
@@ -135,6 +156,11 @@
         stem: 'Why do we turn vertical and re-close the B gap on down with puller after the spill?',
         copy: 'Use Coach Weber’s exact logic.',
         correct: 'Because our scrape linebacker is vacating it',
+        distractors: [
+          'Because the defensive end is always responsible for replacing the free safety in coverage',
+          'Because the running back is required to bounce outside after every wrong-arm spill',
+          'Because the puller becomes the new read key and removes all inside gap responsibility'
+        ],
         hint: 'The linebacker is leaving. That gap cannot be reopened.',
         explanation: 'Correct. We must close the gap that our scrape linebacker is vacating.'
       },
@@ -143,6 +169,11 @@
         stem: 'You get to the B gap on Power or Counter after your spill and a second puller is coming. What should you do?',
         copy: 'Finish the down with puller rule.',
         correct: 'Turn vertical and take out the second puller. Stay in B Gap',
+        distractors: [
+          'Keep running flat down the line so the second puller cannot climb to the linebacker',
+          'Bubble around the second puller and try to make the tackle from the outside edge',
+          'Stop behind the line and wait for the ball carrier to cut back into your original gap'
+        ],
         hint: 'Do not keep drifting down the line.',
         explanation: 'Correct. When we get to that gap, turn vertical and take out the second puller in Power or Counter.'
       },
@@ -151,6 +182,11 @@
         stem: 'What is the big mistake after spilling and re-closing the B gap?',
         copy: 'This mistake reopens what you just closed.',
         correct: 'Running past the gap that needs closed',
+        distractors: [
+          'Turning vertical too soon and keeping your body inside the B gap window',
+          'Taking on the second puller with square pads and staying in the gap',
+          'Closing the scrape linebacker’s window before the ball has crossed the line'
+        ],
         hint: 'The problem is over-running the responsibility.',
         explanation: 'Correct. Do not run past the gap that needs closed, thus reopening it.'
       },
@@ -159,6 +195,11 @@
         stem: 'Your key blocks down, but no kick-out puller shows. What happens next?',
         copy: 'Down without puller reaction.',
         correct: 'Snap shoulders parallel to the LOS and snap eyes to the backfield',
+        distractors: [
+          'Continue chasing the down block flat because the ball must be going away from you',
+          'Throw your wrong arm anyway because every down block should be treated as power',
+          'Turn your back to the quarterback so you can squeeze the offensive tackle harder'
+        ],
         hint: 'No puller changes the next phase. Get square and find the read.',
         explanation: 'Correct. On no kick out, snap shoulders back parallel with the LOS and snap eyes to the backfield to the zone side/read side key.'
       },
@@ -167,6 +208,11 @@
         stem: 'On the read side after down with no puller, what leverage must you maintain?',
         copy: 'The QB cannot beat you outside.',
         correct: 'Outside leverage on the QB',
+        distractors: [
+          'Inside leverage on the running back so you can chase the give immediately',
+          'Backside leverage on the guard because the puller may still show late',
+          'Head-up leverage on the tackle so you can two-gap the entire read scheme'
+        ],
         hint: 'Do not give the quarterback the edge.',
         explanation: 'Correct. On the read side, maintain outside leverage on the read key, the QB.'
       },
@@ -175,6 +221,11 @@
         stem: 'The QB reads you and gives the ball on zone. What is the disciplined answer?',
         copy: 'This is the “do not be a hero” rule.',
         correct: 'Make him give it and do not chase the zone give',
+        distractors: [
+          'Chase the give immediately because the defensive end should make every tackle',
+          'Spin inside after the mesh so the quarterback cannot see where you are fitting',
+          'Run behind the running back and rely on the corner to handle the quarterback keep'
+        ],
         hint: 'Everyone in the stands may like the chase. The opposing OC will like it more.',
         explanation: 'Correct. Make him give the ball, or be in position to stop him outside. Do not be a hero and chase the zone give.'
       },
@@ -183,6 +234,11 @@
         stem: 'When should you make the tackle on the QB read after down with no puller?',
         copy: 'Do your job. Do not chase ghosts.',
         correct: 'If the QB keeps the ball',
+        distractors: [
+          'As soon as the running back crosses your face on the zone give',
+          'Any time the offensive tackle blocks down away from your alignment',
+          'Only after the linebacker declares that he is replacing you outside'
+        ],
         hint: 'You are responsible for the QB read, not for hero-ball chasing the give.',
         explanation: 'Correct. Make the tackle if the QB keeps the ball.'
       },
@@ -191,6 +247,11 @@
         stem: 'Your key pulls away. How do we treat it?',
         copy: 'Key pull away is not a new universe.',
         correct: 'Treat it like a down with no puller',
+        distractors: [
+          'Treat it like a kick-out puller coming directly at your inside shoulder',
+          'Treat it like pass because the blocker has left your immediate surface',
+          'Treat it like a stunt call and cross into the opposite A gap immediately'
+        ],
         hint: 'Step to your key, key pulls away, then square for the read.',
         explanation: 'Correct. Key pull away is treated just like a down with no puller.'
       },
@@ -199,6 +260,11 @@
         stem: 'Key pull away: what is the exact reaction sequence?',
         copy: 'Say it like the trainer.',
         correct: 'Step to your key, key pulls away, square to QB for read',
+        distractors: [
+          'Step upfield, chase the pulling key, then replace the linebacker outside',
+          'Step backward, open to the sideline, and wait for the quarterback to declare',
+          'Step flat down the line, wrong-arm the first color, and chase the running back'
+        ],
         hint: 'Step first. Then square to the QB.',
         explanation: 'Correct. Step to your key, key pulls away, square to QB for read.'
       },
@@ -207,6 +273,11 @@
         stem: 'Interior or covered D-lineman gets a down block. Where do the eyes go first?',
         copy: 'Shade, 3, 4i, or 5 with a TE.',
         correct: 'Immediately down the line for a puller',
+        distractors: [
+          'Immediately to the quarterback’s eyes because every down block becomes read option',
+          'Immediately to the nearest wide receiver because crack replace is now the priority',
+          'Immediately to the backside linebacker because he determines your gap exchange'
+        ],
         hint: 'The down block demands a quick puller check.',
         explanation: 'Correct. On a down block, eyes immediately go down the line for a puller.'
       },
@@ -215,6 +286,11 @@
         stem: 'Interior or covered D-lineman: down block, no puller. What is the reaction?',
         copy: 'Beat being washed by the outside down block.',
         correct: 'Work square and vertical through the gap',
+        distractors: [
+          'Run flat with the down block and try to cross the center before the back cuts',
+          'Open your hips outside and box the next blocker to keep your shoulder free',
+          'Stop your feet in the original alignment and wait for the guard to come back'
+        ],
         hint: 'Do not ride down the line and get washed.',
         explanation: 'Correct. No puller and covered means immediately work square and vertical through the gap.'
       },
@@ -223,6 +299,11 @@
         stem: 'Why does a covered lineman work square and vertical on no puller?',
         copy: 'What are we preventing?',
         correct: 'To beat being washed down the line by the outside down block',
+        distractors: [
+          'To force the quarterback to pull the ball even when you are not the read key',
+          'To create a wider running lane so the scrape linebacker can fit underneath you',
+          'To make the guard climb faster and remove himself from the double team surface'
+        ],
         hint: 'The down block wants to remove you from your gap.',
         explanation: 'Correct. Working square and vertical beats being washed down the line by the outside down block.'
       },
@@ -231,6 +312,11 @@
         stem: 'A player sees down block with no puller and immediately chases the zone give. What do you tell him?',
         copy: 'Use the field language.',
         correct: 'Do not be a hero',
+        distractors: [
+          'Keep chasing because the end should make the tackle whenever he sees the ball',
+          'Turn it into a box technique because the quarterback is no longer your problem',
+          'Run underneath the mesh and replace the nose guard in the opposite A gap'
+        ],
         hint: 'The crowd might cheer once. The OC will call it again.',
         explanation: 'Correct. Do not be a hero. Make the QB give it and be ready if he keeps it.'
       },
@@ -239,6 +325,11 @@
         stem: 'What never changes when the down block picture appears?',
         copy: 'Tie Game 3 back to the foundation.',
         correct: 'The first two steps still stay the same',
+        distractors: [
+          'The first reaction is always to turn sideways and chase the blocker down the line',
+          'The first rule is always to wrong-arm whether a puller appears or not',
+          'The first responsibility always changes to the running back once the ball is meshed'
+        ],
         hint: 'The read changes the reaction, not the foundation footwork.',
         explanation: 'Correct. Steps remain the same. Your read determines the reaction after that.'
       }
@@ -257,7 +348,9 @@
       answered: false,
       started: false,
       timerId: null,
-      runtimeSeconds: 0
+      runtimeSeconds: 0,
+      attemptNumber: 0,
+      currentQuestionMissed: false
     };
 
     const els = {
@@ -282,6 +375,7 @@
       feedbackBox: document.getElementById('feedbackBox'),
       feedbackTitle: document.getElementById('feedbackTitle'),
       feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketGame: document.getElementById('ticketGame'),
       ticketName: document.getElementById('ticketName'),
       ticketDate: document.getElementById('ticketDate'),
       ticketStart: document.getElementById('ticketStart'),
@@ -290,7 +384,8 @@
       ticketAccuracy: document.getElementById('ticketAccuracy'),
       ticketMisses: document.getElementById('ticketMisses'),
       ticketResult: document.getElementById('ticketResult'),
-      finishMessage: document.getElementById('finishMessage')
+      finishMessage: document.getElementById('finishMessage'),
+      logStatus: document.getElementById('logStatus')
     };
 
     function formatTime(date) {
@@ -316,19 +411,36 @@
       return clone;
     }
 
+    function getAttemptStorageKey(playerName) {
+      return `${GAME_TITLE}::${playerName.trim().toLowerCase()}::attempts`;
+    }
+
+    function getNextAttemptNumber(playerName) {
+      const key = getAttemptStorageKey(playerName);
+      const previous = Number(localStorage.getItem(key) || '0');
+      const next = previous + 1;
+      localStorage.setItem(key, String(next));
+      return next;
+    }
+
     function buildQuestions() {
-      return QUESTION_BANK.map(q => {
-        const distractors = [
-          'Box the puller and keep outside shoulder free',
-          'Chase the zone give immediately',
-          'Run upfield past the gap',
-          'Turn your shoulders away from the LOS',
-          'Read the running back first',
-          'Stop your feet and wait for the ball',
-          'Cross face and chase backside',
-          'Open the gap wider for the linebacker'
-        ];
-        const options = shuffle([q.correct, ...shuffle(distractors).filter(d => d !== q.correct).slice(0, 3)]);
+      const shuffledQuestions = shuffle(QUESTION_BANK);
+
+      return shuffledQuestions.map((q, questionIndex) => {
+        const correctSlot = questionIndex % 4;
+        const distractors = shuffle(q.distractors).slice(0, 3);
+        const options = [];
+        let distractorIndex = 0;
+
+        for (let i = 0; i < 4; i++) {
+          if (i === correctSlot) {
+            options.push(q.correct);
+          } else {
+            options.push(distractors[distractorIndex]);
+            distractorIndex += 1;
+          }
+        }
+
         return { ...q, options };
       });
     }
@@ -382,13 +494,18 @@
     function renderQuestion() {
       clearError(els.gameError);
       clearFeedback();
+
       const q = state.questions[state.currentIndex];
       state.answered = false;
+      state.currentQuestionMissed = false;
+
       updateHud();
+
       els.questionStem.textContent = q.stem;
       els.questionCopy.textContent = q.copy;
       els.timerPill.textContent = 'Down Block. Puller or No Puller.';
       els.answerGrid.innerHTML = '';
+
       q.options.forEach((option, idx) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
@@ -410,31 +527,40 @@
     function handleAnswer(option, btnEl) {
       try {
         if (!state.started) return;
+
         const q = state.questions[state.currentIndex];
         const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
+
         if (option === q.correct) {
-          if (!state.answered) state.correctFirstTry += 1;
+          if (!state.currentQuestionMissed) state.correctFirstTry += 1;
+
           state.answered = true;
           btnEl.classList.add('correct');
+
           buttons.forEach(btn => {
             btn.disabled = true;
             btn.classList.add('disabled');
           });
+
           showFeedback('Correct — that is the reaction.', q.explanation);
           updateHud();
+
           setTimeout(() => {
             state.currentIndex += 1;
             if (state.currentIndex >= state.questions.length) finishGame();
             else renderQuestion();
           }, EXPLANATION_DELAY_MS);
         } else {
-          if (!state.answered) {
-            state.answered = true;
+          if (!state.currentQuestionMissed) {
+            state.currentQuestionMissed = true;
             state.misses += 1;
           }
+
+          state.answered = true;
           btnEl.classList.add('incorrect');
           btnEl.disabled = true;
           btnEl.classList.add('disabled');
+
           showFeedback('Miss — fix the picture.', `${q.hint} You still must choose the correct answer to move on.`);
           updateHud();
           enableRemainingAnswers();
@@ -444,14 +570,38 @@
       }
     }
 
+    async function submitTicketLog(payload) {
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PASTE_WEB_APP_URL_HERE') {
+        els.logStatus.textContent = 'Sheet log skipped: paste your Apps Script Web App URL into APPS_SCRIPT_URL.';
+        return;
+      }
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        els.logStatus.textContent = 'Sheet log sent.';
+      } catch (err) {
+        els.logStatus.textContent = `Sheet log error: ${err.message}`;
+      }
+    }
+
     function finishGame() {
       stopRuntimeClock();
       state.endDate = new Date();
+
       const attempted = state.questions.length;
       const accuracy = Math.round((state.correctFirstTry / attempted) * 100);
       const perfect = state.misses === 0;
+
       els.gameScreen.classList.add('hidden');
       els.finishScreen.classList.remove('hidden');
+
+      els.ticketGame.textContent = GAME_TITLE;
       els.ticketName.textContent = state.playerName;
       els.ticketDate.textContent = formatDate(state.endDate);
       els.ticketStart.textContent = formatTime(state.startDate);
@@ -460,9 +610,30 @@
       els.ticketAccuracy.textContent = `${accuracy}%`;
       els.ticketMisses.textContent = String(state.misses);
       els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
+
       els.finishMessage.innerHTML = perfect
-        ? `<h3 class="feedback-title">Perfect. Down block reaction is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
-        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+        ? `<h3 class="feedback-title">Perfect. ${GAME_SHORT_TITLE} is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot this ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">${GAME_TITLE}. The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        playerName: state.playerName,
+        gamePlayed: GAME_TITLE,
+        attemptNumber: state.attemptNumber,
+        startDate: formatDate(state.startDate),
+        startTime: formatTime(state.startDate),
+        endDate: formatDate(state.endDate),
+        endTime: formatTime(state.endDate),
+        runtime: formatRuntime(state.runtimeSeconds),
+        runtimeSeconds: state.runtimeSeconds,
+        correctFirstTry: state.correctFirstTry,
+        totalQuestions: attempted,
+        percent: accuracy,
+        misses: state.misses,
+        result: perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN'
+      };
+
+      submitTicketLog(payload);
     }
 
     function hardReset() {
@@ -477,10 +648,15 @@
       state.answered = false;
       state.started = false;
       state.runtimeSeconds = 0;
+      state.attemptNumber = 0;
+      state.currentQuestionMissed = false;
+
       els.playerName.value = '';
+      els.logStatus.textContent = '';
       clearError(els.startError);
       clearError(els.gameError);
       clearFeedback();
+
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.add('hidden');
       els.startScreen.classList.remove('hidden');
@@ -489,11 +665,14 @@
     function startGame() {
       const name = els.playerName.value.trim();
       clearError(els.startError);
+
       if (!name) {
         setError(els.startError, 'Enter a player name before starting.');
         return;
       }
+
       state.playerName = name;
+      state.attemptNumber = getNextAttemptNumber(name);
       state.startDate = new Date();
       state.endDate = null;
       state.currentIndex = 0;
@@ -503,9 +682,12 @@
       state.answered = false;
       state.started = true;
       state.runtimeSeconds = 0;
+      state.currentQuestionMissed = false;
+
       els.startScreen.classList.add('hidden');
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.remove('hidden');
+
       startRuntimeClock();
       renderQuestion();
     }
