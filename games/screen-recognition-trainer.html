@@ -5,6 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Game 7 — Screen Recognition Trainer</title>
   <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .trainer-input-group{
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+    }
+
+    .trainer-input-group span{
+      display:block;
+      margin-bottom:10px;
+      color:#ffffff;
+      font-weight:700;
+      font-size:.95rem;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+
+    .trainer-input{
+      width:100%;
+      padding:16px 18px;
+      border-radius:14px;
+      border:2px solid rgba(255,255,255,.14);
+      background:rgba(15,23,42,.92);
+      color:#ffffff;
+      font-size:1.05rem;
+      font-weight:600;
+      outline:none;
+      transition:all .2s ease;
+      box-shadow:0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    .trainer-input::placeholder{
+      color:rgba(255,255,255,.45);
+    }
+
+    .trainer-input:focus{
+      border-color:#22c55e;
+      box-shadow:0 0 0 4px rgba(34,197,94,.18);
+      background:rgba(15,23,42,.98);
+    }
+
+    .trainer-input:hover{
+      border-color:rgba(255,255,255,.28);
+    }
+  </style>
 </head>
 <body>
   <div class="page-shell">
@@ -37,9 +82,15 @@
         </p>
       </div>
       <div class="start-grid">
-        <label class="input-group">
+        <label class="input-group trainer-input-group">
           <span>Player Name</span>
-          <input id="playerName" type="text" placeholder="Enter player name" autocomplete="off" />
+          <input
+            id="playerName"
+            class="trainer-input"
+            type="text"
+            placeholder="Enter player name"
+            autocomplete="off"
+          />
         </label>
       </div>
       <div class="btn-row" style="margin-top:16px;">
@@ -93,6 +144,7 @@
         <h2>Completion Ticket</h2>
         <p>Screenshot this ticket after a perfect run. Any miss means the player finished the rep work, but has to run it back clean.</p>
         <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Game</span><span id="ticketGame" class="value">Game 7 — Screen Recognition Trainer</span></div>
           <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
@@ -103,6 +155,7 @@
           <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
         </div>
         <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+        <div id="logStatus" class="feedback-copy" style="margin-top:10px;font-size:0.9rem;"></div>
         <div class="btn-row" style="margin-top:16px;">
           <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
           <a class="btn" href="../index.html">Back to Hub</a>
@@ -112,6 +165,18 @@
   </div>
 
   <script>
+    /***************************************************************
+     * GAME SETTINGS
+     * Paste your deployed Google Apps Script Web App URL below.
+     * Deploy as: Web App → Execute as Me → Anyone with the link.
+     *
+     * This game only sends a sheet log when the result is:
+     * MASTERED — CLEAN RUN
+     ***************************************************************/
+    const GAME_TITLE = 'Game 7 — Screen Recognition Trainer';
+    const GAME_SHORT_TITLE = 'Screen Recognition Trainer';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzmKnxVRjRwKLKUJUWEkFrjk8-yar78EzG-ORUNahtk1ZoV-NFFHobDmDt3QPeIurKAJA/exec';
+
     const EXPLANATION_DELAY_MS = 5000;
 
     const QUESTION_BANK = [
@@ -273,7 +338,9 @@
       answered: false,
       started: false,
       runtimeSeconds: 0,
-      timerId: null
+      timerId: null,
+      attemptNumber: 0,
+      currentQuestionMissed: false
     };
 
     const els = {
@@ -298,6 +365,7 @@
       feedbackBox: document.getElementById('feedbackBox'),
       feedbackTitle: document.getElementById('feedbackTitle'),
       feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketGame: document.getElementById('ticketGame'),
       ticketName: document.getElementById('ticketName'),
       ticketDate: document.getElementById('ticketDate'),
       ticketStart: document.getElementById('ticketStart'),
@@ -306,7 +374,8 @@
       ticketAccuracy: document.getElementById('ticketAccuracy'),
       ticketMisses: document.getElementById('ticketMisses'),
       ticketResult: document.getElementById('ticketResult'),
-      finishMessage: document.getElementById('finishMessage')
+      finishMessage: document.getElementById('finishMessage'),
+      logStatus: document.getElementById('logStatus')
     };
 
     function formatDate(date) {
@@ -332,21 +401,50 @@
       return clone;
     }
 
+    function getAttemptStorageKey(playerName) {
+      return `${GAME_TITLE}::${playerName.trim().toLowerCase()}::attempts`;
+    }
+
+    function getNextAttemptNumber(playerName) {
+      const key = getAttemptStorageKey(playerName);
+      const previous = Number(localStorage.getItem(key) || '0');
+      const next = previous + 1;
+      localStorage.setItem(key, String(next));
+      return next;
+    }
+
     function buildQuestions() {
-      return QUESTION_BANK.map(q => {
-        const distractors = [
-          'Slow down and read the screen before rushing',
-          'Sit on the line and wait for the ball to declare',
-          'Keep rushing upfield even when resistance disappears',
-          'Chase the Quarterback past the screen path',
-          'Turn your back to the lineman and guess where the ball went',
-          'Run away from your gap to find the nearest receiver',
-          'Stop your feet and watch the blocker release',
-          'Take the inside escape lane with no retrace reaction',
-          'Spin outside and keep climbing past the Quarterback',
-          'Let the screen develop because it is a linebacker play'
-        ];
-        const options = shuffle([q.correct, ...shuffle(distractors).filter(d => d !== q.correct).slice(0, 3)]);
+      const shuffledQuestions = shuffle(QUESTION_BANK);
+      const distractorPool = [
+        'Slow down and try to read the screen before committing to the pass rush path',
+        'Sit on the line of scrimmage and wait until the ball clearly declares outside',
+        'Keep rushing upfield even after the blocker releases and resistance disappears',
+        'Chase the Quarterback past the screen path and trust another defender to retrace',
+        'Turn your back to the releasing lineman and guess where the football is going',
+        'Run away from your assigned gap to find the nearest receiver in open space',
+        'Stop your feet and watch the blocker release before deciding whether to redirect',
+        'Take the inside escape lane without planting, retracing, or finding the screen path',
+        'Spin outside and keep climbing past the Quarterback instead of feeling the release',
+        'Let the screen develop because the Defensive Lineman should only rush the passer',
+        'Abandon the lineman immediately and sprint sideways without retracing back to the gap',
+        'Peek into the backfield first and delay the rush in case the offense calls screen'
+      ];
+
+      return shuffledQuestions.map((q, questionIndex) => {
+        const correctSlot = questionIndex % 4;
+        const distractors = shuffle(distractorPool).filter(d => d !== q.correct).slice(0, 3);
+        const options = [];
+        let distractorIndex = 0;
+
+        for (let i = 0; i < 4; i++) {
+          if (i === correctSlot) {
+            options.push(q.correct);
+          } else {
+            options.push(distractors[distractorIndex]);
+            distractorIndex += 1;
+          }
+        }
+
         return { ...q, options };
       });
     }
@@ -402,6 +500,7 @@
       clearFeedback();
       const q = state.questions[state.currentIndex];
       state.answered = false;
+      state.currentQuestionMissed = false;
       updateHud();
       els.questionStem.textContent = q.stem;
       els.questionCopy.textContent = q.copy;
@@ -431,7 +530,7 @@
         const q = state.questions[state.currentIndex];
         const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
         if (option === q.correct) {
-          if (!state.answered) state.correctFirstTry += 1;
+          if (!state.currentQuestionMissed) state.correctFirstTry += 1;
           state.answered = true;
           btnEl.classList.add('correct');
           buttons.forEach(btn => {
@@ -446,10 +545,11 @@
             else renderQuestion();
           }, EXPLANATION_DELAY_MS);
         } else {
-          if (!state.answered) {
-            state.answered = true;
+          if (!state.currentQuestionMissed) {
+            state.currentQuestionMissed = true;
             state.misses += 1;
           }
+          state.answered = true;
           btnEl.classList.add('incorrect');
           btnEl.disabled = true;
           btnEl.classList.add('disabled');
@@ -462,6 +562,32 @@
       }
     }
 
+
+    async function submitTicketLog(payload) {
+      if (!payload || payload.result !== 'MASTERED — CLEAN RUN' || Number(payload.misses) !== 0) {
+        els.logStatus.textContent = 'Sheet log skipped: only mastered clean runs are recorded.';
+        return;
+      }
+
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PASTE_WEB_APP_URL_HERE') {
+        els.logStatus.textContent = 'Sheet log skipped: paste your Apps Script Web App URL into APPS_SCRIPT_URL.';
+        return;
+      }
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        els.logStatus.textContent = 'Mastery log sent.';
+      } catch (err) {
+        els.logStatus.textContent = `Sheet log error: ${err.message}`;
+      }
+    }
+
     function finishGame() {
       stopRuntimeClock();
       state.endDate = new Date();
@@ -470,6 +596,7 @@
       const perfect = state.misses === 0;
       els.gameScreen.classList.add('hidden');
       els.finishScreen.classList.remove('hidden');
+      els.ticketGame.textContent = GAME_TITLE;
       els.ticketName.textContent = state.playerName;
       els.ticketDate.textContent = formatDate(state.endDate);
       els.ticketStart.textContent = formatTime(state.startDate);
@@ -479,8 +606,28 @@
       els.ticketMisses.textContent = String(state.misses);
       els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
       els.finishMessage.innerHTML = perfect
-        ? `<h3 class="feedback-title">Perfect. Screen reaction is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
-        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+        ? `<h3 class="feedback-title">Perfect. ${GAME_SHORT_TITLE} is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot this ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">${GAME_TITLE}. The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        playerName: state.playerName,
+        gamePlayed: GAME_TITLE,
+        attemptNumber: state.attemptNumber,
+        startDate: formatDate(state.startDate),
+        startTime: formatTime(state.startDate),
+        endDate: formatDate(state.endDate),
+        endTime: formatTime(state.endDate),
+        runtime: formatRuntime(state.runtimeSeconds),
+        runtimeSeconds: state.runtimeSeconds,
+        correctFirstTry: state.correctFirstTry,
+        totalQuestions: attempted,
+        percent: accuracy,
+        misses: state.misses,
+        result: perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN'
+      };
+
+      submitTicketLog(payload);
     }
 
     function hardReset() {
@@ -495,7 +642,10 @@
       state.answered = false;
       state.started = false;
       state.runtimeSeconds = 0;
+      state.attemptNumber = 0;
+      state.currentQuestionMissed = false;
       els.playerName.value = '';
+      els.logStatus.textContent = '';
       clearError(els.startError);
       clearError(els.gameError);
       clearFeedback();
@@ -512,6 +662,7 @@
         return;
       }
       state.playerName = name;
+      state.attemptNumber = getNextAttemptNumber(name);
       state.startDate = new Date();
       state.endDate = null;
       state.currentIndex = 0;
@@ -521,6 +672,7 @@
       state.answered = false;
       state.started = true;
       state.runtimeSeconds = 0;
+      state.currentQuestionMissed = false;
       els.startScreen.classList.add('hidden');
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.remove('hidden');
