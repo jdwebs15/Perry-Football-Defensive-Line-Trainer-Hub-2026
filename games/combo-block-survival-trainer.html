@@ -5,6 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Game 5 — Combo Block Survival Trainer</title>
   <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .trainer-input-group{
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+    }
+    .trainer-input-group span{
+      display:block;
+      margin-bottom:10px;
+      color:#ffffff;
+      font-weight:700;
+      font-size:.95rem;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+    .trainer-input{
+      width:100%;
+      padding:16px 18px;
+      border-radius:14px;
+      border:2px solid rgba(255,255,255,.14);
+      background:rgba(15,23,42,.92);
+      color:#ffffff;
+      font-size:1.05rem;
+      font-weight:600;
+      outline:none;
+      transition:all .2s ease;
+      box-shadow:0 0 0 1px rgba(255,255,255,.04);
+      box-sizing:border-box;
+    }
+    .trainer-input::placeholder{
+      color:rgba(255,255,255,.45);
+    }
+    .trainer-input:focus{
+      border-color:#22c55e;
+      box-shadow:0 0 0 4px rgba(34,197,94,.18);
+      background:rgba(15,23,42,.98);
+    }
+    .trainer-input:hover{
+      border-color:rgba(255,255,255,.28);
+    }
+  </style>
 </head>
 <body>
   <div class="page-shell">
@@ -37,9 +79,15 @@
         </p>
       </div>
       <div class="start-grid">
-        <label class="input-group">
+        <label class="input-group trainer-input-group">
           <span>Player Name</span>
-          <input id="playerName" type="text" placeholder="Enter player name" autocomplete="off" />
+          <input
+            id="playerName"
+            class="trainer-input"
+            type="text"
+            placeholder="Enter player name"
+            autocomplete="off"
+          />
         </label>
       </div>
       <div class="btn-row" style="margin-top:16px;">
@@ -93,6 +141,7 @@
         <h2>Completion Ticket</h2>
         <p>Screenshot this ticket after a perfect run. Any miss means the player finished the rep work, but has to run it back clean.</p>
         <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Game</span><span id="ticketGame" class="value">Game 5 — Combo Block Survival Trainer</span></div>
           <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
@@ -103,6 +152,7 @@
           <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
         </div>
         <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+        <div id="logStatus" class="feedback-copy" style="margin-top:10px;font-size:0.9rem;"></div>
         <div class="btn-row" style="margin-top:16px;">
           <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
           <a class="btn" href="../index.html">Back to Hub</a>
@@ -112,6 +162,15 @@
   </div>
 
   <script>
+    /***************************************************************
+     * GAME SETTINGS
+     * Paste your deployed Google Apps Script Web App URL below.
+     * Deploy as: Web App → Execute as Me → Anyone with the link.
+     * This game only sends the log when the result is MASTERED.
+     ***************************************************************/
+    const GAME_TITLE = 'Game 5 — Combo Block Survival Trainer';
+    const GAME_SHORT_TITLE = 'Combo Block Survival Trainer';
+    const APPS_SCRIPT_URL = 'PASTE_WEB_APP_URL_HERE';
     const EXPLANATION_DELAY_MS = 5000;
 
     const QUESTION_BANK = [
@@ -120,6 +179,11 @@
         stem: 'Who will face the majority of combo blocks in this system?',
         copy: 'This is the position group Coach identifies first in the combo block section.',
         correct: 'Interior D-Linemen',
+        distractors: [
+          'Edge defenders playing only contain away from the core of the formation',
+          'Coverage players rotating late into the box after the snap declares',
+          'Backside pursuit players who are removed from the double-team surface'
+        ],
         hint: 'Think about who lives in the middle of the formation and sees the most doubles.',
         explanation: 'Correct. Interior D-Linemen will face the majority of combo blocks.'
       },
@@ -128,6 +192,11 @@
         stem: 'What is the purpose of a combo block?',
         copy: 'The offense is trying to create movement or overtake leverage.',
         correct: 'To obtain vertical movement or overtake you with the outside leverage player',
+        distractors: [
+          'To force the D-Lineman to widen himself so the ball can bounce outside cleanly',
+          'To make the defensive end wrong-arm every block even when no puller appears',
+          'To hold the line of scrimmage without allowing either blocker to climb anywhere'
+        ],
         hint: 'The offense wants movement first, then wants one blocker to climb.',
         explanation: 'Correct. The purpose of combo blocks is to obtain vertical movement, or to overtake you with an outside leverage offensive player knocking the inside leverage player up to the second level.'
       },
@@ -136,6 +205,11 @@
         stem: 'What is the number one goal for us as D-Linemen against combo blocks?',
         copy: 'This is the core coaching point for the entire drill.',
         correct: 'Keep the combo block intact on us',
+        distractors: [
+          'Turn sideways immediately and split out before either blocker can climb',
+          'Escape upfield quickly so the linebacker can replace you in the gap',
+          'Find the ball first and leave the blockers once the mesh begins'
+        ],
         hint: 'Do not let one blocker leave clean for the linebacker.',
         explanation: 'Correct. The number one goal is to keep the combo block intact on us.'
       },
@@ -144,6 +218,11 @@
         stem: 'Against a combo block, what happens with the first step?',
         copy: 'Coach’s rule does not change just because the block picture changes.',
         correct: 'First step is always the same',
+        distractors: [
+          'First step changes to a lateral escape step away from pressure',
+          'First step becomes a retreat step so you can see both blockers',
+          'First step is delayed until the second blocker declares his path'
+        ],
         hint: 'Same feet. Different reaction after recognition.',
         explanation: 'Correct. First step is always the same.'
       },
@@ -152,6 +231,11 @@
         stem: 'As the hat and numbers of your key come at you, what should your hands do?',
         copy: 'This begins like any base block reaction.',
         correct: 'Shoot hands inside and tight',
+        distractors: [
+          'Catch the block wide and wait for the second blocker to arrive',
+          'Throw one shoulder into the blocker and turn out of the gap',
+          'Drop the hands low so you can grab cloth and pull yourself through'
+        ],
         hint: 'No wide hands. No catching. Be inside and tight.',
         explanation: 'Correct. As we recognize the hat and numbers of our key coming at us, we shoot our hands inside and tight.'
       },
@@ -160,6 +244,11 @@
         stem: 'After shooting hands inside and tight, what must you establish?',
         copy: 'This keeps separation and prevents being swallowed.',
         correct: 'Lock out to establish separation',
+        distractors: [
+          'Turn the shoulders to make yourself skinny through the double team',
+          'Collapse the arms so your pads stay close to the blocker’s chest',
+          'Give ground intentionally so both blockers lose their aiming point'
+        ],
         hint: 'Hands alone are not enough. Create space.',
         explanation: 'Correct. Lock out to establish separation.'
       },
@@ -168,6 +257,11 @@
         stem: 'You feel the outside leverage player engage you in the combo. What do you do with your hands?',
         copy: 'This is where players often panic and try to split out too soon.',
         correct: 'Stay engaged with both hands on the base blocker',
+        distractors: [
+          'Remove both hands and reach for the outside blocker immediately',
+          'Throw your inside hand away so you can spin out of the pressure',
+          'Let the base blocker go and chase the second blocker upfield'
+        ],
         hint: 'Do not abandon the base blocker just because the second body arrives.',
         explanation: 'Correct. As we feel the outside leverage player engage us in the combo, stay engaged with both hands on the base blocker.'
       },
@@ -176,6 +270,11 @@
         stem: 'What is the repeated command inside the combo block rule?',
         copy: 'This is Coach’s non-negotiable.',
         correct: 'Maintain your gap. Always maintain your gap.',
+        distractors: [
+          'Find the football first. Always find the football first.',
+          'Escape the pressure early. Always escape the pressure early.',
+          'Chase the climb immediately. Always chase the climb immediately.'
+        ],
         hint: 'The block can change, but your responsibility cannot disappear.',
         explanation: 'Correct. Maintain your gap. Always maintain your gap.'
       },
@@ -184,6 +283,11 @@
         stem: 'In a true double team, what pressure must you fight?',
         copy: 'The offense wants movement off the ball.',
         correct: 'Fight the vertical push',
+        distractors: [
+          'Ride the lateral stretch and run sideways with both blockers',
+          'Accept the backward movement and wait for the linebacker to fit',
+          'Turn your hips completely so the pressure slides past you'
+        ],
         hint: 'Do not get knocked backward off the line.',
         explanation: 'Correct. Fight the vertical push in a true double team.'
       },
@@ -192,6 +296,11 @@
         stem: 'What must you NOT allow the outside leverage blocker to gain on a combo?',
         copy: 'Coach gives a specific relationship limit.',
         correct: 'Greater than half a man',
+        distractors: [
+          'Less than a shoulder so he can never feel your surface',
+          'Inside hand pressure before the base blocker arrives',
+          'Backside pursuit leverage after the running back presses the gap'
+        ],
         hint: 'He cannot get enough of your body to overtake you.',
         explanation: 'Correct. Do not allow the outside leverage blocker to gain greater than half a man on a combo.'
       },
@@ -200,6 +309,11 @@
         stem: 'A player feels the combo and immediately turns his shoulders to split it. What is the correction?',
         copy: 'The goal is not to make yourself skinny and lose the gap.',
         correct: 'Stay square enough to maintain the gap and keep the combo intact',
+        distractors: [
+          'Keep turning so your hips escape and the linebacker can replace you cleanly',
+          'Run through the nearest shoulder and assume the ball will cut behind you',
+          'Abandon the base blocker and attack the second blocker with both hands'
+        ],
         hint: 'Do not open the door for vertical movement or a clean climb.',
         explanation: 'Correct. Stay engaged, maintain your gap, and keep the combo intact on you.'
       },
@@ -208,6 +322,11 @@
         stem: 'A player locks out but lets the outside blocker overtake more than half a man. What went wrong?',
         copy: 'Lockout is good, but leverage still matters.',
         correct: 'He allowed the outside leverage blocker too much of his body',
+        distractors: [
+          'He kept both hands on the base blocker too long before feeling pressure',
+          'He maintained his gap too firmly and forced the ball to declare inside',
+          'He fought vertical pressure instead of immediately turning upfield'
+        ],
         hint: 'The outside player cannot get more than half a man.',
         explanation: 'Correct. We cannot allow the outside leverage blocker to gain greater than half a man on a combo.'
       },
@@ -216,6 +335,11 @@
         stem: 'Why do we want to keep the combo block intact on us?',
         copy: 'Think team defense, not just one player surviving.',
         correct: 'It keeps the blockers occupied and protects the linebacker from a clean climb',
+        distractors: [
+          'It lets the D-Lineman leave the gap so the linebacker can blitz freely',
+          'It creates space for the back to press wider before cutting downhill',
+          'It forces the corner to replace the D-Lineman in the interior gap'
+        ],
         hint: 'The offense wants one blocker to leave for the second level.',
         explanation: 'Correct. Keeping the combo intact on us prevents the offensive line from knocking one blocker up clean to the second level.'
       },
@@ -224,6 +348,11 @@
         stem: 'Your key comes at you with hat and numbers, but you look into the backfield first. What is wrong?',
         copy: 'Combo recognition starts with the key, not guessing the ball.',
         correct: 'Eyes left the key before reacting to the block picture',
+        distractors: [
+          'Feet stayed tied to the first-step rule instead of changing immediately',
+          'Hands were too tight inside and created separation from the blocker',
+          'The player kept the combo intact instead of chasing the running back'
+        ],
         hint: 'Read the hat and numbers first.',
         explanation: 'Correct. Recognize the hat and numbers of the key coming at you, then shoot hands inside and tight.'
       },
@@ -232,6 +361,11 @@
         stem: 'A combo starts to create vertical movement. What must the D-Lineman do immediately?',
         copy: 'Do not accept being driven off the ball.',
         correct: 'Fight the vertical push, and maintain the gap',
+        distractors: [
+          'Turn sideways and run with the pressure until the ball declares',
+          'Give ground to split the blockers after they climb to second level',
+          'Stop the feet and wait for the linebacker to knock the combo apart'
+        ],
         hint: 'The goal is not just contact. It is stopping movement and protecting the gap.',
         explanation: 'Correct. Fight the vertical push in a true double team and always maintain your gap.'
       },
@@ -240,6 +374,11 @@
         stem: 'What is the complete combo block survival picture?',
         copy: 'Put the whole technique together.',
         correct: 'Same first step, hands inside and tight, lock out, keep the combo intact, maintain the gap',
+        distractors: [
+          'Change the first step, split immediately, chase the climb, and find the football',
+          'Look into the backfield, catch the pressure, turn sideways, and run upfield',
+          'Widen out, box the blocker, abandon the base block, and chase the bounce'
+        ],
         hint: 'Feet, hands, separation, combo control, gap responsibility.',
         explanation: 'Correct. The complete picture is same first step, hands inside and tight, lockout for separation, keep the combo intact on us, and maintain the gap.'
       }
@@ -256,7 +395,9 @@
       answered: false,
       started: false,
       runtimeSeconds: 0,
-      timerId: null
+      timerId: null,
+      attemptNumber: 0,
+      currentQuestionMissed: false
     };
 
     const els = {
@@ -281,6 +422,7 @@
       feedbackBox: document.getElementById('feedbackBox'),
       feedbackTitle: document.getElementById('feedbackTitle'),
       feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketGame: document.getElementById('ticketGame'),
       ticketName: document.getElementById('ticketName'),
       ticketDate: document.getElementById('ticketDate'),
       ticketStart: document.getElementById('ticketStart'),
@@ -289,7 +431,8 @@
       ticketAccuracy: document.getElementById('ticketAccuracy'),
       ticketMisses: document.getElementById('ticketMisses'),
       ticketResult: document.getElementById('ticketResult'),
-      finishMessage: document.getElementById('finishMessage')
+      finishMessage: document.getElementById('finishMessage'),
+      logStatus: document.getElementById('logStatus')
     };
 
     function formatDate(date) {
@@ -315,19 +458,36 @@
       return clone;
     }
 
+    function getAttemptStorageKey(playerName) {
+      return `${GAME_TITLE}::${playerName.trim().toLowerCase()}::attempts`;
+    }
+
+    function getNextAttemptNumber(playerName) {
+      const key = getAttemptStorageKey(playerName);
+      const previous = Number(localStorage.getItem(key) || '0');
+      const next = previous + 1;
+      localStorage.setItem(key, String(next));
+      return next;
+    }
+
     function buildQuestions() {
-      return QUESTION_BANK.map(q => {
-        const distractors = [
-          'Turn your shoulders and run sideways out of the gap',
-          'Split immediately and let one blocker climb clean to the linebacker',
-          'Catch the double team with soft hands and stop your feet',
-          'Peek into the backfield before handling the hat and numbers',
-          'Give the outside leverage blocker your whole body',
-          'Abandon the base blocker as soon as the second blocker arrives',
-          'Open the gap to avoid pressure from the double team',
-          'Take yourself upfield and run past the block picture'
-        ];
-        const options = shuffle([q.correct, ...shuffle(distractors).filter(d => d !== q.correct).slice(0, 3)]);
+      const shuffledQuestions = shuffle(QUESTION_BANK);
+
+      return shuffledQuestions.map((q, questionIndex) => {
+        const correctSlot = questionIndex % 4;
+        const distractors = shuffle(q.distractors).slice(0, 3);
+        const options = [];
+        let distractorIndex = 0;
+
+        for (let i = 0; i < 4; i++) {
+          if (i === correctSlot) {
+            options.push(q.correct);
+          } else {
+            options.push(distractors[distractorIndex]);
+            distractorIndex += 1;
+          }
+        }
+
         return { ...q, options };
       });
     }
@@ -381,13 +541,18 @@
     function renderQuestion() {
       clearError(els.gameError);
       clearFeedback();
+
       const q = state.questions[state.currentIndex];
       state.answered = false;
+      state.currentQuestionMissed = false;
+
       updateHud();
+
       els.questionStem.textContent = q.stem;
       els.questionCopy.textContent = q.copy;
       els.timerPill.textContent = 'Combo Block. Gap. Anchor.';
       els.answerGrid.innerHTML = '';
+
       q.options.forEach((option, idx) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
@@ -409,31 +574,40 @@
     function handleAnswer(option, btnEl) {
       try {
         if (!state.started) return;
+
         const q = state.questions[state.currentIndex];
         const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
+
         if (option === q.correct) {
-          if (!state.answered) state.correctFirstTry += 1;
+          if (!state.currentQuestionMissed) state.correctFirstTry += 1;
+
           state.answered = true;
           btnEl.classList.add('correct');
+
           buttons.forEach(btn => {
             btn.disabled = true;
             btn.classList.add('disabled');
           });
+
           showFeedback('Correct — survive the combo.', q.explanation);
           updateHud();
+
           setTimeout(() => {
             state.currentIndex += 1;
             if (state.currentIndex >= state.questions.length) finishGame();
             else renderQuestion();
           }, EXPLANATION_DELAY_MS);
         } else {
-          if (!state.answered) {
-            state.answered = true;
+          if (!state.currentQuestionMissed) {
+            state.currentQuestionMissed = true;
             state.misses += 1;
           }
+
+          state.answered = true;
           btnEl.classList.add('incorrect');
           btnEl.disabled = true;
           btnEl.classList.add('disabled');
+
           showFeedback('Miss — fix the picture.', `${q.hint} You still must choose the correct answer to move on.`);
           updateHud();
           enableRemainingAnswers();
@@ -443,14 +617,43 @@
       }
     }
 
+    async function submitTicketLog(payload) {
+      if (!payload.mastered) {
+        els.logStatus.textContent = 'Sheet log skipped: mastery was not achieved.';
+        return;
+      }
+
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PASTE_WEB_APP_URL_HERE') {
+        els.logStatus.textContent = 'Sheet log skipped: paste your Apps Script Web App URL into APPS_SCRIPT_URL.';
+        return;
+      }
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        els.logStatus.textContent = 'Mastery log sent.';
+      } catch (err) {
+        els.logStatus.textContent = `Sheet log error: ${err.message}`;
+      }
+    }
+
     function finishGame() {
       stopRuntimeClock();
       state.endDate = new Date();
+
       const attempted = state.questions.length;
       const accuracy = Math.round((state.correctFirstTry / attempted) * 100);
       const perfect = state.misses === 0;
+
       els.gameScreen.classList.add('hidden');
       els.finishScreen.classList.remove('hidden');
+
+      els.ticketGame.textContent = GAME_TITLE;
       els.ticketName.textContent = state.playerName;
       els.ticketDate.textContent = formatDate(state.endDate);
       els.ticketStart.textContent = formatTime(state.startDate);
@@ -459,9 +662,31 @@
       els.ticketAccuracy.textContent = `${accuracy}%`;
       els.ticketMisses.textContent = String(state.misses);
       els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
+
       els.finishMessage.innerHTML = perfect
-        ? `<h3 class="feedback-title">Perfect. Combo block survival is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
-        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+        ? `<h3 class="feedback-title">Perfect. ${GAME_SHORT_TITLE} is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot this ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">${GAME_TITLE}. The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        playerName: state.playerName,
+        gamePlayed: GAME_TITLE,
+        attemptNumber: state.attemptNumber,
+        startDate: formatDate(state.startDate),
+        startTime: formatTime(state.startDate),
+        endDate: formatDate(state.endDate),
+        endTime: formatTime(state.endDate),
+        runtime: formatRuntime(state.runtimeSeconds),
+        runtimeSeconds: state.runtimeSeconds,
+        correctFirstTry: state.correctFirstTry,
+        totalQuestions: attempted,
+        percent: accuracy,
+        misses: state.misses,
+        result: perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN',
+        mastered: perfect
+      };
+
+      submitTicketLog(payload);
     }
 
     function hardReset() {
@@ -476,10 +701,16 @@
       state.answered = false;
       state.started = false;
       state.runtimeSeconds = 0;
+      state.timerId = null;
+      state.attemptNumber = 0;
+      state.currentQuestionMissed = false;
+
       els.playerName.value = '';
+      els.logStatus.textContent = '';
       clearError(els.startError);
       clearError(els.gameError);
       clearFeedback();
+
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.add('hidden');
       els.startScreen.classList.remove('hidden');
@@ -488,11 +719,14 @@
     function startGame() {
       const name = els.playerName.value.trim();
       clearError(els.startError);
+
       if (!name) {
         setError(els.startError, 'Enter a player name before starting.');
         return;
       }
+
       state.playerName = name;
+      state.attemptNumber = getNextAttemptNumber(name);
       state.startDate = new Date();
       state.endDate = null;
       state.currentIndex = 0;
@@ -502,9 +736,12 @@
       state.answered = false;
       state.started = true;
       state.runtimeSeconds = 0;
+      state.currentQuestionMissed = false;
+
       els.startScreen.classList.add('hidden');
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.remove('hidden');
+
       startRuntimeClock();
       renderQuestion();
     }
