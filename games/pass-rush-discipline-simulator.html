@@ -5,6 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Game 6 — Pass Rush Discipline Simulator</title>
   <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    /* Game 6 local input polish — keeps this full drop-in independent of styles.css changes */
+    .trainer-input-group{
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+    }
+
+    .trainer-input-group span{
+      display:block;
+      margin-bottom:10px;
+      color:#ffffff;
+      font-weight:700;
+      font-size:.95rem;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+
+    .trainer-input{
+      width:100%;
+      padding:16px 18px;
+      border-radius:14px;
+      border:2px solid rgba(255,255,255,.14);
+      background:rgba(15,23,42,.92);
+      color:#ffffff;
+      font-size:1.05rem;
+      font-weight:600;
+      outline:none;
+      transition:all .2s ease;
+      box-shadow:0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    .trainer-input::placeholder{
+      color:rgba(255,255,255,.45);
+    }
+
+    .trainer-input:focus{
+      border-color:#22c55e;
+      box-shadow:0 0 0 4px rgba(34,197,94,.18);
+      background:rgba(15,23,42,.98);
+    }
+
+    .trainer-input:hover{
+      border-color:rgba(255,255,255,.28);
+    }
+  </style>
 </head>
 <body>
   <div class="page-shell">
@@ -37,9 +84,15 @@
         </p>
       </div>
       <div class="start-grid">
-        <label class="input-group">
+        <label class="input-group trainer-input-group">
           <span>Player Name</span>
-          <input id="playerName" type="text" placeholder="Enter player name" autocomplete="off" />
+          <input
+            id="playerName"
+            class="trainer-input"
+            type="text"
+            placeholder="Enter player name"
+            autocomplete="off"
+          />
         </label>
       </div>
       <div class="btn-row" style="margin-top:16px;">
@@ -93,6 +146,7 @@
         <h2>Completion Ticket</h2>
         <p>Screenshot this ticket after a perfect run. Any miss means the player finished the rep work, but has to run it back clean.</p>
         <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Game</span><span id="ticketGame" class="value">Game 6 — Pass Rush Discipline Simulator</span></div>
           <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
@@ -103,6 +157,7 @@
           <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
         </div>
         <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+        <div id="logStatus" class="feedback-copy" style="margin-top:10px;font-size:0.9rem;"></div>
         <div class="btn-row" style="margin-top:16px;">
           <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
           <a class="btn" href="../index.html">Back to Hub</a>
@@ -112,6 +167,18 @@
   </div>
 
   <script>
+    /***************************************************************
+     * GAME SETTINGS
+     * Paste your deployed Google Apps Script Web App URL below.
+     * Deploy as: Web App → Execute as Me → Anyone with the link.
+     *
+     * This game only sends a sheet log when the result is:
+     * MASTERED — CLEAN RUN
+     ***************************************************************/
+    const GAME_TITLE = 'Game 6 — Pass Rush Discipline Simulator';
+    const GAME_SHORT_TITLE = 'Pass Rush Discipline Simulator';
+    const APPS_SCRIPT_URL = 'PASTE_WEB_APP_URL_HERE';
+
     const EXPLANATION_DELAY_MS = 5000;
 
     const QUESTION_BANK = [
@@ -120,6 +187,11 @@
         stem: 'What does High Hat trigger for a Defensive Lineman?',
         copy: 'Your key shows a pass set. The reaction must be immediate.',
         correct: 'Immediately engage fully in pass rush',
+        distractors: [
+          'Pause at the line of scrimmage and peek into the backfield before starting the rush',
+          'Shuffle laterally with the blocker until the quarterback declares run or pass',
+          'Step backward into contain first, then begin rushing only after the ball is thrown'
+        ],
         hint: 'High Hat is not a pause-and-peek read.',
         explanation: 'Correct. As we recognize a High Hat pass set, we immediately engage fully in our pass rush.'
       },
@@ -128,6 +200,11 @@
         stem: 'What is the first pass rush rule for every rusher?',
         copy: 'Before moves, counters, and effort, the rush has a rule.',
         correct: 'Rush through YOUR gap',
+        distractors: [
+          'Rush through whichever gap opens first, even if it belongs to another defender',
+          'Use the quickest path to the quarterback and adjust the rush lane after pressure appears',
+          'Cross into the nearest open window whenever the offensive lineman oversets his pass set'
+        ],
         hint: 'Your rush is tied to your assigned lane.',
         explanation: 'Correct. Rush through YOUR gap.'
       },
@@ -136,6 +213,11 @@
         stem: 'Outside rushers are what kind of rushers in this system?',
         copy: 'This is the rule Coach emphasizes in all caps.',
         correct: 'Contain rush, ALWAYS',
+        distractors: [
+          'Inside counter rushers first, because immediate pressure matters more than the edge',
+          'Free rushers who can choose either shoulder based on the offensive tackle’s set',
+          'Backside chase rushers who should flatten behind the quarterback whenever possible'
+        ],
         hint: 'Do not trade a sack attempt for losing the edge.',
         explanation: 'Correct. Outside rushers are contain rush, ALWAYS.'
       },
@@ -144,6 +226,11 @@
         stem: 'An outside rusher gets an overset. What is the warning if he takes the inside gap?',
         copy: 'There is a hard correction attached to this temptation.',
         correct: 'He better be able to get back to the outside shoulder of the QB',
+        distractors: [
+          'He should keep chasing inside because the quarterback is no longer his responsibility',
+          'He should spin across the quarterback’s face to make the fastest possible pressure path',
+          'He should run past quarterback depth and loop back once the pocket starts to break'
+        ],
         hint: 'The outside shoulder is the rescue point if he violates contain.',
         explanation: 'Correct. If you are getting an overset and take the inside gap, you better be able to get back to the outside shoulder of the QB.'
       },
@@ -152,6 +239,11 @@
         stem: 'Inside rushers are aiming for what on the Quarterback?',
         copy: 'Inside rush is still gap-disciplined.',
         correct: 'Gap-side shoulder of the QB',
+        distractors: [
+          'The far shoulder of the quarterback so they can chase completely across his face',
+          'The deepest point behind the quarterback so they can circle back into the pocket',
+          'The outside shoulder every time, even if their assigned rush lane is an inside gap'
+        ],
         hint: 'Inside rushers are not free to cross the QB face.',
         explanation: 'Correct. Inside rushers are gap-side shoulder of the QB.'
       },
@@ -160,6 +252,11 @@
         stem: 'What should an inside rusher NEVER do?',
         copy: 'This protects rush-lane integrity and keeps the QB boxed in.',
         correct: 'Cross the QB’s face',
+        distractors: [
+          'Squeeze the pocket while staying on the gap-side shoulder of the quarterback',
+          'Use a pass rush move that fits his strengths while keeping lane responsibility',
+          'Drive the blocker backward once he can no longer turn the corner cleanly'
+        ],
         hint: 'Do not chase across his body and open an escape lane.',
         explanation: 'Correct. Inside rushers NEVER cross the QB’s face.'
       },
@@ -168,6 +265,11 @@
         stem: 'On a twist stunt, what becomes your aiming-point rush rule?',
         copy: 'After movement, the final gap determines the rush responsibility.',
         correct: 'The gap you end up in',
+        distractors: [
+          'The gap you originally aligned in before the movement of the stunt started',
+          'The closest open space after the offensive line passes the stunt off',
+          'The gap that gives the shortest path to the quarterback, regardless of the call'
+        ],
         hint: 'Where you finish on the stunt tells you the rule.',
         explanation: 'Correct. On twist stunts, the gap you end up in is the aiming point rush rule for that gap.'
       },
@@ -176,6 +278,11 @@
         stem: 'What is the squeeze rule once the ball declares?',
         copy: 'Pass rush does not mean running past the play.',
         correct: 'Squeeze to the ball',
+        distractors: [
+          'Widen away from the ball so the quarterback cannot see your rush lane closing',
+          'Keep rushing straight upfield even if the ball has already declared inside',
+          'Stop the rush and mirror the blocker until the quarterback fully leaves the pocket'
+        ],
         hint: 'Close space. Do not widen the escape lane.',
         explanation: 'Correct. Squeeze to the ball.'
       },
@@ -184,6 +291,11 @@
         stem: 'What depth must a pass rusher NEVER go past?',
         copy: 'This is one of the biggest discipline rules in the rush.',
         correct: 'The depth of the Quarterback',
+        distractors: [
+          'The original depth of the offensive tackle before the pass set begins',
+          'The heels of the deepest running back in protection or check-release responsibility',
+          'The starting depth of the linebackers before they open into their coverage drops'
+        ],
         hint: 'Going deeper than the QB helps him escape.',
         explanation: 'Correct. NEVER go past the depth of the Quarterback.'
       },
@@ -192,6 +304,11 @@
         stem: 'You are within about 2 yards of QB depth and can no longer turn the corner. What should you do?',
         copy: 'The rush is not dead just because you cannot win the edge clean.',
         correct: 'Drive your blocker into the QB and constrict his area of operation',
+        distractors: [
+          'Continue running the hoop behind the quarterback and hope he steps backward into you',
+          'Spin completely out of the rush lane to search for a cleaner angle from the opposite gap',
+          'Stop your feet at the blocker and wait for the quarterback to scramble toward your side'
+        ],
         hint: 'Turn the blocker into the pressure.',
         explanation: 'Correct. When you get within 2 yards of the depth of the QB and know you can no longer turn the corner, drive your blocker into the QB and constrict his area of operation.'
       },
@@ -200,6 +317,11 @@
         stem: 'What happens when a rusher goes past the QB’s depth?',
         copy: 'Coach gives the consequence clearly.',
         correct: 'He loses contain and gives an up-and-out escape',
+        distractors: [
+          'He forces the quarterback to climb directly into every underneath coverage defender',
+          'He makes the pocket smaller because the quarterback has no room to step up',
+          'He improves the rush angle because deeper pressure always creates faster sacks'
+        ],
         hint: 'You gave the QB a way to extend the play.',
         explanation: 'Correct. When you go past his depth, you lose contain and give an up and out, allowing the play to be extended.'
       },
@@ -208,6 +330,11 @@
         stem: 'A player wins upfield, but runs behind the QB. What is the correction?',
         copy: 'A pretty rush that opens the escape lane is not disciplined rush.',
         correct: 'Do not go past QB depth; squeeze and constrict the pocket',
+        distractors: [
+          'Keep running behind the quarterback because speed around the edge is always the priority',
+          'Cross the quarterback’s face late because pressure is more important than rush-lane integrity',
+          'Widen the rush path even more so the tackle has to turn his shoulders completely'
+        ],
         hint: 'Pressure must close the QB’s space, not run out of it.',
         explanation: 'Correct. Never go past QB depth. If you cannot turn the corner, drive the blocker into the QB and constrict his area of operation.'
       },
@@ -216,6 +343,11 @@
         stem: 'Why is an outside rusher not allowed to take the inside gap just because it opens?',
         copy: 'The open door can be a trap if it breaks the rush rule.',
         correct: 'Because he is responsible for contain and the outside shoulder of the QB',
+        distractors: [
+          'Because outside rushers are supposed to stop their feet and mirror the tackle on every pass',
+          'Because the inside gap always belongs to the cornerback once the quarterback drops back',
+          'Because the defensive line should never use an inside move against any pass protection'
+        ],
         hint: 'The QB escape lane matters more than the tempting inside flash.',
         explanation: 'Correct. Outside rushers are contain rush always. If they take an inside gap, they must get back to the outside shoulder of the QB.'
       },
@@ -224,6 +356,11 @@
         stem: 'What kind of pass rush moves should players use?',
         copy: 'Coach does not force one universal move on every player.',
         correct: 'Moves organic to what each player does best to get to the QB',
+        distractors: [
+          'The exact same move every rush so every player looks identical on film',
+          'Only moves that take the rusher immediately inside, even if it breaks contain',
+          'Only power moves that avoid counters, speed, hands, and player-specific strengths'
+        ],
         hint: 'The move fits the player, but the rush rules still apply.',
         explanation: 'Correct. The pass rush moves are organic to what each player does best to get to the Quarterback.'
       },
@@ -232,6 +369,11 @@
         stem: 'A twist stunt puts you in a new gap. What rule now controls your rush?',
         copy: 'Do not rush like your original alignment if the stunt changes your final gap.',
         correct: 'The aiming-point rush rule for the gap you ended in',
+        distractors: [
+          'The original alignment rule from before the stunt, even after you exchange gaps',
+          'The rule of whichever offensive lineman you started across from before the snap',
+          'The nearest open lane after the quarterback starts moving outside the pocket'
+        ],
         hint: 'Final gap equals final responsibility.',
         explanation: 'Correct. On twist stunts, the gap you end up in is the aiming point rush rule for that gap.'
       },
@@ -240,6 +382,11 @@
         stem: 'A contain rusher is upfield and feels the QB step up. What should he do?',
         copy: 'The answer is not to keep running around the edge.',
         correct: 'Squeeze to the ball while keeping contain leverage',
+        distractors: [
+          'Continue running around the edge behind the quarterback to finish the speed rush',
+          'Abandon contain and chase across the quarterback’s face through the nearest inside gap',
+          'Stop rushing entirely and wait for the quarterback to choose a scramble direction'
+        ],
         hint: 'Close the pocket without giving the outside escape.',
         explanation: 'Correct. Squeeze to the ball, but outside rushers must remain contain rushers.'
       },
@@ -248,6 +395,11 @@
         stem: 'What is the disciplined picture when the rusher cannot turn the corner?',
         copy: 'This turns a stalled rush into useful pressure.',
         correct: 'Drive the blocker back into the QB instead of running past the pocket',
+        distractors: [
+          'Keep bending behind the quarterback because any deep rush still counts as pressure',
+          'Run completely around the pocket and look for the quarterback from the backside',
+          'Quit the rush lane and look back into coverage once the edge move is stopped'
+        ],
         hint: 'Create pressure through the blocker and shrink the QB’s space.',
         explanation: 'Correct. Drive your blocker into the QB and constrict his area of operation.'
       },
@@ -256,6 +408,11 @@
         stem: 'What is the full pass rush discipline picture?',
         copy: 'Put the entire High Hat rush progression together.',
         correct: 'High Hat, rush your gap, honor contain or gap-side shoulder, squeeze, and never pass QB depth',
+        distractors: [
+          'High Hat, pick the quickest open gap, chase across the quarterback’s face, and finish deep',
+          'High Hat, pause for the run read, mirror the blocker, then rush after the throw begins',
+          'High Hat, ignore the final stunt gap, run past the pocket, and circle back to the ball'
+        ],
         hint: 'Recognition, lane, aiming point, squeeze, depth.',
         explanation: 'Correct. High Hat triggers pass rush, but the rush stays disciplined: rush through your gap, outside contain always, inside gap-side shoulder, squeeze to the ball, and never go past QB depth.'
       }
@@ -272,7 +429,9 @@
       answered: false,
       started: false,
       runtimeSeconds: 0,
-      timerId: null
+      timerId: null,
+      attemptNumber: 0,
+      currentQuestionMissed: false
     };
 
     const els = {
@@ -297,6 +456,7 @@
       feedbackBox: document.getElementById('feedbackBox'),
       feedbackTitle: document.getElementById('feedbackTitle'),
       feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketGame: document.getElementById('ticketGame'),
       ticketName: document.getElementById('ticketName'),
       ticketDate: document.getElementById('ticketDate'),
       ticketStart: document.getElementById('ticketStart'),
@@ -305,15 +465,16 @@
       ticketAccuracy: document.getElementById('ticketAccuracy'),
       ticketMisses: document.getElementById('ticketMisses'),
       ticketResult: document.getElementById('ticketResult'),
-      finishMessage: document.getElementById('finishMessage')
+      finishMessage: document.getElementById('finishMessage'),
+      logStatus: document.getElementById('logStatus')
     };
 
     function formatDate(date) {
-      return date.toLocaleDateString();
+      return new Intl.DateTimeFormat([], { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
     }
 
     function formatTime(date) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      return new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }).format(date);
     }
 
     function formatRuntime(totalSeconds) {
@@ -331,21 +492,36 @@
       return clone;
     }
 
+    function getAttemptStorageKey(playerName) {
+      return `${GAME_TITLE}::${playerName.trim().toLowerCase()}::attempts`;
+    }
+
+    function getNextAttemptNumber(playerName) {
+      const key = getAttemptStorageKey(playerName);
+      const previous = Number(localStorage.getItem(key) || '0');
+      const next = previous + 1;
+      localStorage.setItem(key, String(next));
+      return next;
+    }
+
     function buildQuestions() {
-      return QUESTION_BANK.map(q => {
-        const distractors = [
-          'Take the cleanest path even if it opens the contain lane',
-          'Run past the Quarterback to get a deeper angle',
-          'Cross the QB’s face to chase the quickest pressure',
-          'Abandon the assigned gap once the blocker oversets',
-          'Peek into the backfield before reacting to High Hat',
-          'Rush wide with no squeeze once the QB steps up',
-          'Stop your feet and mirror the blocker at the line',
-          'Spin out of the gap even if it creates an escape lane',
-          'Let the QB step up and out by rushing behind him',
-          'Treat every pass rush move as more important than lane discipline'
-        ];
-        const options = shuffle([q.correct, ...shuffle(distractors).filter(d => d !== q.correct).slice(0, 3)]);
+      const shuffledQuestions = shuffle(QUESTION_BANK);
+
+      return shuffledQuestions.map((q, questionIndex) => {
+        const correctSlot = questionIndex % 4;
+        const distractors = shuffle(q.distractors).slice(0, 3);
+        const options = [];
+        let distractorIndex = 0;
+
+        for (let i = 0; i < 4; i++) {
+          if (i === correctSlot) {
+            options.push(q.correct);
+          } else {
+            options.push(distractors[distractorIndex]);
+            distractorIndex += 1;
+          }
+        }
+
         return { ...q, options };
       });
     }
@@ -399,13 +575,18 @@
     function renderQuestion() {
       clearError(els.gameError);
       clearFeedback();
+
       const q = state.questions[state.currentIndex];
       state.answered = false;
+      state.currentQuestionMissed = false;
+
       updateHud();
+
       els.questionStem.textContent = q.stem;
       els.questionCopy.textContent = q.copy;
       els.timerPill.textContent = 'High Hat. Gap. QB Depth.';
       els.answerGrid.innerHTML = '';
+
       q.options.forEach((option, idx) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
@@ -427,31 +608,40 @@
     function handleAnswer(option, btnEl) {
       try {
         if (!state.started) return;
+
         const q = state.questions[state.currentIndex];
         const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
+
         if (option === q.correct) {
-          if (!state.answered) state.correctFirstTry += 1;
+          if (!state.currentQuestionMissed) state.correctFirstTry += 1;
+
           state.answered = true;
           btnEl.classList.add('correct');
+
           buttons.forEach(btn => {
             btn.disabled = true;
             btn.classList.add('disabled');
           });
+
           showFeedback('Correct — disciplined rush.', q.explanation);
           updateHud();
+
           setTimeout(() => {
             state.currentIndex += 1;
             if (state.currentIndex >= state.questions.length) finishGame();
             else renderQuestion();
           }, EXPLANATION_DELAY_MS);
         } else {
-          if (!state.answered) {
-            state.answered = true;
+          if (!state.currentQuestionMissed) {
+            state.currentQuestionMissed = true;
             state.misses += 1;
           }
+
+          state.answered = true;
           btnEl.classList.add('incorrect');
           btnEl.disabled = true;
           btnEl.classList.add('disabled');
+
           showFeedback('Miss — fix the rush lane.', `${q.hint} You still must choose the correct answer to move on.`);
           updateHud();
           enableRemainingAnswers();
@@ -461,14 +651,43 @@
       }
     }
 
+    async function submitTicketLog(payload) {
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PASTE_WEB_APP_URL_HERE') {
+        els.logStatus.textContent = 'Sheet log skipped: paste your Game 6 Apps Script Web App URL into APPS_SCRIPT_URL.';
+        return;
+      }
+
+      if (payload.result !== 'MASTERED — CLEAN RUN') {
+        els.logStatus.textContent = 'Sheet log skipped: not a mastered clean run.';
+        return;
+      }
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        els.logStatus.textContent = 'Mastery sheet log sent.';
+      } catch (err) {
+        els.logStatus.textContent = `Sheet log error: ${err.message}`;
+      }
+    }
+
     function finishGame() {
       stopRuntimeClock();
       state.endDate = new Date();
+
       const attempted = state.questions.length;
       const accuracy = Math.round((state.correctFirstTry / attempted) * 100);
       const perfect = state.misses === 0;
+
       els.gameScreen.classList.add('hidden');
       els.finishScreen.classList.remove('hidden');
+
+      els.ticketGame.textContent = GAME_TITLE;
       els.ticketName.textContent = state.playerName;
       els.ticketDate.textContent = formatDate(state.endDate);
       els.ticketStart.textContent = formatTime(state.startDate);
@@ -477,9 +696,30 @@
       els.ticketAccuracy.textContent = `${accuracy}%`;
       els.ticketMisses.textContent = String(state.misses);
       els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
+
       els.finishMessage.innerHTML = perfect
-        ? `<h3 class="feedback-title">Perfect. Pass rush discipline is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
-        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+        ? `<h3 class="feedback-title">Perfect. ${GAME_SHORT_TITLE} is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot this ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">${GAME_TITLE}. The player finished the drill, but misses were recorded. Restart and beat it clean.</p>`;
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        playerName: state.playerName,
+        gamePlayed: GAME_TITLE,
+        attemptNumber: state.attemptNumber,
+        startDate: formatDate(state.startDate),
+        startTime: formatTime(state.startDate),
+        endDate: formatDate(state.endDate),
+        endTime: formatTime(state.endDate),
+        runtime: formatRuntime(state.runtimeSeconds),
+        runtimeSeconds: state.runtimeSeconds,
+        correctFirstTry: state.correctFirstTry,
+        totalQuestions: attempted,
+        percent: accuracy,
+        misses: state.misses,
+        result: perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN'
+      };
+
+      submitTicketLog(payload);
     }
 
     function hardReset() {
@@ -494,10 +734,15 @@
       state.answered = false;
       state.started = false;
       state.runtimeSeconds = 0;
+      state.attemptNumber = 0;
+      state.currentQuestionMissed = false;
+
       els.playerName.value = '';
+      els.logStatus.textContent = '';
       clearError(els.startError);
       clearError(els.gameError);
       clearFeedback();
+
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.add('hidden');
       els.startScreen.classList.remove('hidden');
@@ -506,11 +751,14 @@
     function startGame() {
       const name = els.playerName.value.trim();
       clearError(els.startError);
+
       if (!name) {
         setError(els.startError, 'Enter a player name before starting.');
         return;
       }
+
       state.playerName = name;
+      state.attemptNumber = getNextAttemptNumber(name);
       state.startDate = new Date();
       state.endDate = null;
       state.currentIndex = 0;
@@ -520,9 +768,12 @@
       state.answered = false;
       state.started = true;
       state.runtimeSeconds = 0;
+      state.currentQuestionMissed = false;
+
       els.startScreen.classList.add('hidden');
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.remove('hidden');
+
       startRuntimeClock();
       renderQuestion();
     }
