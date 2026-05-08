@@ -5,6 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Game 8 — Full Play Recognition Simulator</title>
   <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .trainer-input-group{
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+    }
+
+    .trainer-input-group span{
+      display:block;
+      margin-bottom:10px;
+      color:#ffffff;
+      font-weight:700;
+      font-size:.95rem;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+
+    .trainer-input{
+      width:100%;
+      padding:16px 18px;
+      border-radius:14px;
+      border:2px solid rgba(255,255,255,.14);
+      background:rgba(15,23,42,.92);
+      color:#ffffff;
+      font-size:1.05rem;
+      font-weight:600;
+      outline:none;
+      transition:all .2s ease;
+      box-shadow:0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    .trainer-input::placeholder{
+      color:rgba(255,255,255,.45);
+    }
+
+    .trainer-input:focus{
+      border-color:#22c55e;
+      box-shadow:0 0 0 4px rgba(34,197,94,.18);
+      background:rgba(15,23,42,.98);
+    }
+
+    .trainer-input:hover{
+      border-color:rgba(255,255,255,.28);
+    }
+  </style>
 </head>
 <body>
   <div class="page-shell">
@@ -37,9 +82,15 @@
         </p>
       </div>
       <div class="start-grid">
-        <label class="input-group">
+        <label class="input-group trainer-input-group">
           <span>Player Name</span>
-          <input id="playerName" type="text" placeholder="Enter player name" autocomplete="off" />
+          <input
+            id="playerName"
+            class="trainer-input"
+            type="text"
+            placeholder="Enter player name"
+            autocomplete="off"
+          />
         </label>
       </div>
       <div class="btn-row" style="margin-top:16px;">
@@ -93,6 +144,7 @@
         <h2>Completion Ticket</h2>
         <p>Screenshot this ticket after a perfect run. Any miss means the player finished the rep work, but has to run it back clean.</p>
         <div class="ticket-grid">
+          <div class="ticket-item"><span class="label">Game</span><span id="ticketGame" class="value">Game 8 — Full Play Recognition Simulator</span></div>
           <div class="ticket-item"><span class="label">Player</span><span id="ticketName" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Date</span><span id="ticketDate" class="value">—</span></div>
           <div class="ticket-item"><span class="label">Start Time</span><span id="ticketStart" class="value">—</span></div>
@@ -103,6 +155,7 @@
           <div class="ticket-item"><span class="label">Result</span><span id="ticketResult" class="value">—</span></div>
         </div>
         <div id="finishMessage" class="feedback-box" style="margin-top:16px;"></div>
+        <div id="logStatus" class="feedback-copy" style="margin-top:10px;font-size:0.9rem;"></div>
         <div class="btn-row" style="margin-top:16px;">
           <button id="restartBtn" class="secondary-btn">Restart for a Clean Run</button>
           <a class="btn" href="../index.html">Back to Hub</a>
@@ -112,6 +165,15 @@
   </div>
 
   <script>
+    /***************************************************************
+     * GAME SETTINGS
+     * Paste your deployed Google Apps Script Web App URL below.
+     * Deploy as: Web App → Execute as Me → Anyone with the link.
+     ***************************************************************/
+    const GAME_TITLE = 'Game 8 — Full Play Recognition Simulator';
+    const GAME_SHORT_TITLE = 'Full Play Recognition Simulator';
+    const APPS_SCRIPT_URL = 'PASTE_WEB_APP_URL_HERE';
+
     const EXPLANATION_DELAY_MS = 5000;
 
     const QUESTION_BANK = [
@@ -135,7 +197,7 @@
         id: 3,
         stem: 'Your key blocks down and a kick-out puller shows. What is the reaction?',
         copy: 'Power or Counter is trying to create a gap your linebacker is scraping away from.',
-        correct: 'Wrong arm the kick-out and close the gap the scrape linebacker is vacating by turning vertical in that gap',
+        correct: 'Wrong arm the kick-out and close the gap the scrape linebacker is vacating',
         hint: 'Spill it and close the space. Do not leave the gap open.',
         explanation: 'Correct. Throw the wrong arm and back hip through the kick-out, spill it, and close the gap the scrape linebacker is vacating.'
       },
@@ -143,7 +205,7 @@
         id: 4,
         stem: 'After wrong-arming the first puller, what must you avoid?',
         copy: 'The mistake looks fast, but it reopens the exact problem you were supposed to solve.',
-        correct: 'Running past the gap that needs closed',
+        correct: 'Do not run past the gap that needs closed',
         hint: 'Close the gap. Do not reopen it.',
         explanation: 'Correct. Do not run past the gap that needs closed, thus reopening it.'
       },
@@ -320,7 +382,9 @@
       answered: false,
       started: false,
       runtimeSeconds: 0,
-      timerId: null
+      timerId: null,
+      attemptNumber: 0,
+      currentQuestionMissed: false
     };
 
     const els = {
@@ -345,6 +409,7 @@
       feedbackBox: document.getElementById('feedbackBox'),
       feedbackTitle: document.getElementById('feedbackTitle'),
       feedbackCopy: document.getElementById('feedbackCopy'),
+      ticketGame: document.getElementById('ticketGame'),
       ticketName: document.getElementById('ticketName'),
       ticketDate: document.getElementById('ticketDate'),
       ticketStart: document.getElementById('ticketStart'),
@@ -353,7 +418,8 @@
       ticketAccuracy: document.getElementById('ticketAccuracy'),
       ticketMisses: document.getElementById('ticketMisses'),
       ticketResult: document.getElementById('ticketResult'),
-      finishMessage: document.getElementById('finishMessage')
+      finishMessage: document.getElementById('finishMessage'),
+      logStatus: document.getElementById('logStatus')
     };
 
     function formatDate(date) {
@@ -379,23 +445,51 @@
       return clone;
     }
 
+    function getAttemptStorageKey(playerName) {
+      return `${GAME_TITLE}::${playerName.trim().toLowerCase()}::attempts`;
+    }
+
+    function getNextAttemptNumber(playerName) {
+      const key = getAttemptStorageKey(playerName);
+      const previous = Number(localStorage.getItem(key) || '0');
+      const next = previous + 1;
+      localStorage.setItem(key, String(next));
+      return next;
+    }
+
     function buildQuestions() {
-      return QUESTION_BANK.map(q => {
-        const distractors = [
-          'Stop your feet and diagnose the play before reacting',
-          'Chase the ball immediately even if it abandons your responsibility',
-          'Run upfield first and figure out the assignment later',
-          'Turn your shoulders and get washed down the line',
-          'Peek into the backfield before reading the helmet and shoulders',
-          'Take the easiest opening even if it violates contain',
-          'Leave your gap once the blocker gives you pressure',
-          'Go past the Quarterback depth to create a wider rush angle',
-          'Cross the QB’s face if it looks like the fastest path',
-          'Let the combo overtake you and climb clean to the linebacker',
-          'Chase the zone give to make a hero tackle',
-          'Read screen first instead of rushing on High Hat'
+      const shuffledQuestions = shuffle(QUESTION_BANK);
+
+      return shuffledQuestions.map((q, questionIndex) => {
+        const longDistractors = [
+          'Stop your feet and diagnose the play before reacting to the helmet and shoulders of the key',
+          'Chase the football immediately even if it means abandoning your assigned gap responsibility',
+          'Run upfield first and try to figure out the assignment after the ball has already declared',
+          'Turn your shoulders with the blocker and allow yourself to be washed down the line of scrimmage',
+          'Peek into the backfield before reading the offensive lineman’s helmet and shoulders',
+          'Take the easiest opening in the protection even if it violates contain or rush-lane discipline',
+          'Leave your assigned gap once the blocker gives pressure instead of fighting the pressure correctly',
+          'Rush past the Quarterback’s depth to create a wider angle that opens an up-and-out escape lane',
+          'Cross the Quarterback’s face if it looks like the fastest path to temporary pressure',
+          'Allow the combo block to overtake you and climb clean to the linebacker at the second level',
+          'Chase the zone give to make a hero tackle instead of honoring the quarterback read responsibility',
+          'Read screen first instead of rushing hard on High Hat and feeling the blocker’s resistance disappear'
         ];
-        const options = shuffle([q.correct, ...shuffle(distractors).filter(d => d !== q.correct).slice(0, 3)]);
+
+        const correctSlot = questionIndex % 4;
+        const distractors = shuffle(longDistractors).filter(d => d !== q.correct).slice(0, 3);
+        const options = [];
+        let distractorIndex = 0;
+
+        for (let i = 0; i < 4; i++) {
+          if (i === correctSlot) {
+            options.push(q.correct);
+          } else {
+            options.push(distractors[distractorIndex]);
+            distractorIndex += 1;
+          }
+        }
+
         return { ...q, options };
       });
     }
@@ -451,6 +545,7 @@
       clearFeedback();
       const q = state.questions[state.currentIndex];
       state.answered = false;
+      state.currentQuestionMissed = false;
       updateHud();
       els.questionStem.textContent = q.stem;
       els.questionCopy.textContent = q.copy;
@@ -477,31 +572,40 @@
     function handleAnswer(option, btnEl) {
       try {
         if (!state.started) return;
+
         const q = state.questions[state.currentIndex];
         const buttons = [...els.answerGrid.querySelectorAll('.answer-btn')];
+
         if (option === q.correct) {
-          if (!state.answered) state.correctFirstTry += 1;
+          if (!state.currentQuestionMissed) state.correctFirstTry += 1;
+
           state.answered = true;
           btnEl.classList.add('correct');
+
           buttons.forEach(btn => {
             btn.disabled = true;
             btn.classList.add('disabled');
           });
+
           showFeedback('Correct — assignment football.', q.explanation);
           updateHud();
+
           setTimeout(() => {
             state.currentIndex += 1;
             if (state.currentIndex >= state.questions.length) finishGame();
             else renderQuestion();
           }, EXPLANATION_DELAY_MS);
         } else {
-          if (!state.answered) {
-            state.answered = true;
+          if (!state.currentQuestionMissed) {
+            state.currentQuestionMissed = true;
             state.misses += 1;
           }
+
+          state.answered = true;
           btnEl.classList.add('incorrect');
           btnEl.disabled = true;
           btnEl.classList.add('disabled');
+
           showFeedback('Miss — fix the read and assignment.', `${q.hint} You still must choose the correct answer to move on.`);
           updateHud();
           enableRemainingAnswers();
@@ -511,14 +615,38 @@
       }
     }
 
+    async function submitTicketLog(payload) {
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PASTE_WEB_APP_URL_HERE') {
+        els.logStatus.textContent = 'Sheet log skipped: paste your Apps Script Web App URL into APPS_SCRIPT_URL.';
+        return;
+      }
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        els.logStatus.textContent = 'Mastery sheet log sent.';
+      } catch (err) {
+        els.logStatus.textContent = `Sheet log error: ${err.message}`;
+      }
+    }
+
     function finishGame() {
       stopRuntimeClock();
       state.endDate = new Date();
+
       const attempted = state.questions.length;
       const accuracy = Math.round((state.correctFirstTry / attempted) * 100);
       const perfect = state.misses === 0;
+
       els.gameScreen.classList.add('hidden');
       els.finishScreen.classList.remove('hidden');
+
+      els.ticketGame.textContent = GAME_TITLE;
       els.ticketName.textContent = state.playerName;
       els.ticketDate.textContent = formatDate(state.endDate);
       els.ticketStart.textContent = formatTime(state.startDate);
@@ -527,9 +655,35 @@
       els.ticketAccuracy.textContent = `${accuracy}%`;
       els.ticketMisses.textContent = String(state.misses);
       els.ticketResult.textContent = perfect ? 'MASTERED — CLEAN RUN' : 'NOT YET — RUN IT BACK CLEAN';
+
       els.finishMessage.innerHTML = perfect
-        ? `<h3 class="feedback-title">Perfect. Full system reaction is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot the ticket and show completion.</p>`
-        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">The player finished the simulator, but misses were recorded. Restart and beat it clean.</p>`;
+        ? `<h3 class="feedback-title">Perfect. ${GAME_SHORT_TITLE} is clean.</h3><p class="feedback-copy">Clean run. No misses. Screenshot this ticket and show completion.</p>`
+        : `<h3 class="feedback-title">Not clean yet.</h3><p class="feedback-copy">${GAME_TITLE}. The player finished the simulator, but misses were recorded. Restart and beat it clean.</p>`;
+
+      if (!perfect) {
+        els.logStatus.textContent = 'Not logged: mastery requires a clean run with zero misses.';
+        return;
+      }
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        playerName: state.playerName,
+        gamePlayed: GAME_TITLE,
+        attemptNumber: state.attemptNumber,
+        startDate: formatDate(state.startDate),
+        startTime: formatTime(state.startDate),
+        endDate: formatDate(state.endDate),
+        endTime: formatTime(state.endDate),
+        runtime: formatRuntime(state.runtimeSeconds),
+        runtimeSeconds: state.runtimeSeconds,
+        correctFirstTry: state.correctFirstTry,
+        totalQuestions: attempted,
+        percent: accuracy,
+        misses: state.misses,
+        result: 'MASTERED — CLEAN RUN'
+      };
+
+      submitTicketLog(payload);
     }
 
     function hardReset() {
@@ -544,7 +698,10 @@
       state.answered = false;
       state.started = false;
       state.runtimeSeconds = 0;
+      state.attemptNumber = 0;
+      state.currentQuestionMissed = false;
       els.playerName.value = '';
+      els.logStatus.textContent = '';
       clearError(els.startError);
       clearError(els.gameError);
       clearFeedback();
@@ -561,6 +718,7 @@
         return;
       }
       state.playerName = name;
+      state.attemptNumber = getNextAttemptNumber(name);
       state.startDate = new Date();
       state.endDate = null;
       state.currentIndex = 0;
@@ -570,6 +728,7 @@
       state.answered = false;
       state.started = true;
       state.runtimeSeconds = 0;
+      state.currentQuestionMissed = false;
       els.startScreen.classList.add('hidden');
       els.finishScreen.classList.add('hidden');
       els.gameScreen.classList.remove('hidden');
