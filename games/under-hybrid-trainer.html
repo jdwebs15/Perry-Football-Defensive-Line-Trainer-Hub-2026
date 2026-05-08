@@ -524,6 +524,7 @@
       <h2>Completion Ticket</h2>
       <p id="ticketMessage">Perfect run earned.</p>
       <div class="ticket-grid" id="ticketGrid"></div>
+      <div id="logStatus" class="feedback-copy" style="margin-top:10px;font-size:0.9rem;"></div>
       <div class="btn-row">
         <button class="btn" onclick="window.print()">Print / Save Ticket</button>
         <button class="secondary-btn" onclick="restartGame()">Run It Again</button>
@@ -536,6 +537,16 @@
 
 <script>
 'use strict';
+
+/***************************************************************
+ * GAME SETTINGS
+ * Paste your deployed Google Apps Script Web App URL below.
+ * Deploy as: Web App → Execute as Me → Anyone with the link.
+ * This version logs ONLY mastery runs with zero misses.
+ ***************************************************************/
+const GAME_TITLE = 'Game 9 — UNDER Hybrid Trainer';
+const GAME_SHORT_TITLE = 'UNDER Hybrid Trainer';
+const APPS_SCRIPT_URL = 'PASTE_WEB_APP_URL_HERE';
 
 window.addEventListener('error', function(event) {
   const box = document.getElementById('errorBox');
@@ -664,9 +675,9 @@ const BANK = [
     detail: 'Use the DL Trainer language. First two steps do not change, then the read tells you the reaction.',
     answers: [
       { text: 'Wrong arm it, spill the puller, and close the gap the scrape linebacker is vacating.', correct: true },
-      { text: 'Run past the gap and chase the ball from behind.', correct: false },
-      { text: 'Sit flat on the line and wait for the back to declare.', correct: false },
-      { text: 'Cross face immediately and chase the zone give.', correct: false }
+      { text: 'Run past the gap trying to chase the ball from behind and reopen the space the scrape linebacker is vacating.', correct: false },
+      { text: 'Sit flat on the line of scrimmage and wait for the running back to declare before fitting the gap.', correct: false },
+      { text: 'Cross face immediately to chase the zone give even though the read is telling you to spill and close the gap.', correct: false }
     ],
     coaching: 'Down with puller: wrong arm, spill, back hip through it, and close the gap. Do not run past the gap and reopen it.'
   },
@@ -680,9 +691,9 @@ const BANK = [
     detail: 'This is not hero ball. This is gap integrity.',
     answers: [
       { text: 'Push vertically, fight pressure, keep the combo on you, and maintain the gap.', correct: true },
-      { text: 'Turn your shoulders and run around the combo.', correct: false },
-      { text: 'Split immediately even if it opens your gap.', correct: false },
-      { text: 'Peek into the backfield and give ground.', correct: false }
+      { text: 'Turn your shoulders sideways and try to run around the combo instead of fighting the vertical push.', correct: false },
+      { text: 'Split immediately between the two blockers even if that opens your assigned gap and frees a blocker to climb.', correct: false },
+      { text: 'Peek into the backfield, give ground against the double team, and allow movement off the line of scrimmage.', correct: false }
     ],
     coaching: 'Combo block rule: keep the combo intact on you, fight vertical push, and always maintain your gap.'
   }
@@ -742,6 +753,9 @@ function startGame() {
   totalAttempts = 0;
   locked = false;
 
+  const logStatus = byId('logStatus');
+  if (logStatus) logStatus.textContent = '';
+
   byId('hudName').textContent = playerName;
   byId('hudAttempt').textContent = attemptNumber;
   byId('startScreen').classList.add('hidden');
@@ -753,6 +767,8 @@ function startGame() {
 function restartGame() {
   attemptNumber += 1;
   localStorage.setItem('underHybridAttempt', String(attemptNumber));
+  const logStatus = byId('logStatus');
+  if (logStatus) logStatus.textContent = '';
   byId('ticketScreen').classList.add('hidden');
   byId('startScreen').classList.remove('hidden');
   byId('gameScreen').classList.add('hidden');
@@ -1015,6 +1031,35 @@ function nextQuestion() {
   else loadQuestion();
 }
 
+
+function formatRuntime(totalSeconds) {
+  const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+  const secs = (totalSeconds % 60).toString().padStart(2, '0');
+  return mins + ':' + secs;
+}
+
+async function submitMasteryLog(payload) {
+  const logStatus = byId('logStatus');
+
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PASTE_WEB_APP_URL_HERE') {
+    if (logStatus) logStatus.textContent = 'Mastery sheet log skipped: paste your Apps Script Web App URL into APPS_SCRIPT_URL.';
+    return;
+  }
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (logStatus) logStatus.textContent = 'Mastery sheet log sent.';
+  } catch (err) {
+    if (logStatus) logStatus.textContent = 'Sheet log error: ' + err.message;
+  }
+}
+
 function finishGame() {
   byId('gameScreen').classList.add('hidden');
   byId('ticketScreen').classList.remove('hidden');
@@ -1028,11 +1073,12 @@ function finishGame() {
   const endTime = new Date();
   const elapsedSeconds = Math.round((endTime - startTime) / 1000);
   const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
-  const result = missCount === 0 ? 'TICKET EARNED' : 'REPLAY REQUIRED';
+  const perfect = missCount === 0;
+  const result = perfect ? 'MASTERED — CLEAN RUN' : 'REPLAY REQUIRED';
 
   const items = [
     ['Player', playerName],
-    ['Game', 'Game 9 — UNDER Hybrid Trainer'],
+    ['Game', GAME_TITLE],
     ['Date', endTime.toLocaleDateString()],
     ['Start Time', startTime.toLocaleTimeString()],
     ['End Time', endTime.toLocaleTimeString()],
@@ -1047,6 +1093,32 @@ function finishGame() {
   byId('ticketGrid').innerHTML = items.map(function(item) {
     return '<div class="ticket-item"><span class="label">' + item[0] + '</span><span class="value">' + item[1] + '</span></div>';
   }).join('');
+
+  if (!perfect) {
+    const logStatus = byId('logStatus');
+    if (logStatus) logStatus.textContent = 'Not logged: mastery requires a clean run with zero misses.';
+    return;
+  }
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    playerName: playerName,
+    gamePlayed: GAME_TITLE,
+    attemptNumber: attemptNumber,
+    startDate: startTime.toLocaleDateString(),
+    startTime: startTime.toLocaleTimeString(),
+    endDate: endTime.toLocaleDateString(),
+    endTime: endTime.toLocaleTimeString(),
+    runtime: formatRuntime(elapsedSeconds),
+    runtimeSeconds: elapsedSeconds,
+    correctFirstTry: correctCount,
+    totalQuestions: QUESTIONS.length,
+    percent: accuracy,
+    misses: missCount,
+    result: 'MASTERED — CLEAN RUN'
+  };
+
+  submitMasteryLog(payload);
 }
 
 function clearBoardFeedback() {
