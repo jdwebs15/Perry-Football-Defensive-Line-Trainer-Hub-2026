@@ -1,621 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game 12 — TITE Control Game</title>
-  <link rel="stylesheet" href="../styles.css" />
-  <style>
-    :root {
-      --board-blue: #10213a;
-      --panel-blue: #152744;
-      --line: rgba(255,255,255,0.22);
-      --gold: #ffd166;
-      --green: #34d399;
-      --red: #ff6b6b;
-      --text: #f8fafc;
-      --muted: #b7c6e6;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Game 12 — TITE Read + Reaction Graphic Trainer</title>
+<link rel="stylesheet" href="../styles.css" />
+<style>
+:root{--bg:#07111f;--panel:#101f39;--text:#f8fafc;--muted:#b8c7e6;--gold:#ffd166;--green:#34d399;--blue:#60a5fa;--orange:#fb923c;--red:#fb7185}body{background:radial-gradient(circle at top,#10254a 0,#07111f 52%,#030712 100%);color:var(--text)}.page-shell{max-width:1180px;margin:0 auto;padding:24px}.game-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}.mini-link{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.13);font-weight:900}.badge-stack{display:flex;gap:8px;flex-wrap:wrap}.small-badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.06em}.small-badge.live{color:#d7fff0;background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.42)}.start-card,.ticket-card{max-width:900px;margin:0 auto;background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(8,15,28,.96));border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.35)}.start-card p,.ticket-card p{color:var(--muted);line-height:1.55}.coach-note{margin-top:16px;border-left:4px solid var(--gold);padding:12px 14px;background:rgba(255,209,102,.09);border-radius:12px;color:#fef3c7;font-weight:800;line-height:1.45}.name-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.name-row input{flex:1 1 280px;min-width:240px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;font-weight:800;outline:none}.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:950;cursor:pointer;background:linear-gradient(180deg,#7c9cff,#4f6fff);color:white;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.secondary-btn{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.14)!important}.hidden{display:none!important}.hud-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-bottom:12px}.hud-box{background:rgba(23,41,74,.88);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px}.hud-box span{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;font-weight:950;letter-spacing:.08em}.hud-box strong{display:block;margin-top:4px;font-size:1.12rem;color:#fff}.layout{display:grid;grid-template-columns:1.08fr .92fr;gap:14px}.field-card,.question-card{background:rgba(16,31,57,.92);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px;box-shadow:0 18px 40px rgba(0,0,0,.25)}.call-banner{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}.call-banner strong{color:var(--gold);font-weight:950}.call-note{color:var(--muted);font-size:.8rem}.game-board{position:relative;min-height:570px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at top,rgba(59,130,246,.16),transparent 56%),linear-gradient(180deg,#17294a,#101f39);background-size:82px 82px,82px 82px,100% 100%,auto}.field-title{position:absolute;left:14px;top:10px;color:var(--muted);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;z-index:8}.def-title{position:absolute;left:14px;bottom:10px;color:var(--muted);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;z-index:8}.orientation{position:absolute;right:14px;bottom:10px;color:var(--gold);font-size:.78rem;font-weight:950;z-index:8}.strength-box{position:absolute;right:10px;top:18px;z-index:8;background:rgba(52,211,153,.17);border:1px solid rgba(52,211,153,.45);border-radius:999px;padding:7px 10px;color:#d7fff0;font-weight:950;font-size:.73rem}.strong-area{position:absolute;top:50px;width:31%;height:138px;border-radius:18px;background:rgba(52,211,153,.09);border:2px solid rgba(52,211,153,.28);z-index:1}.strong-area.right{right:8%}.strong-area.left{left:8%}.los{position:absolute;left:7%;right:7%;top:52%;height:3px;background:rgba(255,255,255,.62);box-shadow:0 0 16px rgba(255,255,255,.18);z-index:2}.los-label{position:absolute;left:50%;top:calc(52% + 7px);transform:translateX(-50%);color:#e5edf9;font-size:.72rem;font-weight:950;z-index:5;text-transform:uppercase;letter-spacing:.06em}.ol,.skill,.dl-token,.off-ball-token,.puller-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5}.ol{width:38px;height:28px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);font-size:.68rem}.skill{width:36px;height:26px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.66rem}.dl-token{width:35px;height:28px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.76rem}.off-ball-token{width:42px;height:25px;background:#dbeafe;border:2px solid rgba(219,234,254,.92);color:#0f172a;font-size:.66rem;z-index:5}.active{background:linear-gradient(180deg,#ffd166,#f59e0b)!important;color:#111827!important;transform:translate(-50%,-50%) scale(1.13)!important;box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34)!important;z-index:9!important}.wr-left-1{left:10%;top:24%}.wr-left-2{left:22%;top:20%}.wr-right-1{left:90%;top:24%}.wr-right-2{left:78%;top:20%}.rb{left:50%;top:19%}.qb{left:50%;top:29%}.ot-l{left:30%;top:48%}.g-l{left:40%;top:48%}.c{left:50%;top:48%}.g-r{left:60%;top:48%}.ot-r{left:70%;top:48%}.hidden-token{display:none!important}.gap-row{position:absolute;left:7%;right:7%;top:73%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6}.gap-zone{min-height:72px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;cursor:pointer;user-select:none;transition:.15s}.gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13);box-shadow:0 0 0 4px rgba(255,209,102,.08)}.gap-zone strong{font-size:1rem}.gap-zone span{font-size:.69rem;color:var(--muted);font-weight:950;text-transform:uppercase;letter-spacing:.06em}.gap-zone.correct{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22);box-shadow:0 0 0 5px rgba(52,211,153,.12)}.gap-zone.wrong{border-color:rgba(251,113,133,.92);background:rgba(251,113,133,.2);animation:shake .22s linear 2}@keyframes shake{25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}}.question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px}.question-card h2{font-size:1.42rem;margin-bottom:8px;color:white}.question-card p{color:var(--muted);line-height:1.5}.responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45}.answer-grid{display:grid;gap:10px;margin-top:14px}.answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800;line-height:1.35;transition:.15s}.answer-btn:hover{transform:translateY(-2px);border-color:rgba(255,209,102,.5)}.answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2)}.answer-btn.incorrect{border-color:rgba(251,113,133,.85);background:rgba(251,113,133,.18)}.answer-btn.disabled{pointer-events:none;opacity:.78}.choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950}.feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}.feedback-box h3{margin-bottom:4px;color:white}.feedback-box p{color:var(--muted)}.ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900;letter-spacing:.06em}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px}.path-line{position:absolute;height:5px;border-radius:999px;transform-origin:left center;z-index:12;box-shadow:0 0 14px rgba(255,255,255,.23);pointer-events:none}.path-blue{background:var(--blue)}.path-green{background:var(--green)}.path-orange{background:var(--orange)}.path-head{position:absolute;width:0;height:0;border-left:13px solid currentColor;border-top:8px solid transparent;border-bottom:8px solid transparent;z-index:13;pointer-events:none}.path-head.blue{color:var(--blue)}.path-head.green{color:var(--green)}.path-head.orange{color:var(--orange)}.ghost-token{position:absolute;width:43px;height:34px;border-radius:12px;background:rgba(255,255,255,.2);border:1px dashed rgba(255,255,255,.38);transform:translate(-50%,-50%);z-index:4;pointer-events:none}.puller-token{z-index:11;width:46px;height:34px;border-radius:12px;background:linear-gradient(180deg,#fb923c,#c2410c);border:2px solid rgba(255,237,213,.85);color:#fff7ed;font-size:.82rem;font-weight:950;pointer-events:none;display:none}.movement-label{position:absolute;z-index:14;padding:7px 10px;border-radius:999px;border:1px solid rgba(52,211,153,.5);background:rgba(5,46,22,.88);color:#dcfce7;font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.06em;box-shadow:0 10px 24px rgba(0,0,0,.32);pointer-events:none}
+    /* Compact football tokens: keeps realistic LOS spacing without crowding */
+    .ol{
+      width:38px!important;
+      height:28px!important;
+      font-size:.68rem!important;
+      border-radius:10px!important;
+    }
+    .skill{
+      width:36px!important;
+      height:26px!important;
+      font-size:.66rem!important;
+      border-radius:10px!important;
+    }
+    .dl-token{
+      width:35px!important;
+      height:28px!important;
+      font-size:.76rem!important;
+      border-radius:10px!important;
+    }
+    .off-ball-token{
+      width:42px!important;
+      height:25px!important;
+      font-size:.66rem!important;
+      border-radius:10px!important;
+    }
+    .active{
+      transform:translate(-50%,-50%) scale(1.10)!important;
     }
 
-    .game-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-
-    .mini-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.12);
-      font-weight: 800;
-    }
-
-    .badge-stack { display: flex; gap: 8px; flex-wrap: wrap; }
-    .small-badge {
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.07);
-      font-size: 0.75rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .small-badge.live { color: #d7fff0; background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.42); }
-
-    .start-card, .ticket-card {
-      max-width: 880px;
-      margin: 0 auto;
-      background: linear-gradient(180deg, rgba(21,39,68,0.96), rgba(11,19,34,0.96));
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
-    }
-
-    .start-card h1, .ticket-card h1 { margin-bottom: 10px; }
-    .start-card p, .ticket-card p { color: var(--muted); line-height: 1.55; }
-    .name-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
-    .name-row input {
-      flex: 1 1 280px;
-      min-width: 240px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.08);
-      color: white;
-      font-weight: 800;
-      outline: none;
-    }
-    .coach-note {
-      margin-top: 18px;
-      border-left: 4px solid var(--gold);
-      background: rgba(255,209,102,0.09);
-      padding: 12px 14px;
-      border-radius: 14px;
-      color: #ffe7a6;
-      font-weight: 750;
-    }
-
-    .hud-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .hud-box {
-      background: rgba(21,39,68,0.92);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      padding: 12px;
-      min-height: 66px;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
-    }
-    .hud-box span { display: block; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; font-weight: 900; letter-spacing: 0.06em; }
-    .hud-box strong { display: block; margin-top: 4px; font-size: 1.25rem; color: white; }
-
-    .gap-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
-      gap: 16px;
-      align-items: start;
-    }
-
-    .field-card, .question-card {
-      background: linear-gradient(180deg, rgba(21,39,68,0.97), rgba(13,24,41,0.97));
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 24px;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
-      padding: 16px;
-    }
-
-    .call-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .call-banner strong { font-size: 1.1rem; color: white; }
-    .call-note { color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
-
-    .game-board {
-      position: relative;
-      min-height: 570px;
-      border-radius: 22px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.16);
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 10% 100%,
-        linear-gradient(180deg, rgba(36,66,113,0.35), rgba(4,10,21,0.3)),
-        radial-gradient(circle at 50% 52%, rgba(78,162,255,0.16), transparent 64%),
-        #0d1b30;
-    }
-
-    .field-title {
-      position: absolute;
-      z-index: 5;
-      top: 13px;
-      left: 14px;
-      color: var(--muted);
-      font-size: 0.74rem;
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .strength-box {
-      position: absolute;
-      z-index: 6;
-      top: 12px;
-      right: 12px;
-      border-radius: 999px;
-      color: #d7fff0;
-      border: 1px solid rgba(52,211,153,0.46);
-      background: rgba(52,211,153,0.16);
-      padding: 7px 10px;
-      font-size: 0.78rem;
-      font-weight: 950;
-    }
-
-    .strong-area {
-      position: absolute;
-      top: 48px;
-      width: 30%;
-      height: 148px;
-      border-radius: 18px;
-      border: 2px solid rgba(52,211,153,0.36);
-      background: rgba(52,211,153,0.06);
-      box-shadow: inset 0 0 24px rgba(52,211,153,0.08);
-      z-index: 1;
-    }
-    .strong-area.left { left: 6%; }
-    .strong-area.right { right: 6%; }
-
-    .hash-line {
-      position: absolute;
-      left: 7%;
-      right: 7%;
-      height: 1px;
-      background: rgba(255,255,255,0.08);
-      z-index: 1;
-    }
-    .hash-1 { top: 31%; }
-    .hash-2 { top: 74%; }
-
-    .los {
-      position: absolute;
-      left: 6%;
-      right: 6%;
-      top: 54%;
-      height: 4px;
-      background: rgba(255,255,255,0.42);
-      box-shadow: 0 0 18px rgba(255,255,255,0.18);
-      z-index: 2;
-    }
-    .los-label {
-      position: absolute;
-      top: calc(54% + 9px);
-      left: 50%;
-      transform: translateX(-50%);
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      z-index: 4;
-    }
-
-    .def-left-right {
-      position: absolute;
-      right: 15px;
-      bottom: 13px;
-      z-index: 5;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 950;
-      text-align: right;
-    }
-    .def-label {
-      position: absolute;
-      left: 15px;
-      bottom: 13px;
-      z-index: 5;
-      color: var(--muted);
-      font-size: 0.74rem;
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .ol, .skill, .dl-token {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      font-weight: 950;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-      z-index: 5;
-    }
-    .ol {
-      width: 46px;
-      height: 34px;
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #f8fafc;
-      font-size: 0.8rem;
-    }
-    .skill {
-      width: 42px;
-      height: 30px;
-      background: rgba(255,209,102,0.25);
-      border: 1px solid rgba(255,209,102,0.45);
-      color: #fff4ca;
-      font-size: 0.75rem;
-    }
-    .dl-token {
-      width: 43px;
-      height: 34px;
-      background: linear-gradient(180deg, #f8fafc, #cbd5e1);
-      border: 2px solid rgba(255,255,255,0.85);
-      color: #0f172a;
-      font-size: 0.9rem;
-    }
-    .dl-token.active-player {
-      background: linear-gradient(180deg, #ffd166, #f59e0b);
-      color: #111827;
-      transform: translate(-50%, -50%) scale(1.12);
-      box-shadow: 0 0 0 6px rgba(255,209,102,0.18), 0 16px 28px rgba(0,0,0,0.34);
-      z-index: 8;
-    }
-
-    .wr-left-1 { left: 11%; top: 23%; }
-    .wr-left-2 { left: 23%; top: 19%; }
-    .wr-right-1 { left: 89%; top: 23%; }
-    .wr-right-2 { left: 77%; top: 19%; }
-    .rb { left: 50%; top: 18%; }
-    .qb { left: 50%; top: 28%; }
-
-    .ot-l { left: 30%; top: 39%; }
-    .g-l { left: 40%; top: 39%; }
-    .c { left: 50%; top: 39%; }
-    .g-r { left: 60%; top: 39%; }
-    .ot-r { left: 70%; top: 39%; }
-
-    /* TITE = two 4i techniques and a zero. Offense is on top, defense is on bottom.
-       4i = inside shade of the offensive tackle, not a 5 technique outside shade. */
-    .e-left { left: 33%; top: 63%; }
-    .e-right { left: 67%; top: 63%; }
-    .t-left { left: 33%; top: 63%; }
-    .t-right { left: 67%; top: 63%; }
-    .n-left, .n-right { left: 50%; top: 63%; }
-    .j-left, .j-right { display: none; }
-
-    .hidden-token { display: none; }
-
-    .gap-row {
-      position: absolute;
-      left: 7%;
-      right: 7%;
-      top: 71%;
-      display: grid;
-      grid-template-columns: repeat(6, minmax(64px, 1fr));
-      gap: 10px;
-      z-index: 6;
-    }
-    .gap-zone {
-      min-height: 72px;
-      border-radius: 16px;
-      border: 2px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.07);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      text-align: center;
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-    }
-    .gap-zone:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255,209,102,0.72);
-      background: rgba(255,209,102,0.13);
-      box-shadow: 0 0 0 4px rgba(255,209,102,0.08);
-    }
-    .gap-zone strong { font-size: 1rem; letter-spacing: 0.02em; }
-    .gap-zone span { font-size: 0.7rem; color: var(--muted); font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em; }
-    .gap-zone.correct-zone {
-      border-color: rgba(52,211,153,0.9);
-      background: rgba(52,211,153,0.22);
-      box-shadow: 0 0 0 5px rgba(52,211,153,0.12), inset 0 0 22px rgba(52,211,153,0.1);
-    }
-    .gap-zone.wrong-zone {
-      border-color: rgba(255,107,107,0.92);
-      background: rgba(255,107,107,0.2);
-      animation: shake 0.22s linear 2;
-    }
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-3px); }
-      50% { transform: translateX(3px); }
-      75% { transform: translateX(-2px); }
-      100% { transform: translateX(0); }
-    }
-
-    .question-kicker {
-      color: var(--gold);
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.78rem;
-      margin-bottom: 8px;
-    }
-    .question-card h2 { font-size: 1.42rem; margin-bottom: 8px; color: white; }
-    .question-card p { color: var(--muted); line-height: 1.5; }
-    .responsibility-box {
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #e2e8f0;
-      font-weight: 760;
-      line-height: 1.45;
-    }
-    .answer-grid {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .answer-btn {
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.08);
-      color: white;
-      text-align: left;
-      padding: 13px 14px;
-      border-radius: 16px;
-      cursor: pointer;
-      font-weight: 800;
-      line-height: 1.35;
-      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-    }
-    .answer-btn:hover { transform: translateY(-2px); border-color: rgba(255,209,102,0.5); }
-    .answer-btn.correct { border-color: rgba(52,211,153,0.85); background: rgba(52,211,153,0.2); }
-    .answer-btn.incorrect { border-color: rgba(255,107,107,0.85); background: rgba(255,107,107,0.18); }
-    .answer-btn.disabled { pointer-events: none; opacity: 0.78; }
-    .choice-letter {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      margin-right: 10px;
-      background: rgba(255,255,255,0.12);
-      color: var(--gold);
-      font-weight: 950;
-    }
-
-    .feedback-box {
-      margin-top: 14px;
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.13);
-    }
-    .feedback-box h3 { margin-bottom: 4px; color: white; }
-    .feedback-box p { color: var(--muted); }
-
-    .ticket-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .ticket-item {
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .ticket-item .label { display: block; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 900; letter-spacing: 0.06em; }
-    .ticket-item .value { display: block; color: white; font-weight: 900; margin-top: 4px; }
-
-    .btn { border: 0; }
-    .secondary-btn {
-      background: rgba(255,255,255,0.1) !important;
-      border: 1px solid rgba(255,255,255,0.14) !important;
-    }
-    .hidden { display: none !important; }
-
-    @media (max-width: 980px) {
-      .hud-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .gap-layout { grid-template-columns: 1fr; }
-      .game-board { min-height: 530px; }
-    }
-    @media (max-width: 640px) {
-      .hud-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .gap-row { gap: 6px; grid-template-columns: repeat(3, minmax(72px, 1fr)); top: 69%; }
-      .gap-zone { min-height: 62px; }
-      .ticket-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+    @media(max-width:980px){.hud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{grid-template-columns:1fr}.game-board{min-height:530px}}@media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gap-row{gap:6px;grid-template-columns:repeat(3,minmax(72px,1fr));top:69%}.gap-zone{min-height:62px}.ticket-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="page-shell">
-    <div class="game-topbar">
-      <a class="mini-link" href="../index.html">← Back to Hub</a>
-      <div class="badge-stack">
-        <span class="small-badge live">● Live</span>
-        <span class="small-badge">Game 11</span>
-        <span class="small-badge">TITE Control Game</span>
-      </div>
-    </div>
-
-    <section id="startScreen" class="start-card">
-      <h1>Game 12 — TITE Control Game</h1>
-      <p>
-        This one teaches TITE reads and reactions. Read formation strength, apply RIP/LIZ from the defensive perspective,
-        identify End, Nose, or Tackle, and react to base, pull, and away reads. Do not guess. Read it and play your job.
-      </p>
-      <div class="coach-note">
-        Shuffle is built in: question order changes every run, and any multiple-choice answers shuffle every time they appear.
-      </div>
-      <div class="name-row">
-        <input id="playerName" type="text" placeholder="Player name" autocomplete="off" />
-        <button class="btn" onclick="startGame()">Start Game</button>
-      </div>
-    </section>
-
-    <section id="gameScreen" class="hidden">
-      <div class="hud-grid">
-        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div>
-        <div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div>
-        <div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div>
-        <div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div>
-        <div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div>
-        <div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
-      </div>
-
-      <div class="gap-layout">
-        <div class="field-card">
-          <div class="call-banner">
-            <strong id="callTitle">UNDER RIP</strong>
-            <span class="call-note">Offense is on top. Defense is on bottom. RIP/LIZ is called from your defensive perspective.</span>
-          </div>
-          <div class="game-board">
-            <div class="field-title">Offense</div>
-            <div id="strengthTag" class="strength-box">Strength: defensive right</div>
-            <div id="strongArea" class="strong-area right"></div>
-            <div class="hash-line hash-1"></div>
-            <div class="hash-line hash-2"></div>
-
-            <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div>
-            <div id="wrL2" class="skill wr-left-2 hidden-token">WR</div>
-            <div id="wrR1" class="skill wr-right-1">WR</div>
-            <div id="wrR2" class="skill wr-right-2">WR</div>
-            <div class="skill rb">RB</div>
-            <div class="skill qb">QB</div>
-
-            <div class="ol ot-l">OT</div>
-            <div class="ol g-l">G</div>
-            <div class="ol c">C</div>
-            <div class="ol g-r">G</div>
-            <div class="ol ot-r">OT</div>
-
-            <div class="los"></div>
-            <div class="los-label">Line of Scrimmage</div>
-
-            <div id="dlE" class="dl-token e-right">E</div>
-            <div id="dlN" class="dl-token n-right">N</div>
-            <div id="dlT" class="dl-token t-left">T</div>
-            <div id="dlJ" class="dl-token j-left hidden-token">J</div>
-
-            <div class="gap-row">
-              <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div>
-              <div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div>
-              <div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div>
-              <div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div>
-              <div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div>
-              <div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
-            </div>
-
-            <div class="def-label">Defense</div>
-            <div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
-          </div>
-        </div>
-
-        <aside class="question-card">
-          <div id="questionKicker" class="question-kicker">UNDER RIP • Strength: defensive right</div>
-          <h2 id="questionStem">Click your responsibility.</h2>
-          <p id="questionCopy">Read the call and click the correct gap.</p>
-          <div id="responsibilityBox" class="responsibility-box"></div>
-          <div id="mcAnswers" class="answer-grid hidden"></div>
-          <div id="feedbackBox" class="feedback-box hidden">
-            <h3 id="feedbackTitle">Correct</h3>
-            <p id="feedbackCopy">Good rep.</p>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section id="ticketScreen" class="ticket-card hidden">
-      <h1>TITE Control Game Ticket</h1>
-      <p id="ticketMessage">Perfect run earned.</p>
-      <div id="ticketGrid" class="ticket-grid"></div>
-      <div class="name-row">
-        <button class="btn" onclick="restartGame()">Restart for Another Attempt</button>
-        <a class="btn secondary-btn" href="../index.html">Back to Hub</a>
-      </div>
-    </section>
-  </div>
-
+<div class="page-shell">
+  <div class="game-topbar"><a class="mini-link" href="../index.html">← Back to Hub</a><div class="badge-stack"><span class="small-badge live">● Live</span><span class="small-badge">Game 12</span><span class="small-badge">TITE Read + Reaction</span></div></div>
+  <section id="startScreen" class="start-card"><h1>Game 12 — TITE Read + Reaction Graphic Trainer</h1><p>This is a full rebuild of the TITE game. TITE keeps the same run-game language from OKIE except for the front structure: Nose is a zero with fallback weak A, End is a 4i, Tackle is a 4i, and both 4i players have C-gap contain rush on High Hat. Sam and off-ball Jack follow the off-ball rule: they box when the puller is coming to them.</p><div class="coach-note">Key rules: E/T in 4i maintain B on base, square/sit/key QB on down with no puller, on-the-LOS personnel spill down with puller, Sam/Jack box as off-ball players, Nose falls back to weak A, E/T are C-gap contain rushers in pass, and 4i down/no-puller means work vertical and square through the gap to avoid the OT wash.</div><div class="name-row"><input id="playerName" type="text" placeholder="Player name" autocomplete="off" /><button class="btn" onclick="startGame()">Start Game</button></div></section>
+  <section id="gameScreen" class="hidden"><div class="hud-grid"><div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div><div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div><div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div><div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div><div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div><div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div><div class="hud-box"><span>Runtime</span><strong id="hudRuntime">00:00</strong></div></div>
+  <div class="layout"><div class="field-card"><div class="call-banner"><strong id="callTitle">TITE RIP</strong><span class="call-note">Offense is on top. Defense is on bottom. All calls are from the defensive perspective.</span></div><div id="gameBoard" class="game-board"><div class="field-title">Offense</div><div id="strengthTag" class="strength-box">Strength: defensive right</div><div id="strongArea" class="strong-area right"></div><div id="wrL1" class="skill wr-left-1 hidden-token">WR</div><div id="wrL2" class="skill wr-left-2 hidden-token">WR</div><div id="wrR1" class="skill wr-right-1">WR</div><div id="wrR2" class="skill wr-right-2">WR</div><div class="skill rb">RB</div><div class="skill qb">QB</div><div class="ol ot-l">OT</div><div class="ol g-l">G</div><div class="ol c">C</div><div class="ol g-r">G</div><div class="ol ot-r">OT</div><div class="los"></div><div class="los-label">Line of Scrimmage</div><div id="dlE" class="dl-token">E</div><div id="dlN" class="dl-token">N</div><div id="dlT" class="dl-token">T</div><div id="sam" class="off-ball-token">SAM</div><div id="jack" class="off-ball-token">JACK</div><div id="pullerToken" class="puller-token">G</div><div id="movementLabel" class="movement-label hidden"></div><div class="gap-row"><div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div></div><div class="def-title">Defense</div><div class="orientation">Defensive Left ← → Defensive Right</div></div></div><div class="question-card"><div id="questionKicker" class="question-kicker">TITE RIP</div><h2 id="questionStem">Question</h2><p id="questionCopy">Read it.</p><div id="responsibilityBox" class="responsibility-box">Click or choose your answer.</div><div id="mcAnswers" class="answer-grid hidden"></div><div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Feedback</h3><p id="feedbackCopy">—</p></div></div></div></section>
+  <section id="ticketScreen" class="ticket-card hidden"><h1>Game 12 — TITE Read + Reaction Ticket</h1><p id="ticketMessage">—</p><div id="ticketGrid" class="ticket-grid"></div><p id="logStatus" style="margin-top:12px;font-size:.92rem;color:#b8c7e6;"></p><div class="name-row"><button class="btn" onclick="restartGame()">Restart for Perfect Run</button><a class="btn secondary-btn" href="../index.html">Back to Hub</a></div></section>
+</div>
 <script>
-
-const PLAYER_LABELS = { E: 'End', N: 'Nose', T: 'Tackle' };
-const BANK = [
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',title:'TITE RIP — End alignment. Where are you lined up?',detail:'TITE gives you a 4i picture. End and Tackle are inside shades of the offensive tackles.',answers:[{text:'4i technique, inside shade of the offensive tackle.',correct:true},{text:'5 technique, outside shade of the offensive tackle.',correct:false},{text:'3 technique, outside shade of the guard.',correct:false},{text:'Zero technique, head-up on the center.',correct:false}],coaching:'TITE is a 4i / zero / 4i front. End is a 4i, Nose is zero, Tackle is a 4i.'},
- {mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',title:'TITE LIZ — Tackle alignment. Where are you lined up?',detail:'TITE is mirrored by the call. Tackle is opposite the End and still plays 4i.',answers:[{text:'4i technique, inside shade of the offensive tackle.',correct:true},{text:'1 technique, shade on the center.',correct:false},{text:'5 technique, outside shade of the tackle.',correct:false},{text:'Wide 9 contain player.',correct:false}],coaching:'Tackle is a 4i. You are inside shade of the tackle. Control B and fight pressure.'},
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'N',title:'TITE RIP — Nose alignment. What is the Nose?',detail:'Keep the Nose simple and fast.',answers:[{text:'Zero technique, head-up on the center.',correct:true},{text:'Strong shade to the call.',correct:false},{text:'Weak 3 technique.',correct:false},{text:'4i inside shade of the tackle.',correct:false}],coaching:'Nose is a zero. His discipline is A-gap control and lag technique. Do not overcomplicate him.'},
-
- {mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',title:'TITE RIP — End 4i. Click your base B-gap control.',detail:'You are the End to the call side in a 4i. Your job is B-gap control. Fight pressure. Do not get washed.',answer:'RB',coaching:'End is a right 4i on RIP. Control Right B. Hands on the guard, hip to the tackle, and fight pressure.'},
- {mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'E',title:'TITE LIZ — End 4i. Click your base B-gap control.',detail:'You are the End to the call side in a 4i. Your job is B-gap control. Fight pressure. Do not get washed.',answer:'LB',coaching:'End is a left 4i on LIZ. Control Left B. Hands on the guard, hip to the tackle, and fight pressure.'},
- {mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'T',title:'TITE RIP — Tackle 4i. Click your base B-gap control.',detail:'Tackle is opposite the call in TITE. Still 4i. Still B-gap control.',answer:'LB',coaching:'Tackle is a left 4i on RIP. Control Left B. Do not get washed down.'},
- {mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',title:'TITE LIZ — Tackle 4i. Click your base B-gap control.',detail:'Tackle is opposite the call in TITE. Still 4i. Still B-gap control.',answer:'RB',coaching:'Tackle is a right 4i on LIZ. Control Right B. Do not get washed down.'},
-
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',title:'TITE RIP — End 4i. Guard comes to you. What is your reaction?',detail:'This is the base 4i control reaction.',answers:[{text:'Hands on the guard, hip to the tackle, control B gap.',correct:true},{text:'Run around the tackle to C gap.',correct:false},{text:'Cross face immediately into A gap.',correct:false},{text:'Stop your feet and wait for the ball.',correct:false}],coaching:'Guard to you = hands on guard, hip to tackle. Control B. Fight pressure.'},
- {mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',title:'TITE LIZ — Tackle 4i. Guard comes to you. What is your reaction?',detail:'This is the base 4i control reaction.',answers:[{text:'Hands on the guard, hip to the tackle, control B gap.',correct:true},{text:'Fly outside and become the C-gap player.',correct:false},{text:'Turn shoulders and chase the ball.',correct:false},{text:'Wrong arm the tackle immediately.',correct:false}],coaching:'Control the B gap. Fight pressure. Do not get washed.'},
-
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'T',title:'TITE RIP — Tackle 4i. Guard pulls away. What do you do?',detail:'TITE 4i players must not disappear when the guard leaves.',answers:[{text:'Scan for kickout. If no kickout, maintain B gap.',correct:true},{text:'Chase flat immediately every time.',correct:false},{text:'Become the backside C-gap player.',correct:false},{text:'Stand up and look for the football.',correct:false}],coaching:'Guard away = scan for kickout. No kickout, maintain B. Gap integrity first.'},
- {mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'E',title:'TITE LIZ — End 4i. Guard pulls away. What do you do?',detail:'TITE 4i players must not disappear when the guard leaves.',answers:[{text:'Scan for kickout. If no kickout, maintain B gap.',correct:true},{text:'Run upfield to contain.',correct:false},{text:'Cross into A gap now.',correct:false},{text:'Sit and wait behind the line.',correct:false}],coaching:'Guard away = scan for kickout, then maintain B if it does not show. Do not vacate your gap.'},
-
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',title:'TITE RIP — End 4i. Guard pulls for Power/Counter. What is your reaction?',detail:'Power and Counter stress TITE with pulling guards.',answers:[{text:'Hip and chase the puller flat down the line.',correct:true},{text:'Stay high and widen to C gap.',correct:false},{text:'Back out and replace the linebacker.',correct:false},{text:'Run through A gap immediately.',correct:false}],coaching:'Guard pulls = hip and chase. Flat down the line. Do not get washed and do not run upfield.'},
- {mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',title:'TITE LIZ — Tackle 4i. Guard pulls for Power/Counter. What is your reaction?',detail:'Power and Counter stress TITE with pulling guards.',answers:[{text:'Hip and chase the puller flat down the line.',correct:true},{text:'Sit in B gap and never move.',correct:false},{text:'Open the gate and run upfield.',correct:false},{text:'Become a contain rusher.',correct:false}],coaching:'Guard pulls = hip and chase. Flat down the line. Discipline and pursuit angle.'},
-
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'N',title:'TITE RIP — Nose zero. What is your control rule?',detail:'Nose is not the main question target, but he must understand the front.',answers:[{text:'Control A gap and fight pressure. Lag backside A when needed.',correct:true},{text:'Always run to C gap.',correct:false},{text:'Become a 4i and chase the guard.',correct:false},{text:'Open the B gap for the linebacker.',correct:false}],coaching:'Nose is zero. Control A and fight pressure. Backside A lag technique keeps the front intact.'},
- {mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'N',title:'TITE RIP — Nose zero. Click backside A / lag technique.',detail:'On RIP, strength is defensive right. Backside is defensive left.',answer:'LA',coaching:'Nose zero with backside A lag technique. On RIP, that is Left A.'},
- {mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'N',title:'TITE LIZ — Nose zero. Click backside A / lag technique.',detail:'On LIZ, strength is defensive left. Backside is defensive right.',answer:'RA',coaching:'Nose zero with backside A lag technique. On LIZ, that is Right A.'},
-
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',title:'TITE RIP — End 4i. Zone/SMACK read toward you. What is your job?',detail:'When a 4i is getting read, he cannot chase the give.',answers:[{text:'Squeeze and attack the inside point of the QB.',correct:true},{text:'Chase the running back every time.',correct:false},{text:'Widen to contain and open B gap.',correct:false},{text:'Drop into coverage.',correct:false}],coaching:'4i getting read = squeeze and attack the inside point of the QB. Do not be a hero and chase the give.'},
- {mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',title:'TITE LIZ — Tackle 4i. Zone/SMACK read toward you. What is your job?',detail:'When a 4i is getting read, he cannot chase the give.',answers:[{text:'Squeeze and attack the inside point of the QB.',correct:true},{text:'Run around the tackle to C gap.',correct:false},{text:'Chase the back across the mesh.',correct:false},{text:'Sit still and watch the play.',correct:false}],coaching:'4i getting read = squeeze and attack inside point of QB. Assignment discipline.'},
-
- {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'T',title:'TITE RIP — Tackle 4i. You feel combo pressure. What matters most?',detail:'TITE requires toughness and discipline inside.',answers:[{text:'Maintain B gap and fight pressure. Do not get washed.',correct:true},{text:'Turn shoulders and run with the double team.',correct:false},{text:'Jump outside to C gap.',correct:false},{text:'Spin out immediately and guess.',correct:false}],coaching:'TITE control game: maintain B, fight pressure, do not get washed.'},
- {mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'E',title:'TITE LIZ — End 4i. You feel combo pressure. What matters most?',detail:'TITE requires toughness and discipline inside.',answers:[{text:'Maintain B gap and fight pressure. Do not get washed.',correct:true},{text:'Give ground and find the ball late.',correct:false},{text:'Cross face into A gap because it looks open.',correct:false},{text:'Widen and become contain.',correct:false}],coaching:'Control B. Fight pressure. Do not get washed. Make the linebacker right.'}
+const GAME_TITLE='Game 12 — TITE Read + Reaction Graphic Trainer';
+const GAME_SHORT_TITLE='TITE Read + Reaction';
+const APPS_SCRIPT_URL='PASTE_WEB_APP_URL_HERE';
+const STORAGE_KEY='titeReadReactionGraphicAttempt';
+const PLAYER_LABELS={E:'End',N:'Nose',T:'Tackle',SAM:'Sam',JACK:'Jack'};
+const BANK=[
+{id:1,mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'N',title:'TITE RIP — Nose alignment. What is different from UNDER?',detail:'TITE puts the Nose in a zero. He is not shaded to the call.',answers:[{text:'Nose is aligned in a zero and has fallback weak A post-snap.',correct:true},{text:'Nose is shaded to the call and owns strong A just like UNDER.',correct:false},{text:'Nose is a 3 technique away from the call and owns B gap.',correct:false},{text:'Nose is off the ball and boxes the first puller.',correct:false}],coaching:'Correct. TITE Nose is zero. His specific difference is fallback weak A after the snap.'},
+{id:2,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'N',read:'fallback',title:'TITE RIP — Nose zero. Click your fallback A gap.',detail:'RIP means strength is defensive right. Nose is zero pre-snap, then falls back weak A post-snap.',answer:'LA',coaching:'Correct. TITE RIP: Nose is zero pre-snap and falls back to weak A, which is Left A.',movement:{type:'noseFallback',player:'N',to:'LA'}},
+{id:3,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'N',read:'fallback',title:'TITE LIZ — Nose zero. Click your fallback A gap.',detail:'LIZ means strength is defensive left. Nose is zero pre-snap, then falls back weak A post-snap.',answer:'RA',coaching:'Correct. TITE LIZ: Nose is zero pre-snap and falls back to weak A, which is Right A.',movement:{type:'noseFallback',player:'N',to:'RA'}},
+{id:4,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',read:'base',title:'TITE RIP — End 4i. Base/man-on block comes to you. Click the gap you maintain.',detail:'Base/man-on: the 4i steps to his guard key and maintains the gap he is pre-snap aligned in.',answer:'RB',coaching:'Correct. TITE End steps to the guard key and maintains B gap.',movement:{type:'base',player:'E',to:'RB'}},
+{id:5,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'E',read:'base',title:'TITE LIZ — End 4i. Base/man-on block comes to you. Click the gap you maintain.',detail:'Base/man-on: the 4i steps to his guard key and maintains the gap he is pre-snap aligned in.',answer:'LB',coaching:'Correct. TITE End steps to the guard key and maintains B gap.',movement:{type:'base',player:'E',to:'LB'}},
+{id:6,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'T',read:'base',title:'TITE RIP — Tackle 4i. Base/man-on block comes to you. Click the gap you maintain.',detail:'Tackle is a 4i away from the call. He uses the same run responsibilities as the OKIE Tackle.',answer:'LB',coaching:'Correct. TITE Tackle steps to the guard key and maintains the aligned B gap.',movement:{type:'base',player:'T',to:'LB'}},
+{id:7,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',read:'base',title:'TITE LIZ — Tackle 4i. Base/man-on block comes to you. Click the gap you maintain.',detail:'Tackle is a 4i away from the call. He uses the same run responsibilities as the OKIE Tackle.',answer:'RB',coaching:'Correct. TITE Tackle steps to the guard key and maintains the aligned B gap.',movement:{type:'base',player:'T',to:'RB'}},
+{id:8,mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',read:'downNoPuller',title:'TITE RIP — End 4i. Down block shows, but no puller shows. What now?',detail:'Down by the guard has two variables: down with puller and down with no puller.',answers:[{text:'Immediately work vertical and square through your gap to avoid being washed by the OT down block.',correct:true},{text:'Chase flat down the line even though no puller appeared.',correct:false},{text:'Box the down block like an off-ball Sam or Jack.',correct:false},{text:'Run to C gap immediately and abandon the B gap picture.',correct:false}],coaching:'Correct. Down with no puller: immediately work vertical and square through the gap to avoid being washed by the OT down block.'},
+{id:9,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',read:'downNoPuller',title:'TITE RIP — End 4i. Down block, no puller. Click the B gap you must work vertical and square through.',detail:'Do not chase ghosts. Once no puller shows, work vertical and square through your gap so the OT cannot wash you.',answer:'RB',coaching:'Correct. TITE End works vertical and square through B gap to avoid being washed by the OT down block.',movement:{type:'squareSit',player:'E',to:'RB'}},
+{id:10,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',read:'downNoPuller',title:'TITE LIZ — Tackle 4i. Down block, no puller. Click the B gap you must work vertical and square through.',detail:'T and E both use the OKIE Tackle-style down/no-puller response in TITE: vertical and square through the gap.',answer:'RB',coaching:'Correct. TITE Tackle works vertical and square through B gap to avoid being washed by the OT down block.',movement:{type:'squareSit',player:'T',to:'RB'}},
+{id:11,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',read:'downPuller',title:'TITE RIP — End 4i. Down with puller coming to you. Click the B gap you must close after spill.',detail:'Only on-the-LOS personnel spill. The End is on the LOS, so he spills.',answer:'RB',coaching:'Correct. The on-LOS End spills the puller, gets underneath, and closes same-side B.',movement:{type:'spill',player:'E',to:'RB',pullerTo:'E'}},
+{id:12,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'E',read:'downPuller',title:'TITE LIZ — End 4i. Down with puller coming to you. Click the B gap you must close after spill.',detail:'Only on-the-LOS personnel spill. The End is on the LOS, so he spills.',answer:'LB',coaching:'Correct. The on-LOS End spills the puller, gets underneath, and closes same-side B.',movement:{type:'spill',player:'E',to:'LB',pullerTo:'E'}},
+{id:13,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'T',read:'downPuller',title:'TITE RIP — Tackle 4i. Down with puller coming to you. Click the B gap you must close after spill.',detail:'Only on-the-LOS personnel spill. The Tackle is on the LOS, so he spills.',answer:'LB',coaching:'Correct. The on-LOS Tackle spills the puller, gets underneath, and closes same-side B.',movement:{type:'spill',player:'T',to:'LB',pullerTo:'T'}},
+{id:14,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',read:'downPuller',title:'TITE LIZ — Tackle 4i. Down with puller coming to you. Click the B gap you must close after spill.',detail:'Only on-the-LOS personnel spill. The Tackle is on the LOS, so he spills.',answer:'RB',coaching:'Correct. The on-LOS Tackle spills the puller, gets underneath, and closes same-side B.',movement:{type:'spill',player:'T',to:'RB',pullerTo:'T'}},
+{id:15,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'SAM',read:'offBallBox',title:'TITE RIP — Puller is coming to Sam. Click the C gap Sam boxes.',detail:'Sam is off the ball. Off-ball personnel box by crossing the LOS and setting the edge in the offensive backfield. Whoever the puller is heading to is the player who boxes.',answer:'LC',coaching:'Correct. Puller comes to Sam, so Sam boxes. Off-ball personnel box across the LOS; on-LOS personnel spill.',movement:{type:'box',player:'SAM',to:'LC'}},
+{id:16,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'JACK',read:'offBallBox',title:'TITE LIZ — Puller is coming to off-ball Jack. Click the C gap Jack boxes.',detail:'Jack is off the ball in this rule family. Off-ball personnel box by crossing the LOS and setting the edge in the offensive backfield.',answer:'LC',coaching:'Correct. Puller comes to off-ball Jack, so Jack boxes his side. Off-ball personnel box across the LOS; on-LOS personnel spill.',movement:{type:'box',player:'JACK',to:'LC'}},
+{id:17,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'E',read:'highHat',title:'TITE RIP — End 4i gets High Hat. Click the C-gap contain rush lane.',detail:'T and E now both gain width first, then rush C-gap contain in TITE.',answer:'RC',coaching:'Correct. TITE End gains width first, then turns upfield into C-gap contain rush on High Hat.',movement:{type:'rushContain',player:'E',to:'RC'}},
+{id:18,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'E',read:'highHat',title:'TITE LIZ — End 4i gets High Hat. Click the C-gap contain rush lane.',detail:'T and E now both gain width first, then rush C-gap contain in TITE.',answer:'LC',coaching:'Correct. TITE End gains width first, then turns upfield into C-gap contain rush on High Hat.',movement:{type:'rushContain',player:'E',to:'LC'}},
+{id:19,mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'T',read:'highHat',title:'TITE RIP — Tackle 4i gets High Hat. Click the C-gap contain rush lane.',detail:'T and E now both gain width first, then rush C-gap contain in TITE.',answer:'LC',coaching:'Correct. TITE Tackle gains width first, then turns upfield into C-gap contain rush on High Hat.',movement:{type:'rushContain',player:'T',to:'LC'}},
+{id:20,mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'T',read:'highHat',title:'TITE LIZ — Tackle 4i gets High Hat. Click the C-gap contain rush lane.',detail:'T and E now both gain width first, then rush C-gap contain in TITE.',answer:'RC',coaching:'Correct. TITE Tackle gains width first, then turns upfield into C-gap contain rush on High Hat.',movement:{type:'rushContain',player:'T',to:'RC'}},
+{id:21,mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'TITE LIZ',player:'E',title:'TITE LIZ — What is the big rule difference for TITE compared with OKIE?',detail:'Think front structure first.',answers:[{text:'Nose is zero with fallback weak A, and E/T are both 4i players with C-gap contain rush.',correct:true},{text:'Nose is shaded to the call and End is a 5 technique to the call.',correct:false},{text:'Jack is always on the LOS and must spill every puller.',correct:false},{text:'Tackle becomes a 3 technique away from the call.',correct:false}],coaching:'Correct. TITE is 4i / zero / 4i. Nose fallback weak A. E/T have 4i run responsibilities and C-gap contain rush.'},
+{id:22,mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'TITE RIP',player:'JACK',title:'TITE RIP — Puller is heading to off-ball Jack. What does Jack do?',detail:'Off-ball player rule.',answers:[{text:'Box the puller because the puller is coming to him and he is off the ball.',correct:true},{text:'Spill the puller because all edge players spill.',correct:false},{text:'Cross the LOS and close B because he is a 4i.',correct:false},{text:'Fall back weak A because he is aligned in a zero.',correct:false}],coaching:'Correct. Whoever the puller is heading to boxes if he is off the ball. On-the-LOS personnel spill.'}
 ];
-let QUESTIONS=[], playerName='', currentIndex=0, correctCount=0, missCount=0, totalAttempts=0;
-let attemptNumber=Number(localStorage.getItem('titeControlAttempt')||'1');
-let startTime=null, locked=false;
-function byId(id){return document.getElementById(id);} function currentQuestion(){return QUESTIONS[currentIndex];}
-function shuffleArray(array){const copy=array.slice(); for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]];} return copy;}
-function buildQuestionSet(){return shuffleArray(BANK).slice(0,14);}
-function startGame(){playerName=byId('playerName').value.trim(); if(!playerName){alert('Type your name first.');return;} QUESTIONS=buildQuestionSet(); startTime=new Date(); currentIndex=0; correctCount=0; missCount=0; totalAttempts=0; locked=false; byId('hudName').textContent=playerName; byId('hudAttempt').textContent=attemptNumber; byId('startScreen').classList.add('hidden'); byId('ticketScreen').classList.add('hidden'); byId('gameScreen').classList.remove('hidden'); loadQuestion();}
-function restartGame(){attemptNumber+=1; localStorage.setItem('titeControlAttempt',String(attemptNumber)); byId('ticketScreen').classList.add('hidden'); byId('startScreen').classList.remove('hidden'); byId('gameScreen').classList.add('hidden');}
-function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length; byId('hudCorrect').textContent=correctCount; byId('hudMisses').textContent=missCount; const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100); byId('hudAccuracy').textContent=accuracy+'%'; byId('hudAttempt').textContent=attemptNumber;}
-function loadQuestion(){locked=false; clearFeedback(); const q=currentQuestion(); applyFormation(q.formation,q.call,q.strength); showFront(q.call); highlightPlayer(q.player); byId('callTitle').textContent=q.call+' — '+PLAYER_LABELS[q.player]; byId('questionKicker').textContent=q.call+' • Strength: '+q.strength; byId('questionStem').textContent=q.title; byId('questionCopy').textContent=q.detail; byId('responsibilityBox').textContent=q.mode==='gap'?'Click the correct final responsibility on the board. This is from the defense’s perspective.':'Choose the correct TITE control reaction. Answers are shuffled.'; if(q.mode==='choice') renderChoices(q.answers); else byId('mcAnswers').classList.add('hidden'); updateHud();}
-function applyFormation(formation,call,strength){const leftStrong=formation==='leftTwoDetached'; byId('strongArea').className='strong-area '+(leftStrong?'left':'right'); byId('strengthTag').textContent='Strength: '+strength; byId('wrL1').classList.toggle('hidden-token',!leftStrong); byId('wrL2').classList.toggle('hidden-token',!leftStrong); byId('wrR1').classList.toggle('hidden-token',leftStrong); byId('wrR2').classList.toggle('hidden-token',leftStrong);}
-function showFront(call){const rip=call.includes('RIP'); const e=byId('dlE'), n=byId('dlN'), t=byId('dlT'), j=byId('dlJ'); e.className='dl-token '+(rip?'e-right':'e-left'); n.className='dl-token '+(rip?'n-right':'n-left'); t.className='dl-token '+(rip?'t-left':'t-right'); j.className='dl-token hidden-token';}
-function highlightPlayer(player){['dlE','dlN','dlT','dlJ'].forEach(id=>byId(id).classList.remove('active-player')); if(player==='E')byId('dlE').classList.add('active-player'); if(player==='N')byId('dlN').classList.add('active-player'); if(player==='T')byId('dlT').classList.add('active-player');}
-function selectGap(gap){if(locked)return; const q=currentQuestion(); if(q.mode!=='gap')return; totalAttempts+=1; const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]'); if(gap===q.answer){correctCount+=1; locked=true; if(zone)zone.classList.add('correct-zone'); showFeedback('Correct — that is your job.',q.coaching,true); updateHud(); setTimeout(nextQuestion,5000);} else {missCount+=1; if(zone)zone.classList.add('wrong-zone'); const help=(q.title.includes('spill')||q.title.includes('kickout'))?'On a spill exchange, the DL closes B and the linebacker replaces to C. Click the gap you close.':'Read the call, read your player, and click the job from the defense’s perspective.'; showFeedback('Not it.',help,false); updateHud();}}
-function renderChoices(answers){const grid=byId('mcAnswers'); grid.innerHTML=''; grid.classList.remove('hidden'); shuffleArray(answers).forEach(function(answer,index){const button=document.createElement('button'); button.className='answer-btn'; button.innerHTML='<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text; button.onclick=function(){chooseAnswer(button,answer);}; grid.appendChild(button);});}
-function chooseAnswer(button,answer){if(locked)return; const q=currentQuestion(); totalAttempts+=1; if(answer.correct){correctCount+=1; locked=true; button.classList.add('correct'); document.querySelectorAll('.answer-btn').forEach(btn=>btn.classList.add('disabled')); showFeedback('Correct — that is the reaction.',q.coaching,true); updateHud(); setTimeout(nextQuestion,5000);} else {missCount+=1; button.classList.add('incorrect','disabled'); showFeedback('Not it.','TITE is read-driven. Base, pull, and away each have a rule. Do not guess.',false); updateHud();}}
-function showFeedback(title,copy,isCorrect){byId('feedbackTitle').textContent=title; byId('feedbackCopy').textContent=copy; byId('feedbackBox').classList.remove('hidden'); byId('feedbackBox').style.borderColor=isCorrect?'rgba(52,211,153,0.6)':'rgba(255,107,107,0.6)';}
-function clearFeedback(){byId('feedbackBox').classList.add('hidden'); byId('mcAnswers').classList.add('hidden'); document.querySelectorAll('.gap-zone').forEach(zone=>zone.classList.remove('correct-zone','wrong-zone'));}
-function nextQuestion(){currentIndex+=1; if(currentIndex>=QUESTIONS.length)finishGame(); else loadQuestion();}
-function finishGame(){byId('gameScreen').classList.add('hidden'); byId('ticketScreen').classList.remove('hidden'); byId('ticketMessage').textContent=missCount>0?'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.':'Perfect run earned. Screenshot or print this ticket.'; const endTime=new Date(); const elapsedSeconds=Math.round((endTime-startTime)/1000); const accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100); const result=missCount===0?'TICKET EARNED':'REPLAY REQUIRED'; const items=[['Player',playerName],['Game','Game 12 — TITE Control Game'],['Date',endTime.toLocaleDateString()],['Start Time',startTime.toLocaleTimeString()],['End Time',endTime.toLocaleTimeString()],['Runtime',elapsedSeconds+' seconds'],['Correct First-Time Answers',correctCount+' / '+QUESTIONS.length],['Misses',missCount],['Accuracy',accuracy+'%'],['Attempt',attemptNumber],['Result',result]]; byId('ticketGrid').innerHTML=items.map(item=>'<div class="ticket-item"><span class="label">'+item[0]+'</span><span class="value">'+item[1]+'</span></div>').join('');}
-
+let QUESTIONS=[],playerName='',currentIndex=0,correctCount=0,missCount=0,totalAttempts=0,attemptNumber=Number(localStorage.getItem(STORAGE_KEY)||'1'),startTime=null,runtimeSeconds=0,timerId=null,locked=false;
+function byId(id){return document.getElementById(id)}function currentQuestion(){return QUESTIONS[currentIndex]}function shuffleArray(array){const copy=array.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}function buildQuestionSet(){const must=[BANK[0],BANK[1],BANK[2],BANK[16],BANK[18],BANK[20],BANK[21]];const rest=BANK.filter(q=>!must.includes(q));return shuffleArray([...must,...shuffleArray(rest).slice(0,9)]).slice(0,16)}function formatRuntime(s){return Math.floor(s/60).toString().padStart(2,'0')+':'+(s%60).toString().padStart(2,'0')}function startClock(){clearInterval(timerId);timerId=setInterval(()=>{runtimeSeconds++;byId('hudRuntime').textContent=formatRuntime(runtimeSeconds)},1000)}function stopClock(){clearInterval(timerId);timerId=null}function startGame(){playerName=byId('playerName').value.trim();if(!playerName){alert('Type your name first.');return}QUESTIONS=buildQuestionSet();startTime=new Date();runtimeSeconds=0;currentIndex=0;correctCount=0;missCount=0;totalAttempts=0;locked=false;byId('hudName').textContent=playerName;byId('hudAttempt').textContent=attemptNumber;byId('startScreen').classList.add('hidden');byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.remove('hidden');startClock();loadQuestion()}function restartGame(){attemptNumber++;localStorage.setItem(STORAGE_KEY,String(attemptNumber));byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.add('hidden');byId('startScreen').classList.remove('hidden')}function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length;byId('hudCorrect').textContent=correctCount;byId('hudMisses').textContent=missCount;byId('hudAccuracy').textContent=(totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100))+'%';byId('hudAttempt').textContent=attemptNumber;byId('hudRuntime').textContent=formatRuntime(runtimeSeconds)}function loadQuestion(){locked=false;clearFeedback();clearMovement();const q=currentQuestion();applyFormation(q.formation,q.strength);showTiteFront(q.call);highlightPlayer(q.player);byId('callTitle').textContent=q.call+' — '+PLAYER_LABELS[q.player];byId('questionKicker').textContent=q.call+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent=q.mode==='gap'?'Click the correct final responsibility on the board. On correct, the graphic will show the movement path.':'Choose the correct TITE rule. Answers are shuffled.';if(q.mode==='choice')renderChoices(q.answers);else byId('mcAnswers').classList.add('hidden');updateHud()}function applyFormation(formation,strength){const leftStrong=formation==='leftTwoDetached';byId('strongArea').className='strong-area '+(leftStrong?'left':'right');byId('strengthTag').textContent='Strength: '+strength;byId('wrL1').classList.toggle('hidden-token',!leftStrong);byId('wrL2').classList.toggle('hidden-token',!leftStrong);byId('wrR1').classList.toggle('hidden-token',leftStrong);byId('wrR2').classList.toggle('hidden-token',leftStrong)}function place(el,left,top){el.style.left=left+'%';el.style.top=top+'%';el.style.transform='translate(-50%,-50%)'}function showTiteFront(call){const rip=call.includes('RIP');place(byId('dlE'),rip?67:33,57);place(byId('dlN'),50,58.2);place(byId('dlT'),rip?33:67,57);place(byId('sam'),rip?25:75,64);place(byId('jack'),rip?75:25,64)}function highlightPlayer(player){['dlE','dlN','dlT','sam','jack'].forEach(id=>byId(id).classList.remove('active'));if(player==='E')byId('dlE').classList.add('active');if(player==='N')byId('dlN').classList.add('active');if(player==='T')byId('dlT').classList.add('active');if(player==='SAM')byId('sam').classList.add('active');if(player==='JACK')byId('jack').classList.add('active')}function renderChoices(answers){const grid=byId('mcAnswers');grid.innerHTML='';grid.classList.remove('hidden');shuffleArray(answers).forEach((answer,index)=>{const b=document.createElement('button');b.className='answer-btn';b.innerHTML='<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text;b.onclick=()=>chooseAnswer(b,answer);grid.appendChild(b)})}function chooseAnswer(button,answer){if(locked)return;const q=currentQuestion();totalAttempts++;if(answer.correct){correctCount++;locked=true;button.classList.add('correct');document.querySelectorAll('.answer-btn').forEach(btn=>btn.classList.add('disabled'));showFeedback('Correct — that is the rule.',q.coaching,true);updateHud();setTimeout(nextQuestion,5000)}else{missCount++;button.classList.add('incorrect','disabled');showFeedback('Not it.','Read the front first: TITE is 4i / zero / 4i. Then apply the run/pass rule.',false);updateHud()}}function selectGap(gap){if(locked)return;const q=currentQuestion();if(q.mode!=='gap')return;totalAttempts++;const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]');if(gap===q.answer){correctCount++;locked=true;if(zone)zone.classList.add('correct');showMovement(q);showFeedback('Correct — that is your job.',q.coaching,true);updateHud();setTimeout(nextQuestion,6200)}else{missCount++;if(zone){zone.classList.add('wrong');setTimeout(()=>zone.classList.remove('wrong'),650)}showFeedback('Not it.',getGapHelp(q),false);updateHud()}}function getGapHelp(q){if(q.read==='fallback')return'Nose is zero pre-snap. In TITE he falls back to weak A after the snap.';if(q.read==='base')return'Base/man-on means the 4i maintains the gap he is pre-snap aligned in: B gap.';if(q.read==='downNoPuller')return'Down with no puller means step to the guard key, then work vertical and square through the gap to avoid the OT wash.';if(q.read==='downPuller')return'On-the-LOS personnel spill. Spill the puller and close same-side B.';if(q.read==='offBallBox')return'Off-ball personnel box by crossing the LOS and setting the edge in the offensive backfield. Whoever the puller is heading to is the player who boxes.';if(q.read==='highHat')return'TITE E and T both become C-gap contain rushers on High Hat.';return'Read the call, identify your player, and click the final responsibility from the defense’s perspective.'}function showFeedback(title,copy,isCorrect){byId('feedbackTitle').textContent=title;byId('feedbackCopy').textContent=copy;byId('feedbackBox').classList.remove('hidden');byId('feedbackBox').style.borderColor=isCorrect?'rgba(52,211,153,.6)':'rgba(251,113,133,.6)'}function clearFeedback(){byId('feedbackBox').classList.add('hidden');byId('mcAnswers').classList.add('hidden');document.querySelectorAll('.gap-zone').forEach(z=>z.classList.remove('correct','wrong'))}function clearMovement(){document.querySelectorAll('.path-line,.path-head,.ghost-token').forEach(el=>el.remove());byId('pullerToken').style.display='none';byId('movementLabel').classList.add('hidden');['dlE','dlN','dlT','sam','jack'].forEach(id=>{const el=byId(id);el.style.transition='';el.style.transform='translate(-50%,-50%)'})}function boardRect(){return byId('gameBoard').getBoundingClientRect()}function tokenPoint(el){const b=boardRect(),r=el.getBoundingClientRect();return{x:r.left+r.width/2-b.left,y:r.top+r.height/2-b.top}}function percentPoint(left,top){const b=boardRect();return{x:b.width*left/100,y:b.height*top/100}}function playerEl(p){return p==='E'?byId('dlE'):p==='N'?byId('dlN'):p==='T'?byId('dlT'):p==='SAM'?byId('sam'):p==='JACK'?byId('jack'):null}function gapPoint(gap){const map={LC:[22,50],LB:[38,50],LA:[46,50],RA:[54,50],RB:[62,50],RC:[78,50]};return percentPoint(map[gap][0],map[gap][1])}function guardKeyPoint(player){const el=playerEl(player);const start=tokenPoint(el);const rightSide=start.x>boardRect().width/2;return rightSide?percentPoint(60,50):percentPoint(40,50)}function drawSegment(start,end,color){const board=byId('gameBoard'),dx=end.x-start.x,dy=end.y-start.y,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx)*180/Math.PI;const line=document.createElement('div');line.className='path-line path-'+color;line.style.left=start.x+'px';line.style.top=start.y+'px';line.style.width=len+'px';line.style.transform='rotate('+ang+'deg)';board.appendChild(line)}function drawArrowHead(end,prev,color){const board=byId('gameBoard'),dx=end.x-prev.x,dy=end.y-prev.y,ang=Math.atan2(dy,dx)*180/Math.PI;const head=document.createElement('div');head.className='path-head '+color;head.style.left=end.x+'px';head.style.top=end.y+'px';head.style.transform='rotate('+ang+'deg) translate(-50%,-50%)';board.appendChild(head)}function drawPolyline(points,color){if(points.length<2)return;for(let i=0;i<points.length-1;i++)drawSegment(points[i],points[i+1],color);drawArrowHead(points[points.length-1],points[points.length-2],color)}function drawGhost(el){const board=byId('gameBoard'),p=tokenPoint(el),g=document.createElement('div');g.className='ghost-token';g.style.left=p.x+'px';g.style.top=p.y+'px';board.appendChild(g)}function moveTokenAlong(player,points,speed=.7){const el=playerEl(player);if(!el||points.length<2)return;const start=points[0],end=points[points.length-1],dx=end.x-start.x,dy=end.y-start.y;drawGhost(el);el.style.transition='transform '+speed+'s cubic-bezier(.16,1,.3,1)';el.style.transform='translate(calc(-50% + '+dx+'px), calc(-50% + '+dy+'px))'}function showMovement(q){clearMovement();if(q.movement.type==='spill'){drawSpill(q);return}if(q.movement.type==='box'){drawBox(q);return}const el=playerEl(q.movement.player),start=tokenPoint(el),end=gapPoint(q.movement.to);let color=q.read==='highHat'?'blue':'green';let points=[start,end];if(q.movement.type==='base'){const key=guardKeyPoint(q.movement.player);const step={x:key.x,y:start.y-18};const finish={x:end.x,y:end.y+4};points=[start,step,finish]}if(q.movement.type==='squareSit'){const key=guardKeyPoint(q.movement.player);const step={x:key.x,y:start.y-20};const vertical={x:key.x,y:start.y-42};const finish={x:end.x,y:end.y+2};points=[start,step,vertical,finish]}if(q.movement.type==='rushContain'){const widthDirection=q.movement.to.startsWith('R')?1:-1;const widen={x:start.x+(widthDirection*48),y:start.y-2};const upfield={x:widen.x,y:start.y-42};const contain={x:end.x,y:end.y-10};points=[start,widen,upfield,contain]}if(q.movement.type==='noseFallback')points=[start,{x:end.x,y:start.y-20},end];drawPolyline(points,color);moveTokenAlong(q.movement.player,points,.78);labelMovement(q,points[points.length-1])}function drawSpill(q){const player=q.movement.player,start=tokenPoint(playerEl(player)),target=gapPoint(q.movement.to),direction=q.movement.to.startsWith('R')?1:-1;const key=guardKeyPoint(player);const keyStep={x:key.x,y:start.y-18};const flatten={x:target.x-direction*10,y:start.y-24};const vertical={x:target.x,y:target.y-8};const points=[start,keyStep,flatten,vertical];drawPullerPath(q,direction);drawPolyline(points,'green');moveTokenAlong(player,points,.78);labelMovement(q,vertical)}function drawPullerPath(q,direction){const puller=byId('pullerToken'),start=direction===1?percentPoint(40,48):percentPoint(60,48),mid={x:start.x+direction*64,y:start.y+22},end={x:start.x+direction*132,y:start.y+30};puller.style.display='flex';puller.style.left=start.x+'px';puller.style.top=start.y+'px';puller.textContent=direction===1?'LG':'RG';drawPolyline([start,mid,end],'orange')}function drawBox(q){const player=q.movement.player,start=tokenPoint(playerEl(player));const playerIsRight=start.x>boardRect().width/2;const direction=playerIsRight?1:-1;const los=percentPoint(50,52);const downhill={x:start.x+direction*12,y:start.y-24};const crossLos={x:start.x+direction*34,y:los.y-8};const leverage={x:start.x+direction*52,y:los.y-32};const box={x:start.x+direction*58,y:los.y-48};const points=[start,downhill,crossLos,leverage,box];drawPolyline(points,'blue');moveTokenAlong(player,points,.82);labelMovement(q,box)}function labelMovement(q,point){const label=byId('movementLabel');label.classList.remove('hidden');label.style.left=Math.max(12,point.x-70)+'px';label.style.top=Math.max(12,point.y-58)+'px';label.textContent=q.read==='base'?'Maintain aligned gap':q.read==='downNoPuller'?'Vertical • Square • Through Gap':q.read==='downPuller'?'Spill • Underneath • Close B':q.read==='offBallBox'?'Cross LOS • Box Edge':q.read==='highHat'?'Width First • C-Gap Contain':q.read==='fallback'?'Fallback weak A':'Finish your job'}function nextQuestion(){currentIndex++;if(currentIndex>=QUESTIONS.length)finishGame();else loadQuestion()}async function submitTicketLog(payload){const status=byId('logStatus');if(!APPS_SCRIPT_URL||APPS_SCRIPT_URL==='PASTE_WEB_APP_URL_HERE'){status.textContent='Sheet log skipped: paste your Apps Script Web App URL into APPS_SCRIPT_URL.';return}try{await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});status.textContent='Mastery sheet log sent.'}catch(err){status.textContent='Sheet log error: '+err.message}}function finishGame(){stopClock();byId('gameScreen').classList.add('hidden');byId('ticketScreen').classList.remove('hidden');const perfect=missCount===0;byId('ticketMessage').textContent=perfect?'Perfect run earned. Screenshot or print this ticket.':'Finished, but not a perfect run. Restart and earn the ticket with zero misses.';const endTime=new Date(),elapsedSeconds=Math.round((endTime-startTime)/1000),accuracy=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100),result=perfect?'MASTERED — CLEAN RUN':'REPLAY REQUIRED';const items=[['Player',playerName],['Game',GAME_TITLE],['Date',endTime.toLocaleDateString()],['Start Time',startTime.toLocaleTimeString()],['End Time',endTime.toLocaleTimeString()],['Runtime',formatRuntime(elapsedSeconds)],['Runtime Seconds',elapsedSeconds],['Correct First-Time Answers',correctCount+' / '+QUESTIONS.length],['Misses',missCount],['Accuracy',accuracy+'%'],['Attempt',attemptNumber],['Result',result]];byId('ticketGrid').innerHTML=items.map(item=>'<div class="ticket-item"><span class="label">'+item[0]+'</span><span class="value">'+item[1]+'</span></div>').join('');if(!perfect){byId('logStatus').textContent='Not logged: mastery requires a clean run with zero misses.';return}submitTicketLog({timestamp:new Date().toISOString(),playerName,gamePlayed:GAME_TITLE,attemptNumber,startDate:startTime.toLocaleDateString(),startTime:startTime.toLocaleTimeString(),endDate:endTime.toLocaleDateString(),endTime:endTime.toLocaleTimeString(),runtime:formatRuntime(elapsedSeconds),runtimeSeconds:elapsedSeconds,correctFirstTry:correctCount,totalQuestions:QUESTIONS.length,percent:accuracy,misses:missCount,result:'MASTERED — CLEAN RUN'})}
 </script>
 </body>
 </html>
