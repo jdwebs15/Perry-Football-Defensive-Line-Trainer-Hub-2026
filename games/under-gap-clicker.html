@@ -286,11 +286,11 @@
     .rb { left: 50%; top: 18%; }
     .qb { left: 50%; top: 28%; }
 
-    .ot-l { left: 30%; top: 39%; }
-    .g-l { left: 40%; top: 39%; }
-    .c { left: 50%; top: 39%; }
-    .g-r { left: 60%; top: 39%; }
-    .ot-r { left: 70%; top: 39%; }
+    .ot-l { left: 30%; top: 47%; }
+    .g-l { left: 40%; top: 47%; }
+    .c { left: 50%; top: 47%; }
+    .g-r { left: 60%; top: 47%; }
+    .ot-r { left: 70%; top: 47%; }
 
     .e-left { left: 26%; top: 63%; }
     .n-left { left: 46%; top: 63%; }
@@ -441,72 +441,50 @@
     }
     .hidden { display: none !important; }
 
-
-
-    .movement-layer {
+    .path-line {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 9;
-      overflow: visible;
-    }
-
-    .movement-path {
-      fill: none;
-      stroke: #34d399;
-      stroke-width: 5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 0 8px rgba(52,211,153,0.55));
-      stroke-dasharray: 600;
-      stroke-dashoffset: 600;
-      animation: drawPath 1.2s ease forwards;
-    }
-
-    .movement-path.general {
-      stroke: #60a5fa;
-      filter: drop-shadow(0 0 8px rgba(96,165,250,0.55));
-    }
-
-    .puller-path {
-      fill: none;
-      stroke: #f97316;
-      stroke-width: 5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 0 8px rgba(249,115,22,0.55));
-      stroke-dasharray: 600;
-      stroke-dashoffset: 600;
-      animation: drawPath 1.2s ease forwards;
-    }
-
-    .movement-label {
-      position: absolute;
-      z-index: 10;
-      padding: 7px 10px;
+      height: 5px;
       border-radius: 999px;
-      border: 1px solid rgba(52,211,153,0.5);
-      background: rgba(5,46,22,0.88);
-      color: #dcfce7;
-      font-size: 0.72rem;
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.32);
+      transform-origin: left center;
+      z-index: 12;
+      box-shadow: 0 0 14px rgba(255,255,255,0.23);
       pointer-events: none;
     }
 
-    .puller-label {
-      border-color: rgba(249,115,22,0.65);
-      background: rgba(67,20,7,0.9);
-      color: #ffedd5;
+    .path-blue { background: #60a5fa; }
+    .path-green { background: #34d399; }
+    .path-orange { background: #f97316; }
+
+    .path-head {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 13px solid currentColor;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      z-index: 13;
+      pointer-events: none;
+    }
+
+    .path-head.blue { color: #60a5fa; }
+    .path-head.green { color: #34d399; }
+    .path-head.orange { color: #f97316; }
+
+    .ghost-token {
+      position: absolute;
+      width: 43px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.20);
+      border: 1px dashed rgba(255,255,255,0.38);
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      pointer-events: none;
     }
 
     .puller-token {
       position: absolute;
-      z-index: 8;
+      z-index: 11;
       transform: translate(-50%, -50%);
       width: 46px;
       height: 34px;
@@ -520,10 +498,29 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 0 0 5px rgba(249,115,22,0.14), 0 14px 26px rgba(0,0,0,0.32);
+      pointer-events: none;
     }
 
-    @keyframes drawPath {
-      to { stroke-dashoffset: 0; }
+    .movement-label {
+      position: absolute;
+      z-index: 14;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(52,211,153,0.50);
+      background: rgba(5,46,22,0.88);
+      color: #dcfce7;
+      font-size: 0.72rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.32);
+      pointer-events: none;
+    }
+
+    .puller-label {
+      border-color: rgba(249,115,22,0.65);
+      background: rgba(67,20,7,0.90);
+      color: #ffedd5;
     }
 
     @media (max-width: 980px) {
@@ -581,7 +578,7 @@
             <strong id="callTitle">UNDER RIP</strong>
             <span class="call-note">Offense is on top. Defense is on bottom. RIP/LIZ is called from your defensive perspective.</span>
           </div>
-          <div class="game-board">
+          <div id="gameBoard" class="game-board">
             <div class="field-title">Offense</div>
             <div id="strengthTag" class="strength-box">Strength: defensive right</div>
             <div id="strongArea" class="strong-area right"></div>
@@ -620,20 +617,6 @@
 
             <div class="def-label">Defense</div>
             <div class="def-left-right">DEFENSIVE LEFT ← → DEFENSIVE RIGHT</div>
-
-            <svg id="movementLayer" class="movement-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-                  <path d="M0,0 L0,6 L7,3 z" fill="#34d399"></path>
-                </marker>
-                <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-                  <path d="M0,0 L0,6 L7,3 z" fill="#60a5fa"></path>
-                </marker>
-                <marker id="arrowOrange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-                  <path d="M0,0 L0,6 L7,3 z" fill="#f97316"></path>
-                </marker>
-              </defs>
-            </svg>
             <div id="movementLabel" class="movement-label hidden"></div>
             <div id="pullerLabel" class="movement-label puller-label hidden">Puller path</div>
             <div id="pullerToken" class="puller-token hidden">G</div>
@@ -1028,58 +1011,125 @@ function clearFeedback() {
 
 
 function clearMovementVisuals() {
-  const layer = byId('movementLayer');
-  if (layer) {
-    Array.from(layer.querySelectorAll('path.dynamic-path')).forEach(path => path.remove());
-  }
+  document.querySelectorAll('.path-line, .path-head, .ghost-token').forEach(function(el) {
+    el.remove();
+  });
+
   ['movementLabel', 'pullerLabel', 'pullerToken'].forEach(function(id) {
     const el = byId(id);
     if (el) el.classList.add('hidden');
   });
 }
 
+function boardRect() {
+  return byId('gameBoard').getBoundingClientRect();
+}
+
+function percentPoint(x, y) {
+  const board = boardRect();
+  return {
+    x: board.width * (x / 100),
+    y: board.height * (y / 100)
+  };
+}
+
+function elementCenterPoint(el) {
+  const board = boardRect();
+  const r = el.getBoundingClientRect();
+  return {
+    x: r.left + r.width / 2 - board.left,
+    y: r.top + r.height / 2 - board.top
+  };
+}
+
 function pointForPlayer(player, call) {
+  const tokenMap = { E: 'dlE', N: 'dlN', T: 'dlT', J: 'dlJ' };
+  const token = byId(tokenMap[player]);
+  if (token) return elementCenterPoint(token);
+
   const rip = call.includes('RIP');
-  const map = rip ? {
+  const fallback = rip ? {
     E: { x: 74, y: 63 }, N: { x: 54, y: 63 }, T: { x: 36, y: 63 }, J: { x: 26, y: 63 }
   } : {
     E: { x: 26, y: 63 }, N: { x: 46, y: 63 }, T: { x: 64, y: 63 }, J: { x: 74, y: 63 }
   };
-  return map[player] || { x: 50, y: 63 };
+
+  const p = fallback[player] || { x: 50, y: 63 };
+  return percentPoint(p.x, p.y);
 }
 
 function pointForGap(gap) {
-  const map = {
-    LC: { x: 14, y: 77 }, LB: { x: 31, y: 77 }, LA: { x: 45, y: 77 },
-    RA: { x: 55, y: 77 }, RB: { x: 69, y: 77 }, RC: { x: 86, y: 77 }
+  // IMPORTANT: movement arrows should go toward the actual football gap on the field,
+  // not down to the clickable word boxes. These points sit just across the LOS
+  // on the QB/RB side of the offensive line.
+  const fieldTargets = {
+    LC: { x: 24, y: 49 },
+    LB: { x: 36, y: 49 },
+    LA: { x: 45, y: 49 },
+    RA: { x: 55, y: 49 },
+    RB: { x: 64, y: 49 },
+    RC: { x: 76, y: 49 }
   };
-  return map[gap] || { x: 50, y: 77 };
+  const p = fieldTargets[gap] || { x: 50, y: 49 };
+  return percentPoint(p.x, p.y);
 }
 
-function makeSvgPath(d, className, markerId) {
-  const layer = byId('movementLayer');
-  if (!layer) return;
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', d);
-  path.setAttribute('class', 'dynamic-path ' + className);
-  path.setAttribute('marker-end', 'url(#' + markerId + ')');
-  layer.appendChild(path);
+function drawGhost(point) {
+  const board = byId('gameBoard');
+  const ghost = document.createElement('div');
+  ghost.className = 'ghost-token';
+  ghost.style.left = point.x + 'px';
+  ghost.style.top = point.y + 'px';
+  board.appendChild(ghost);
+}
+
+function drawLineSegment(start, end, color, withHead) {
+  const board = byId('gameBoard');
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const len = Math.hypot(dx, dy);
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+  const line = document.createElement('div');
+  line.className = 'path-line path-' + color;
+  line.style.left = start.x + 'px';
+  line.style.top = start.y + 'px';
+  line.style.width = len + 'px';
+  line.style.transform = 'rotate(' + angle + 'deg)';
+  board.appendChild(line);
+
+  if (withHead) {
+    const head = document.createElement('div');
+    head.className = 'path-head ' + color;
+    head.style.left = end.x + 'px';
+    head.style.top = end.y + 'px';
+    head.style.transform = 'translate(-50%, -50%) rotate(' + angle + 'deg)';
+    board.appendChild(head);
+  }
+}
+
+function drawPath(points, color) {
+  if (!points || points.length < 2) return;
+  for (let i = 0; i < points.length - 1; i++) {
+    drawLineSegment(points[i], points[i + 1], color, i === points.length - 2);
+  }
 }
 
 function showLabel(id, text, x, y) {
   const el = byId(id);
   if (!el) return;
+  const p = percentPoint(x, y);
   el.textContent = text;
-  el.style.left = x + '%';
-  el.style.top = y + '%';
+  el.style.left = p.x + 'px';
+  el.style.top = p.y + 'px';
   el.classList.remove('hidden');
 }
 
-function showPullerToken(x, y) {
+function showPullerToken(point) {
   const el = byId('pullerToken');
   if (!el) return;
-  el.style.left = x + '%';
-  el.style.top = y + '%';
+  el.style.left = point.x + 'px';
+  el.style.top = point.y + 'px';
   el.classList.remove('hidden');
 }
 
@@ -1090,35 +1140,78 @@ function isDownWithPullerQuestion(q) {
 function showMovementForCorrectAnswer(q, gap) {
   clearMovementVisuals();
 
-  if (isDownWithPullerQuestion(q) && (q.activePlayer === 'E' || q.player === 'E')) {
+  const player = q.activePlayer || q.player;
+  if (isDownWithPullerQuestion(q) && (player === 'E' || player === 'J')) {
     showDownWithPullerMovement(q);
     return;
   }
 
-  const start = pointForPlayer(q.activePlayer || q.player, q.call || 'UNDER RIP');
+  const start = pointForPlayer(player, q.call || 'UNDER RIP');
   const finish = pointForGap(gap);
-  const midY = Math.min(start.y + 5, finish.y - 4);
-  makeSvgPath('M ' + start.x + ' ' + start.y + ' C ' + start.x + ' ' + midY + ', ' + finish.x + ' ' + midY + ', ' + finish.x + ' ' + finish.y, 'movement-path general', 'arrowBlue');
-  showLabel('movementLabel', 'Gap movement', Math.max(8, Math.min(78, finish.x - 8)), Math.max(58, finish.y - 13));
+
+  drawGhost(start);
+  drawPath([start, finish], 'blue');
 }
 
 function showDownWithPullerMovement(q) {
-  const rip = (q.call || '').includes('RIP');
+  clearMovementVisuals();
 
-  if (rip) {
-    // End spills underneath a puller coming from the opposite guard, then turns vertical into same-side B.
-    makeSvgPath('M 74 63 L 72 53 C 70 49, 66 48, 62 48 L 66 48 L 69 38', 'movement-path', 'arrowGreen');
-    makeSvgPath('M 40 39 C 47 43, 56 44, 66 44 L 79 45', 'puller-path', 'arrowOrange');
-    showPullerToken(40, 39);
-    showLabel('movementLabel', 'E spills under puller → vertical to right B', 47, 50);
-    showLabel('pullerLabel', 'Opposite guard puller behind LOS', 43, 35);
+  const rip = (q.call || '').includes('RIP');
+  const spiller = q.activePlayer || q.player;
+
+  let start, p1, p2, p3, p4, pullerStart, pullerMiddle, pullerKickout;
+
+  if (spiller === 'E' && rip) {
+    // UNDER RIP: End is the call-side spiller on defensive right.
+    start = pointForPlayer('E', q.call);
+    p1 = percentPoint(73, 55);   // cross LOS from the End
+    p2 = percentPoint(70, 50);   // get to QB/RB side, behind the OL
+    p3 = percentPoint(62, 50);   // flatten underneath toward the guard
+    p4 = percentPoint(62, 36);   // turn vertical into same-side B
+    pullerStart = percentPoint(40, 39);  // opposite guard, deeper than spiller path
+    pullerMiddle = percentPoint(57, 44);
+    pullerKickout = percentPoint(75, 52);
+  } else if (spiller === 'E' && !rip) {
+    // UNDER LIZ: End is the call-side spiller on defensive left.
+    start = pointForPlayer('E', q.call);
+    p1 = percentPoint(27, 55);
+    p2 = percentPoint(30, 50);
+    p3 = percentPoint(38, 50);
+    p4 = percentPoint(38, 36);
+    pullerStart = percentPoint(60, 39);
+    pullerMiddle = percentPoint(43, 44);
+    pullerKickout = percentPoint(25, 52);
+  } else if (spiller === 'J' && rip) {
+    // UNDER RIP: Jack is the away-side spiller on defensive left.
+    start = pointForPlayer('J', q.call);
+    p1 = percentPoint(27, 55);
+    p2 = percentPoint(30, 50);
+    p3 = percentPoint(38, 50);
+    p4 = percentPoint(38, 36);
+    pullerStart = percentPoint(60, 39);
+    pullerMiddle = percentPoint(43, 44);
+    pullerKickout = percentPoint(25, 52);
   } else {
-    makeSvgPath('M 26 63 L 28 53 C 30 49, 34 48, 38 48 L 34 48 L 31 38', 'movement-path', 'arrowGreen');
-    makeSvgPath('M 60 39 C 53 43, 44 44, 34 44 L 21 45', 'puller-path', 'arrowOrange');
-    showPullerToken(60, 39);
-    showLabel('movementLabel', 'E spills under puller → vertical to left B', 18, 50);
-    showLabel('pullerLabel', 'Opposite guard puller behind LOS', 38, 35);
+    // UNDER LIZ: Jack is the away-side spiller on defensive right.
+    start = pointForPlayer('J', q.call);
+    p1 = percentPoint(73, 55);
+    p2 = percentPoint(70, 50);
+    p3 = percentPoint(62, 50);
+    p4 = percentPoint(62, 36);
+    pullerStart = percentPoint(40, 39);
+    pullerMiddle = percentPoint(57, 44);
+    pullerKickout = percentPoint(75, 52);
   }
+
+  drawGhost(start);
+  // Literal course from your drawing: start at the actual spiller, cross the LOS,
+  // flatten behind the offensive line, then turn vertical into same-side B.
+  drawPath([start, p1, p2, p3, p4], 'green');
+
+  // Puller path stays deeper in the offensive backfield than the spill path.
+  showPullerToken(pullerStart);
+  showLabel('pullerLabel', 'Puller path', (pullerStart.x / boardRect().width) * 100, (pullerStart.y / boardRect().height) * 100 - 6);
+  drawPath([pullerStart, pullerMiddle, pullerKickout], 'orange');
 }
 
 function nextQuestion() {
