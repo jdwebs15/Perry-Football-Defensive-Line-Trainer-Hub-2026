@@ -8,28 +8,90 @@
   <style>
     :root{
       --bg:#07111f;--panel:#101f39;--panel2:#17294a;--line:rgba(255,255,255,.18);
-      --text:#f8fafc;--muted:#b8c7e6;--gold:#ffd166;--green:#34d399;--red:#fb7185;
+      --text:#f8fafc;--muted:#b8c7e6;--gold:#ffd166;--green:#34d399;--blue:#60a5fa;--orange:#f97316;--red:#fb7185;
     }
-    body{background:radial-gradient(circle at top,#10254a 0,#07111f 52%,#030712 100%);color:var(--text)}
+    *{box-sizing:border-box}
+    body{background:radial-gradient(circle at top,#10254a 0,#07111f 52%,#030712 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
     .page-shell{max-width:1180px;margin:0 auto;padding:24px}
     .game-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
     .mini-link{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.13);font-weight:900}
-    .badge-stack{display:flex;gap:8px;flex-wrap:wrap}.small-badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.06em}.small-badge.live{color:#d7fff0;background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.42)}
+    .badge-stack{display:flex;gap:8px;flex-wrap:wrap}
+    .small-badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.06em}
+    .small-badge.live{color:#d7fff0;background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.42)}
     .start-card,.ticket-card{max-width:900px;margin:0 auto;background:linear-gradient(180deg,rgba(21,39,68,.96),rgba(8,15,28,.96));border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
-    .start-card p,.ticket-card p{color:var(--muted);line-height:1.55}.coach-note{margin-top:16px;border-left:4px solid var(--gold);padding:12px 14px;background:rgba(255,209,102,.09);border-radius:12px;color:#fef3c7;font-weight:800}.name-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.name-row input{flex:1 1 280px;min-width:240px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;font-weight:800;outline:none}
-    .btn{border:0;border-radius:14px;padding:12px 16px;font-weight:950;cursor:pointer;background:linear-gradient(180deg,#7c9cff,#4f6fff);color:white}.secondary-btn{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.14)!important}.hidden{display:none!important}
-    .hud-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:12px}.hud-box{background:rgba(23,41,74,.88);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px}.hud-box span{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;font-weight:950;letter-spacing:.08em}.hud-box strong{display:block;margin-top:4px;font-size:1.2rem}
-    .layout{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.field-card,.question-card{background:rgba(16,31,57,.92);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
-    .call-banner{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}.call-banner strong{color:var(--gold);font-weight:950}.call-note{color:var(--muted);font-size:.8rem}
-    .game-board{position:relative;min-height:550px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(180deg,#17294a,#101f39);background-size:82px 82px,82px 82px,auto}
-    .field-title{position:absolute;left:14px;top:10px;color:var(--muted);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.def-title{position:absolute;left:14px;bottom:10px;color:var(--muted);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.orientation{position:absolute;right:14px;bottom:10px;color:var(--gold);font-size:.78rem;font-weight:950}.strength-box{position:absolute;right:10px;top:18px;z-index:6;background:rgba(52,211,153,.17);border:1px solid rgba(52,211,153,.45);border-radius:999px;padding:7px 10px;color:#d7fff0;font-weight:950;font-size:.73rem}.strong-area{position:absolute;top:50px;width:31%;height:138px;border-radius:18px;background:rgba(52,211,153,.09);border:2px solid rgba(52,211,153,.28);z-index:1}.strong-area.right{right:8%}.strong-area.left{left:8%}.los{position:absolute;left:7%;right:7%;top:54%;height:3px;background:rgba(255,255,255,.62);box-shadow:0 0 16px rgba(255,255,255,.18)}
-    .ol,.skill,.dl-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5}.ol{width:46px;height:34px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);font-size:.8rem}.skill{width:42px;height:30px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.75rem}.dl-token{width:43px;height:34px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.9rem}.dl-token.active{background:linear-gradient(180deg,#ffd166,#f59e0b);transform:translate(-50%,-50%) scale(1.13);box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);z-index:8}
-    .wr-left-1{left:10%;top:24%}.wr-left-2{left:22%;top:20%}.wr-right-1{left:90%;top:24%}.wr-right-2{left:78%;top:20%}.rb{left:50%;top:19%}.qb{left:50%;top:29%}.ot-l{left:30%;top:39%}.g-l{left:40%;top:39%}.c{left:50%;top:39%}.g-r{left:60%;top:39%}.ot-r{left:70%;top:39%}.hidden-token{display:none}
-    .dl-left4i{left:34%;top:63%}.dl-zero{left:50%;top:63%}.dl-right4i{left:66%;top:63%}
-    .gap-row{position:absolute;left:7%;right:7%;top:71%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6}.gap-zone{min-height:72px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;cursor:pointer;user-select:none;transition:.15s}.gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13);box-shadow:0 0 0 4px rgba(255,209,102,.08)}.gap-zone strong{font-size:1rem}.gap-zone span{font-size:.69rem;color:var(--muted);font-weight:950;text-transform:uppercase;letter-spacing:.06em}.gap-zone.correct{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22);box-shadow:0 0 0 5px rgba(52,211,153,.12)}.gap-zone.wrong{border-color:rgba(251,113,133,.92);background:rgba(251,113,133,.2);animation:shake .22s linear 2}@keyframes shake{25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}}
-    .question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px}.question-card h2{font-size:1.42rem;margin-bottom:8px;color:white}.question-card p{color:var(--muted);line-height:1.5}.responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45}.answer-grid{display:grid;gap:10px;margin-top:14px}.answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800;line-height:1.35;transition:.15s}.answer-btn:hover{transform:translateY(-2px);border-color:rgba(255,209,102,.5)}.answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2)}.answer-btn.incorrect{border-color:rgba(251,113,133,.85);background:rgba(251,113,133,.18)}.answer-btn.disabled{pointer-events:none;opacity:.78}.choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950}.feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}.feedback-box h3{margin-bottom:4px;color:white}.feedback-box p{color:var(--muted)}
-    .ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900;letter-spacing:.06em}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px}
-    @media(max-width:980px){.hud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{grid-template-columns:1fr}.game-board{min-height:530px}}@media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gap-row{gap:6px;grid-template-columns:repeat(3,minmax(72px,1fr));top:69%}.gap-zone{min-height:62px}.ticket-grid{grid-template-columns:1fr}}
+    .start-card p,.ticket-card p{color:var(--muted);line-height:1.55}
+    .coach-note{margin-top:16px;border-left:4px solid var(--gold);padding:12px 14px;background:rgba(255,209,102,.09);border-radius:12px;color:#fef3c7;font-weight:800;line-height:1.45}
+    .name-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    .name-row input{flex:1 1 280px;min-width:240px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;font-weight:800;outline:none}
+    .btn{border:0;border-radius:14px;padding:12px 16px;font-weight:950;cursor:pointer;background:linear-gradient(180deg,#7c9cff,#4f6fff);color:white;text-decoration:none}
+    .secondary-btn{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.14)!important}
+    .hidden{display:none!important}
+    .hud-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:12px}
+    .hud-box{background:rgba(23,41,74,.88);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px}
+    .hud-box span{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;font-weight:950;letter-spacing:.08em}
+    .hud-box strong{display:block;margin-top:4px;font-size:1.2rem}
+    .layout{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    .field-card,.question-card{background:rgba(16,31,57,.92);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+    .call-banner{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}
+    .call-banner strong{color:var(--gold);font-weight:950}
+    .call-note{color:var(--muted);font-size:.8rem}
+    .game-board{position:relative;min-height:570px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(180deg,#17294a,#101f39);background-size:82px 82px,82px 82px,auto}
+    .field-title{position:absolute;left:14px;top:10px;color:var(--muted);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
+    .def-title{position:absolute;left:14px;bottom:10px;color:var(--muted);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
+    .orientation{position:absolute;right:14px;bottom:10px;color:var(--gold);font-size:.78rem;font-weight:950}
+    .strength-box{position:absolute;right:10px;top:18px;z-index:6;background:rgba(52,211,153,.17);border:1px solid rgba(52,211,153,.45);border-radius:999px;padding:7px 10px;color:#d7fff0;font-weight:950;font-size:.73rem}
+    .strong-area{position:absolute;top:50px;width:31%;height:138px;border-radius:18px;background:rgba(52,211,153,.09);border:2px solid rgba(52,211,153,.28);z-index:1}
+    .strong-area.right{right:8%}.strong-area.left{left:8%}
+    .los{position:absolute;left:7%;right:7%;top:54%;height:3px;background:rgba(255,255,255,.62);box-shadow:0 0 16px rgba(255,255,255,.18);z-index:2}
+    .los-label{position:absolute;left:50%;top:calc(54% + 8px);transform:translateX(-50%);font-size:.72rem;font-weight:950;color:var(--muted);z-index:4}
+    .ol,.skill,.dl-token,.lb-token{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:12px;font-weight:950;box-shadow:0 10px 20px rgba(0,0,0,.25);z-index:5}
+    .ol{width:46px;height:34px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);font-size:.8rem}
+    .skill{width:42px;height:30px;background:rgba(255,209,102,.25);border:1px solid rgba(255,209,102,.45);color:#fff4ca;font-size:.75rem}
+    .dl-token{width:48px;height:38px;background:linear-gradient(180deg,#f8fafc,#cbd5e1);border:2px solid rgba(255,255,255,.85);color:#0f172a;font-size:.9rem;text-align:center;line-height:1.05}
+    .lb-token{width:46px;height:34px;background:linear-gradient(180deg,#dbeafe,#93c5fd);border:2px solid rgba(219,234,254,.85);color:#0f172a;font-size:.82rem;text-align:center;line-height:1.05}
+    .dl-token.active,.lb-token.active{background:linear-gradient(180deg,#ffd166,#f59e0b);transform:translate(-50%,-50%) scale(1.13);box-shadow:0 0 0 6px rgba(255,209,102,.18),0 16px 28px rgba(0,0,0,.34);z-index:8}
+    .wr-left-1{left:10%;top:24%}.wr-left-2{left:22%;top:20%}.wr-right-1{left:90%;top:24%}.wr-right-2{left:78%;top:20%}
+    .rb{left:50%;top:19%}.qb{left:50%;top:29%}
+    .ot-l{left:30%;top:45%}.g-l{left:40%;top:45%}.c{left:50%;top:45%}.g-r{left:60%;top:45%}.ot-r{left:70%;top:45%}
+    .hidden-token{display:none}
+    /* OKIE DL and off-ball fits. Offense is above LOS. Defense is below LOS.
+       OKIE rule for this trainer: Nose shades to the call, End is 5-tech to the call,
+       Tackle is 4i away, Jack is 4x4 off the ball away. */
+    .dl-left5{left:26%;top:62%}.dl-right5{left:74%;top:62%}
+    .dl-leftShade{left:46%;top:62%}.dl-rightShade{left:54%;top:62%}
+    .dl-left4i{left:34%;top:62%}.dl-right4i{left:66%;top:62%}
+    .sam-left{left:22%;top:68%}.sam-right{left:78%;top:68%}
+    .jack-left{left:22%;top:68%}.jack-right{left:78%;top:68%}
+    .puller-token{position:absolute;z-index:11;transform:translate(-50%,-50%);width:46px;height:34px;border-radius:12px;background:linear-gradient(180deg,#fb923c,#c2410c);border:2px solid rgba(255,237,213,.85);color:#fff7ed;font-size:.82rem;font-weight:950;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px rgba(249,115,22,.14),0 14px 26px rgba(0,0,0,.32);pointer-events:none}
+    .path-line{position:absolute;height:5px;border-radius:999px;transform-origin:left center;z-index:12;box-shadow:0 0 14px rgba(255,255,255,.23);pointer-events:none}
+    .path-green{background:var(--green)}.path-blue{background:var(--blue)}.path-orange{background:var(--orange)}
+    .path-head{position:absolute;width:0;height:0;border-left:13px solid currentColor;border-top:8px solid transparent;border-bottom:8px solid transparent;z-index:13;pointer-events:none}
+    .path-head.green{color:var(--green)}.path-head.blue{color:var(--blue)}.path-head.orange{color:var(--orange)}
+    .ghost-token{position:absolute;width:46px;height:34px;border-radius:12px;background:rgba(255,255,255,.20);border:1px dashed rgba(255,255,255,.38);transform:translate(-50%,-50%);z-index:4;pointer-events:none}
+    .movement-label{position:absolute;z-index:14;padding:7px 10px;border-radius:999px;border:1px solid rgba(52,211,153,.50);background:rgba(5,46,22,.88);color:#dcfce7;font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.06em;box-shadow:0 10px 24px rgba(0,0,0,.32);pointer-events:none}
+    .puller-label{border-color:rgba(249,115,22,.65);background:rgba(67,20,7,.90);color:#ffedd5}
+    .gap-row{position:absolute;left:7%;right:7%;top:74%;display:grid;grid-template-columns:repeat(6,minmax(64px,1fr));gap:10px;z-index:6}
+    .gap-zone{min-height:72px;border-radius:16px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;cursor:pointer;user-select:none;transition:.15s}
+    .gap-zone:hover{transform:translateY(-4px);border-color:rgba(255,209,102,.72);background:rgba(255,209,102,.13);box-shadow:0 0 0 4px rgba(255,209,102,.08)}
+    .gap-zone strong{font-size:1rem}.gap-zone span{font-size:.69rem;color:var(--muted);font-weight:950;text-transform:uppercase;letter-spacing:.06em}
+    .gap-zone.correct{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.22);box-shadow:0 0 0 5px rgba(52,211,153,.12)}
+    .gap-zone.wrong{border-color:rgba(251,113,133,.92);background:rgba(251,113,133,.2);animation:shake .22s linear 2}
+    @keyframes shake{25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}}
+    .question-kicker{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;margin-bottom:8px}
+    .question-card h2{font-size:1.42rem;margin-bottom:8px;color:white}.question-card p{color:var(--muted);line-height:1.5}
+    .responsibility-box{margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-weight:760;line-height:1.45}
+    .answer-grid{display:grid;gap:10px;margin-top:14px}
+    .answer-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:white;text-align:left;padding:13px 14px;border-radius:16px;cursor:pointer;font-weight:800;line-height:1.35;transition:.15s}
+    .answer-btn:hover{transform:translateY(-2px);border-color:rgba(255,209,102,.5)}
+    .answer-btn.correct{border-color:rgba(52,211,153,.85);background:rgba(52,211,153,.2)}.answer-btn.incorrect{border-color:rgba(251,113,133,.85);background:rgba(251,113,133,.18)}
+    .answer-btn.disabled{pointer-events:none;opacity:.78}.choice-letter{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;margin-right:10px;background:rgba(255,255,255,.12);color:var(--gold);font-weight:950}
+    .feedback-box{margin-top:14px;border-radius:18px;padding:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}
+    .feedback-box h3{margin-bottom:4px;color:white}.feedback-box p{color:var(--muted)}
+    .ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+    .ticket-item{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+    .ticket-item .label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;font-weight:900;letter-spacing:.06em}.ticket-item .value{display:block;color:white;font-weight:900;margin-top:4px}
+    @media(max-width:980px){.hud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{grid-template-columns:1fr}.game-board{min-height:540px}}
+    @media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gap-row{gap:6px;grid-template-columns:repeat(3,minmax(72px,1fr));top:71%}.gap-zone{min-height:62px}.ticket-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -41,93 +103,621 @@
 
     <section id="startScreen" class="start-card">
       <h1>Game 11 — OKIE Read + Reaction</h1>
-      <p>This one teaches OKIE as a 3-4 front. End and Tackle are 4i players keying the guards, stepping to an imaginary V of the neck so the first two steps never change. Nose is a head-up zero. Players react to base, pull/trap, down with no puller, and high hat.</p>
-      <div class="coach-note">Shuffle is built in: question order changes every run, and multiple-choice answers shuffle every time.</div>
+      <p>This teaches OKIE with the alignment rules we use: Nose shades to the call, End is in a 5 technique to the call, Tackle is in a 4i away from the call, and Jack is 4x4 off the ball away from the call.</p>
+      <div class="coach-note">
+        <strong>Rule built into this version:</strong> base/man-on, down with no puller, and down with puller are treated as separate reads. Base/man-on maintains the player’s presnap alignment gap. Only on-the-LOS personnel spill pullers. Whoever the puller is heading to boxes if he is off the ball. In OKIE, Sam and Jack are off the ball; if the puller goes to Sam, Sam boxes and Jack holds C away from the call.
+      </div>
       <div class="name-row"><input id="playerName" type="text" placeholder="Player name" autocomplete="off"><button class="btn" onclick="startGame()">Start Game</button></div>
     </section>
 
     <section id="gameScreen" class="hidden">
       <div class="hud-grid">
-        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div><div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div><div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div><div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div><div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div><div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
+        <div class="hud-box"><span>Player</span><strong id="hudName">—</strong></div>
+        <div class="hud-box"><span>Question</span><strong id="hudQuestion">1 / 1</strong></div>
+        <div class="hud-box"><span>Correct</span><strong id="hudCorrect">0</strong></div>
+        <div class="hud-box"><span>Misses</span><strong id="hudMisses">0</strong></div>
+        <div class="hud-box"><span>Accuracy</span><strong id="hudAccuracy">100%</strong></div>
+        <div class="hud-box"><span>Attempt</span><strong id="hudAttempt">1</strong></div>
       </div>
+
       <div class="layout">
         <div class="field-card">
-          <div class="call-banner"><strong id="callTitle">OKIE RIP</strong><span class="call-note">Offense is on top. Defense is on bottom. RIP/LIZ is called from your defensive perspective.</span></div>
-          <div class="game-board">
-            <div class="field-title">Offense</div><div id="strengthTag" class="strength-box">Strength: defensive right</div><div id="strongArea" class="strong-area right"></div><div class="los"></div>
-            <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div><div id="wrL2" class="skill wr-left-2 hidden-token">WR</div><div id="wrR1" class="skill wr-right-1">WR</div><div id="wrR2" class="skill wr-right-2">WR</div><div class="skill rb">RB</div><div class="skill qb">QB</div>
+          <div class="call-banner"><strong id="callTitle">OKIE RIP</strong><span class="call-note">Offense is on top. Defense is on bottom. RIP/LIZ is called from the defense’s perspective.</span></div>
+          <div id="gameBoard" class="game-board">
+            <div class="field-title">Offense</div>
+            <div id="strengthTag" class="strength-box">Strength: defensive right</div>
+            <div id="strongArea" class="strong-area right"></div>
+            <div class="los"></div><div class="los-label">Line of Scrimmage</div>
+            <div id="wrL1" class="skill wr-left-1 hidden-token">WR</div><div id="wrL2" class="skill wr-left-2 hidden-token">WR</div>
+            <div id="wrR1" class="skill wr-right-1">WR</div><div id="wrR2" class="skill wr-right-2">WR</div>
+            <div class="skill rb">RB</div><div class="skill qb">QB</div>
             <div class="ol ot-l">OT</div><div class="ol g-l">G</div><div class="ol c">C</div><div class="ol g-r">G</div><div class="ol ot-r">OT</div>
-            <div id="dlE" class="dl-token dl-right4i">E</div><div id="dlN" class="dl-token dl-zero">N</div><div id="dlT" class="dl-token dl-left4i">T</div>
+            <div id="dlE" class="dl-token dl-right5">E</div>
+            <div id="dlN" class="dl-token dl-rightShade">N</div>
+            <div id="dlT" class="dl-token dl-left4i">T</div>
+            <div id="lbS" class="lb-token sam-right">SAM</div>
+            <div id="lbJ" class="lb-token jack-left">JACK</div>
+            <div id="pullerToken" class="puller-token hidden">G</div>
+            <div id="movementLabel" class="movement-label hidden"></div>
+            <div id="pullerLabel" class="movement-label puller-label hidden">Puller path</div>
             <div class="gap-row">
-              <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div><div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div><div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
+              <div class="gap-zone" data-gap="LC" onclick="selectGap('LC')"><strong>Left C</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="LB" onclick="selectGap('LB')"><strong>Left B</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="LA" onclick="selectGap('LA')"><strong>Left A</strong><span>Def. Left</span></div>
+              <div class="gap-zone" data-gap="RA" onclick="selectGap('RA')"><strong>Right A</strong><span>Def. Right</span></div>
+              <div class="gap-zone" data-gap="RB" onclick="selectGap('RB')"><strong>Right B</strong><span>Def. Right</span></div>
+              <div class="gap-zone" data-gap="RC" onclick="selectGap('RC')"><strong>Right C</strong><span>Def. Right</span></div>
             </div>
             <div class="def-title">Defense</div><div class="orientation">Defensive Left ← → Defensive Right</div>
           </div>
         </div>
+
         <div class="question-card">
-          <div id="questionKicker" class="question-kicker">OKIE RIP</div><h2 id="questionStem">Question</h2><p id="questionCopy">Read it.</p><div id="responsibilityBox" class="responsibility-box">Click or choose your answer.</div><div id="mcAnswers" class="answer-grid hidden"></div><div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Feedback</h3><p id="feedbackCopy">—</p></div>
+          <div id="questionKicker" class="question-kicker">OKIE RIP</div>
+          <h2 id="questionStem">Question</h2>
+          <p id="questionCopy">Read it.</p>
+          <div id="responsibilityBox" class="responsibility-box">Click or choose your answer.</div>
+          <div id="mcAnswers" class="answer-grid hidden"></div>
+          <div id="feedbackBox" class="feedback-box hidden"><h3 id="feedbackTitle">Feedback</h3><p id="feedbackCopy">—</p></div>
         </div>
       </div>
     </section>
 
     <section id="ticketScreen" class="ticket-card hidden">
-      <h1>OKIE Read + Reaction Ticket</h1><p id="ticketMessage">—</p><div id="ticketGrid" class="ticket-grid"></div><div class="name-row"><button class="btn" onclick="window.print()">Print / Screenshot Ticket</button><button class="btn secondary-btn" onclick="restartGame()">Restart for Perfect Run</button></div>
+      <h1>OKIE Read + Reaction Ticket</h1>
+      <p id="ticketMessage">—</p>
+      <div id="ticketGrid" class="ticket-grid"></div>
+      <p id="logStatus" style="margin-top:12px;font-size:0.92rem;"></p>
+      <div class="name-row"><button class="btn" onclick="restartGame()">Restart for Perfect Run</button><a class="btn secondary-btn" href="../index.html">Back to Hub</a></div>
     </section>
   </div>
 
 <script>
-const PLAYER_LABELS={E:'End',N:'Nose',T:'Tackle'};
-const BANK=[
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End alignment. Where are you aligned?',detail:'OKIE is a 3-4 front. End travels to the call side.',answers:[{text:'4i technique — inside shade of the offensive tackle.',correct:true},{text:'5 technique — outside shade of the offensive tackle.',correct:false},{text:'3 technique — outside shade of the guard.',correct:false},{text:'Head-up zero on the center.',correct:false}],coaching:'OKIE = zero Nose with two 4i players. The End is a 4i to the call side.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End alignment. Where are you aligned?',detail:'OKIE is a 3-4 front. End travels to the call side.',answers:[{text:'4i technique — inside shade of the offensive tackle.',correct:true},{text:'Loose 7 outside a tight end.',correct:false},{text:'Head-up zero on the center.',correct:false},{text:'2i inside shade of the guard.',correct:false}],coaching:'OKIE End is a 4i. Inside shade of the OT.'},
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'T',title:'OKIE RIP — Tackle alignment. Where are you aligned?',detail:'Tackle is opposite the call in OKIE.',answers:[{text:'4i technique — inside shade of the offensive tackle.',correct:true},{text:'3 technique outside shade of the guard.',correct:false},{text:'5 technique outside shade of the tackle.',correct:false},{text:'Head-up zero on the center.',correct:false}],coaching:'Tackle is also a 4i player in OKIE. End and Tackle are both inside shades of the OTs.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle alignment. Where are you aligned?',detail:'Tackle is opposite the call in OKIE.',answers:[{text:'4i technique — inside shade of the offensive tackle.',correct:true},{text:'1 technique shade.',correct:false},{text:'Loose 5 technique.',correct:false},{text:'Apex outside linebacker alignment.',correct:false}],coaching:'OKIE = zero Nose with two 4i players.'},
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'N',title:'OKIE RIP — Nose alignment. Where are you aligned?',detail:'Do not treat the Nose like a shade here.',answers:[{text:'Head-up zero technique on the center.',correct:true},{text:'1 technique shade to the call.',correct:false},{text:'3 technique to the call.',correct:false},{text:'4i away from the call.',correct:false}],coaching:'Nose is a head-up zero. We do not over-teach fallback because strong/weak calls make him quicker.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'N',title:'OKIE LIZ — Nose alignment. Where are you aligned?',detail:'OKIE is a true 3-4 picture.',answers:[{text:'Head-up zero technique on the center.',correct:true},{text:'1 shade to the strength.',correct:false},{text:'2i on the guard.',correct:false},{text:'4i on the tackle.',correct:false}],coaching:'Nose is head-up zero. Keep him fast.'},
+const GAME_TITLE = 'Game 11 — OKIE Read + Reaction';
+const GAME_SHORT_TITLE = 'OKIE Read + Reaction';
+const APPS_SCRIPT_URL = 'PASTE_WEB_APP_URL_HERE';
+const STORAGE_KEY = 'okieReadReactionAttempt';
 
-{mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End 4i. Guard blocks base/to you. Click your B-gap responsibility.',detail:'Key the guard, step to the imaginary V of the neck, and keep the first two steps consistent.',answer:'RB',coaching:'Do not step flat to the real V. The key is now the guard, so step to an imaginary V that keeps the first two steps the same. End on RIP owns Right B.'},
-{mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End 4i. Guard blocks base/to you. Click your B-gap responsibility.',detail:'Key the guard, step to the imaginary V of the neck, and keep the first two steps consistent.',answer:'LB',coaching:'Do not step flat to the real V. Step to the imaginary V and own the B gap. End on LIZ owns Left B.'},
-{mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'T',title:'OKIE RIP — Tackle 4i. Guard blocks base/to you. Click your B-gap responsibility.',detail:'Tackle is opposite the call. Key the guard and keep the first two steps consistent.',answer:'LB',coaching:'Tackle is the left 4i on RIP. Step to the imaginary V of the guard and own Left B.'},
-{mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle 4i. Guard blocks base/to you. Click your B-gap responsibility.',detail:'Tackle is opposite the call. Key the guard and keep the first two steps consistent.',answer:'RB',coaching:'Tackle is the right 4i on LIZ. Step to the imaginary V of the guard and own Right B.'},
+const PLAYER_LABELS = { E:'End', N:'Nose', T:'Tackle', S:'Sam', J:'Jack' };
 
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End 4i. Guard pulls and the offense is trying to trap you. What is your reaction?',detail:'Teams like to trap the 4i. Treat down with puller the same.',answers:[{text:'Wrong arm it and spill the trap. Close the gap now.',correct:true},{text:'Box the trap and bounce the ball wider.',correct:false},{text:'Run upfield around the trapper.',correct:false},{text:'Sit still and wait for the ball to declare.',correct:false}],coaching:'Down with puller is still spill. Wrong arm the trap, close the gap, and let the defense exchange around it.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End 4i. Guard pulls and the offense is trying to trap you. What is your reaction?',detail:'Teams like to trap the 4i. Treat down with puller the same.',answers:[{text:'Wrong arm it and spill the trap. Close the gap now.',correct:true},{text:'Run underneath and chase the back.',correct:false},{text:'Stay outside and box the kickout.',correct:false},{text:'Turn your shoulders and run upfield.',correct:false}],coaching:'Trap the 4i? Spill it. Wrong arm, close the gap, and keep the defense sound.'},
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'T',title:'OKIE RIP — Tackle 4i. Guard pulls and you get trapped. What is your reaction?',detail:'The Tackle is a 4i too. Same rule.',answers:[{text:'Wrong arm it and spill the trap. Close the gap now.',correct:true},{text:'Cross face to A gap immediately.',correct:false},{text:'Bounce outside to contain rush.',correct:false},{text:'Wait for the linebacker to fit before reacting.',correct:false}],coaching:'The 4i does not sit and catch the trap. Wrong arm it and spill.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle 4i. Guard pulls and you get trapped. What is your reaction?',detail:'The Tackle is a 4i too. Same rule.',answers:[{text:'Wrong arm it and spill the trap. Close the gap now.',correct:true},{text:'Box the trapper and widen the ball.',correct:false},{text:'Run behind the trapper.',correct:false},{text:'Stop your feet and peek.',correct:false}],coaching:'Down with puller is treated the same. Spill the trap and close the gap.'},
+const BANK = [
+  {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End alignment. Where are you aligned?',detail:'OKIE is a 3-4 picture. End travels to the call side.',answers:[
+    {text:'5 technique — outside shade of the offensive tackle to the call side.',correct:true},
+    {text:'5 technique — outside shade of the offensive tackle.',correct:false},
+    {text:'3 technique — outside shade of the guard.',correct:false},
+    {text:'Head-up zero on the center.',correct:false}],coaching:'OKIE End is in a 5 technique to the call side.'},
+  {mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End alignment. Where are you aligned?',detail:'OKIE is a 3-4 picture. End travels to the call side.',answers:[
+    {text:'5 technique — outside shade of the offensive tackle to the call side.',correct:true},
+    {text:'4i away from the call.',correct:false},
+    {text:'Head-up zero on the center.',correct:false},
+    {text:'Head-up zero on the center.',correct:false}],coaching:'OKIE End is in a 5 technique to the call side.'},
+  {mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'N',title:'OKIE RIP — Nose alignment. Where are you aligned?',detail:'Nose shades to the call in this OKIE teaching progression.',answers:[
+    {text:'Shade to the call side of the center.',correct:true},
+    {text:'1 technique shade to the call.',correct:false},
+    {text:'3 technique to the call.',correct:false},
+    {text:'4i away from the call.',correct:false}],coaching:'Nose shades to the call side.'},
+  {mode:'gap',visual:'fit',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End 5 tech. Base/man-on block comes to you. Click the C gap you maintain from your presnap alignment.',detail:'Base/man-on block: maintain the gap you are aligned in. The End is a 5-tech to the call side, so he maintains C gap.',answer:'RC',coaching:'Base/man-on: End is a 5-tech to the call side and maintains Right C. Base does not become a B-gap spill fit.'},
+  {mode:'gap',visual:'fit',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End 5 tech. Base/man-on block comes to you. Click the C gap you maintain from your presnap alignment.',detail:'Base/man-on block: maintain the gap you are aligned in. The End is a 5-tech to the call side, so he maintains C gap.',answer:'LC',coaching:'Base/man-on: End is a 5-tech to the call side and maintains Left C. Base does not become a B-gap spill fit.'},
+  {mode:'gap',visual:'fit',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'T',title:'OKIE RIP — Tackle 4i. Base/man-on block comes to you. Click the B gap you maintain from your presnap alignment.',detail:'Base/man-on block: maintain the gap you are aligned in. The Tackle is a 4i away from the call, so he maintains B gap.',answer:'LB',coaching:'Base/man-on: Tackle is the 4i away from the call and maintains Left B.'},
+  {mode:'gap',visual:'fit',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle 4i. Base/man-on block comes to you. Click the B gap you maintain from your presnap alignment.',detail:'Base/man-on block: maintain the gap you are aligned in. The Tackle is a 4i away from the call, so he maintains B gap.',answer:'RB',coaching:'Base/man-on: Tackle is the 4i away from the call and maintains Right B.'},
 
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End 4i. Guard blocks down. No puller shows. What now?',detail:'You are getting down by the guard, and the tackle is trying to wash you down.',answers:[{text:'Square up and get vertical immediately to beat the tackle down.',correct:true},{text:'Keep chasing flat down the line.',correct:false},{text:'Run around into C gap.',correct:false},{text:'Stand up and look into the backfield.',correct:false}],coaching:'Down with no puller: square up and get vertical now. Beat the down by the tackle.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End 4i. Guard blocks down. No puller shows. What now?',detail:'You are getting down by the guard, and the tackle is trying to wash you down.',answers:[{text:'Square up and get vertical immediately to beat the tackle down.',correct:true},{text:'Chase the down block flat.',correct:false},{text:'Run upfield to contain.',correct:false},{text:'Fold behind the Nose.',correct:false}],coaching:'No puller means get square and vertical. Do not get washed by the tackle down.'},
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'T',title:'OKIE RIP — Tackle 4i. Guard blocks down. No puller shows. What now?',detail:'You are getting down by the guard, and the tackle is trying to wash you down.',answers:[{text:'Square up and get vertical immediately to beat the tackle down.',correct:true},{text:'Hip and chase a puller that is not there.',correct:false},{text:'Run to the sideline.',correct:false},{text:'Cross the center’s face.',correct:false}],coaching:'Down by the guard with no puller: square up and get vertical.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle 4i. Guard blocks down. No puller shows. What now?',detail:'You are getting down by the guard, and the tackle is trying to wash you down.',answers:[{text:'Square up and get vertical immediately to beat the tackle down.',correct:true},{text:'Stay flat and chase the play.',correct:false},{text:'Become the C-gap contain player.',correct:false},{text:'Sit and wait for the linebacker to scrape.',correct:false}],coaching:'No puller = get vertical. Beat the tackle trying to down block you.'},
+  {mode:'gap',visual:'spill',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End 5 tech. Down with puller / Power is coming to you. Click the B gap you close after the spill.',detail:'Only on-the-LOS personnel spill. The End is on the LOS, so he wrong-arms, spills, and closes B.',answer:'RB',coaching:'Correct. End is on the LOS, so he spills the puller and closes the same-side B gap.'},
+  {mode:'gap',visual:'spill',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End 5 tech. Down with puller / Power is coming to you. Click the B gap you close after the spill.',detail:'Only on-the-LOS personnel spill. The End is on the LOS, so he wrong-arms, spills, and closes B.',answer:'LB',coaching:'Correct. End is on the LOS, so he spills the puller and closes the same-side B gap.'},
+  {mode:'gap',visual:'spill',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'T',title:'OKIE RIP — Tackle 4i. Down with puller / trap is coming to you. Click the B gap you close after the spill.',detail:'Only on-the-LOS personnel spill. The Tackle is on the LOS, so he wrong-arms, spills, and closes B.',answer:'LB',coaching:'Correct. Tackle is on the LOS, so he spills the puller and closes the same-side B gap.'},
+  {mode:'gap',visual:'spill',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle 4i. Down with puller / trap is coming to you. Click the B gap you close after the spill.',detail:'Only on-the-LOS personnel spill. The Tackle is on the LOS, so he wrong-arms, spills, and closes B.',answer:'RB',coaching:'Correct. Tackle is on the LOS, so he spills the puller and closes the same-side B gap.'},
 
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End 4i. Your guard gives you high hat. What is your pass-rush rule?',detail:'High hat puts you into pass rush, but OKIE 4i must get to the edge and contain.',answers:[{text:'Contain rush by getting out to the edge and containing.',correct:true},{text:'Rush straight through A gap.',correct:false},{text:'Cross the QB’s face.',correct:false},{text:'Stop and spy the quarterback.',correct:false}],coaching:'High hat = pass. From the 4i, get out to the edge and contain. Do not lose contain.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'E',title:'OKIE LIZ — End 4i. Your guard gives you high hat. What is your pass-rush rule?',detail:'High hat puts you into pass rush, but OKIE 4i must get to the edge and contain.',answers:[{text:'Contain rush by getting out to the edge and containing.',correct:true},{text:'Work flat down the line.',correct:false},{text:'Sit in B gap for run first.',correct:false},{text:'Take the fastest inside rush.',correct:false}],coaching:'High hat = pass rush. Get to the edge and contain.'},
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'T',title:'OKIE RIP — Tackle 4i. Your guard gives you high hat. What is your pass-rush rule?',detail:'Tackle is a 4i too. Same pass rule.',answers:[{text:'Contain rush by getting out to the edge and containing.',correct:true},{text:'Bull the center immediately.',correct:false},{text:'Peel for the back.',correct:false},{text:'Cross face into A gap.',correct:false}],coaching:'High hat from the 4i = get out to the edge and contain.'},
-{mode:'choice',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle 4i. Your guard gives you high hat. What is your pass-rush rule?',detail:'Tackle is a 4i too. Same pass rule.',answers:[{text:'Contain rush by getting out to the edge and containing.',correct:true},{text:'Chase inside immediately.',correct:false},{text:'Stop your feet and read screen first.',correct:false},{text:'Run underneath the guard.',correct:false}],coaching:'Contain rush. Get out to the edge and keep the quarterback boxed in.'},
+  {mode:'choice',visual:'box',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'J',title:'OKIE RIP — Puller is coming to the off-ball Jack. What is the rule?',detail:'Whoever the puller is heading to boxes. In OKIE, Jack is off the ball away from the call, so he boxes instead of spilling.',answers:[
+    {text:'Box it. Jack is off the ball in OKIE, and only on-the-LOS personnel spill.',correct:true},
+    {text:'Wrong arm it and spill like the End.',correct:false},
+    {text:'Run underneath the puller and close B.',correct:false},
+    {text:'Stop and wait for the ball to declare.',correct:false}],coaching:'Correct. The puller is heading to Jack, so Jack boxes. Off-ball players box; on-the-LOS players spill.'},
+  {mode:'choice',visual:'box',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'J',title:'OKIE LIZ — Puller is coming to the off-ball Jack. What is the rule?',detail:'Whoever the puller is heading to boxes. In OKIE, Jack is off the ball away from the call, so he boxes instead of spilling.',answers:[
+    {text:'Box it. Jack is off the ball in OKIE, and only on-the-LOS personnel spill.',correct:true},
+    {text:'Wrong arm it and spill like the 4i.',correct:false},
+    {text:'Cross underneath the puller to B gap.',correct:false},
+    {text:'Chase the back inside-out.',correct:false}],coaching:'Correct. The puller is heading to Jack, so Jack boxes. Off-ball players box; on-the-LOS players spill.'},
+  {mode:'choice',visual:'box',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'S',title:'OKIE RIP — Puller is coming to the off-ball Sam. What is the rule?',detail:'Whoever the puller is heading to boxes. Sam is off the ball, so Sam boxes. Jack holds C on the away side because there is no 5-technique protecting him.',answers:[
+    {text:'Sam boxes the puller; Jack holds his C gap away from the call.',correct:true},
+    {text:'Sam wrong-arms and spills the puller like an on-the-LOS defensive lineman.',correct:false},
+    {text:'Sam runs underneath and closes B while Jack chases the ball.',correct:false},
+    {text:'Sam opens the C gap and lets the ball bounce outside.',correct:false}],coaching:'Correct. The puller is heading to Sam, so Sam boxes. Jack is off the ball away from the call and holds C because he has no 5-technique protecting him.'},
+  {mode:'choice',visual:'sitread',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'E',title:'OKIE RIP — End 5 tech. Down block shows, but no puller shows. What now?',detail:'You are getting down by the guard. You have confirmed there is no puller coming.',answers:[
+    {text:'Square up, sit, and key the QB read.',correct:true},
+    {text:'Keep chasing flat down the line.',correct:false},
+    {text:'Run around into C gap.',correct:false},
+    {text:'Wrong-arm a puller that is not there.',correct:false}],coaching:'Down with no puller: square up, sit, and key the QB read. Do not chase flat and do not invent a puller.'},
+  {mode:'choice',visual:'contain',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'T',title:'OKIE LIZ — Tackle 4i. Guard gives high hat. What is your pass-rush rule?',detail:'High hat puts you into pass rush, but the rush must stay disciplined.',answers:[
+    {text:'Get to the edge/contain lane from the 4i and never lose contain.',correct:true},
+    {text:'Rush straight through A gap.',correct:false},
+    {text:'Cross the QB’s face immediately.',correct:false},
+    {text:'Stop and spy the quarterback.',correct:false}],coaching:'High hat means pass. From the 4i, get to the edge and contain.'}
+];
 
-{mode:'choice',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'N',title:'OKIE RIP — Nose zero. What is the main coaching point?',detail:'Keep this simple for the Nose.',answers:[{text:'Be a zero and play fast; do not overthink fallback.',correct:true},{text:'Always shade to the call side A gap.',correct:false},{text:'Become a 4i to the strength.',correct:false},{text:'Run to C gap on every pull.',correct:false}],coaching:'Nose is head-up zero. We keep him quick by moving toward strong/weak calls instead of overloading him.'},
-{mode:'gap',formation:'rightTwoDetached',strength:'defensive right',call:'OKIE RIP',player:'N',title:'OKIE RIP — Nose zero. If we talk fallback, click the weakside A gap.',detail:'This is lightly touched because strong/weak calls usually make him quicker.',answer:'LA',coaching:'Nose is zero. Fallback weakside A on RIP is Left A, but do not overcomplicate him.'},
-{mode:'gap',formation:'leftTwoDetached',strength:'defensive left',call:'OKIE LIZ',player:'N',title:'OKIE LIZ — Nose zero. If we talk fallback, click the weakside A gap.',detail:'This is lightly touched because strong/weak calls usually make him quicker.',answer:'RA',coaching:'Nose is zero. Fallback weakside A on LIZ is Right A, but do not overcomplicate him.'}
-]
-let QUESTIONS=[],playerName='',currentIndex=0,correctCount=0,missCount=0,totalAttempts=0,startTime=null,locked=false;
-let attemptNumber=Number(localStorage.getItem('okieReadReactionAttempt')||'1');
-function byId(id){return document.getElementById(id)}function currentQuestion(){return QUESTIONS[currentIndex]}
-function shuffleArray(a){const c=a.slice();for(let i=c.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]]}return c}
-function buildQuestionSet(){return shuffleArray(BANK).slice(0,14)}
-function startGame(){playerName=byId('playerName').value.trim();if(!playerName){alert('Type your name first.');return}QUESTIONS=buildQuestionSet();startTime=new Date();currentIndex=0;correctCount=0;missCount=0;totalAttempts=0;locked=false;byId('hudName').textContent=playerName;byId('hudAttempt').textContent=attemptNumber;byId('startScreen').classList.add('hidden');byId('ticketScreen').classList.add('hidden');byId('gameScreen').classList.remove('hidden');loadQuestion()}
-function restartGame(){attemptNumber+=1;localStorage.setItem('okieReadReactionAttempt',String(attemptNumber));byId('ticketScreen').classList.add('hidden');byId('startScreen').classList.remove('hidden');byId('gameScreen').classList.add('hidden')}
-function updateHud(){byId('hudQuestion').textContent=(currentIndex+1)+' / '+QUESTIONS.length;byId('hudCorrect').textContent=correctCount;byId('hudMisses').textContent=missCount;const acc=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);byId('hudAccuracy').textContent=acc+'%';byId('hudAttempt').textContent=attemptNumber}
-function loadQuestion(){locked=false;clearFeedback();const q=currentQuestion();applyFormation(q.formation,q.strength);showFront(q.call);highlightPlayer(q.player);byId('callTitle').textContent=q.call+' — '+PLAYER_LABELS[q.player];byId('questionKicker').textContent=q.call+' • Strength: '+q.strength;byId('questionStem').textContent=q.title;byId('questionCopy').textContent=q.detail;byId('responsibilityBox').textContent=q.mode==='gap'?'Click the correct final responsibility on the board. This is from the defense’s perspective.':'Choose the correct OKIE read reaction. Answers are shuffled.';if(q.mode==='choice')renderChoices(q.answers);else byId('mcAnswers').classList.add('hidden');updateHud()}
-function applyFormation(formation,strength){const left=formation==='leftTwoDetached';byId('strongArea').className='strong-area '+(left?'left':'right');byId('strengthTag').textContent='Strength: '+strength;byId('wrL1').classList.toggle('hidden-token',!left);byId('wrL2').classList.toggle('hidden-token',!left);byId('wrR1').classList.toggle('hidden-token',left);byId('wrR2').classList.toggle('hidden-token',left)}
-function showFront(call){const rip=call.includes('RIP');byId('dlE').className='dl-token '+(rip?'dl-right4i':'dl-left4i');byId('dlN').className='dl-token dl-zero';byId('dlT').className='dl-token '+(rip?'dl-left4i':'dl-right4i')}
-function highlightPlayer(player){['dlE','dlN','dlT'].forEach(id=>byId(id).classList.remove('active'));if(player==='E')byId('dlE').classList.add('active');if(player==='N')byId('dlN').classList.add('active');if(player==='T')byId('dlT').classList.add('active')}
-function selectGap(gap){if(locked)return;const q=currentQuestion();if(q.mode!=='gap')return;totalAttempts+=1;const zone=document.querySelector('.gap-zone[data-gap="'+gap+'"]');if(gap===q.answer){correctCount+=1;locked=true;if(zone)zone.classList.add('correct');showFeedback('Correct — that is your job.',q.coaching,true);updateHud();setTimeout(nextQuestion,5000)}else{missCount+=1;if(zone)zone.classList.add('wrong');showFeedback('Not it.','OKIE is a 3-4 picture now: zero Nose, 4i End, 4i Tackle. Read the call and click final responsibility.',false);updateHud()}}
-function renderChoices(answers){const grid=byId('mcAnswers');grid.innerHTML='';grid.classList.remove('hidden');shuffleArray(answers).forEach((answer,index)=>{const b=document.createElement('button');b.className='answer-btn';b.innerHTML='<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text;b.onclick=()=>chooseAnswer(b,answer);grid.appendChild(b)})}
-function chooseAnswer(button,answer){if(locked)return;const q=currentQuestion();totalAttempts+=1;if(answer.correct){correctCount+=1;locked=true;button.classList.add('correct');document.querySelectorAll('.answer-btn').forEach(btn=>btn.classList.add('disabled'));showFeedback('Correct — that is the reaction.',q.coaching,true);updateHud();setTimeout(nextQuestion,5000)}else{missCount+=1;button.classList.add('incorrect','disabled');showFeedback('Not it.','OKIE is read-driven. Key the guard: base/to you, pull/trap, down with no puller, or high hat. Do not guess.',false);updateHud()}}
-function showFeedback(title,copy,isCorrect){byId('feedbackTitle').textContent=title;byId('feedbackCopy').textContent=copy;byId('feedbackBox').classList.remove('hidden');byId('feedbackBox').style.borderColor=isCorrect?'rgba(52,211,153,.6)':'rgba(251,113,133,.6)'}
-function clearFeedback(){byId('feedbackBox').classList.add('hidden');byId('mcAnswers').classList.add('hidden');document.querySelectorAll('.gap-zone').forEach(z=>z.classList.remove('correct','wrong'))}
-function nextQuestion(){currentIndex+=1;if(currentIndex>=QUESTIONS.length)finishGame();else loadQuestion()}
-function finishGame(){byId('gameScreen').classList.add('hidden');byId('ticketScreen').classList.remove('hidden');byId('ticketMessage').textContent=missCount>0?'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.':'Perfect run earned. Screenshot or print this ticket.';const end=new Date();const elapsed=Math.round((end-startTime)/1000);const acc=totalAttempts===0?100:Math.round((correctCount/totalAttempts)*100);const result=missCount===0?'TICKET EARNED':'REPLAY REQUIRED';const items=[['Player',playerName],['Game','Game 11 — OKIE Read + Reaction'],['Date',end.toLocaleDateString()],['Start Time',startTime.toLocaleTimeString()],['End Time',end.toLocaleTimeString()],['Runtime',elapsed+' seconds'],['Correct First-Time Answers',correctCount+' / '+QUESTIONS.length],['Misses',missCount],['Accuracy',acc+'%'],['Attempt',attemptNumber],['Result',result]];byId('ticketGrid').innerHTML=items.map(i=>'<div class="ticket-item"><span class="label">'+i[0]+'</span><span class="value">'+i[1]+'</span></div>').join('')}
+let QUESTIONS = [];
+let playerName = '';
+let currentIndex = 0;
+let correctCount = 0;
+let missCount = 0;
+let totalAttempts = 0;
+let attemptNumber = Number(localStorage.getItem(STORAGE_KEY) || '1');
+let startTime = null;
+let locked = false;
+
+function byId(id){ return document.getElementById(id); }
+function currentQuestion(){ return QUESTIONS[currentIndex]; }
+
+function shuffleArray(array){
+  const copy = array.slice();
+  for(let i=copy.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]] = [copy[j],copy[i]];
+  }
+  return copy;
+}
+
+function buildQuestionSet(){
+  return shuffleArray(BANK).slice(0, 14);
+}
+
+function startGame(){
+  playerName = byId('playerName').value.trim();
+  if(!playerName){ alert('Type your name first.'); return; }
+  QUESTIONS = buildQuestionSet();
+  startTime = new Date();
+  currentIndex = 0;
+  correctCount = 0;
+  missCount = 0;
+  totalAttempts = 0;
+  locked = false;
+  byId('hudName').textContent = playerName;
+  byId('hudAttempt').textContent = attemptNumber;
+  byId('startScreen').classList.add('hidden');
+  byId('ticketScreen').classList.add('hidden');
+  byId('gameScreen').classList.remove('hidden');
+  loadQuestion();
+}
+
+function restartGame(){
+  attemptNumber += 1;
+  localStorage.setItem(STORAGE_KEY, String(attemptNumber));
+  byId('ticketScreen').classList.add('hidden');
+  byId('gameScreen').classList.add('hidden');
+  byId('startScreen').classList.remove('hidden');
+}
+
+function updateHud(){
+  byId('hudQuestion').textContent = (currentIndex+1) + ' / ' + QUESTIONS.length;
+  byId('hudCorrect').textContent = correctCount;
+  byId('hudMisses').textContent = missCount;
+  const accuracy = totalAttempts === 0 ? 100 : Math.round((correctCount / totalAttempts) * 100);
+  byId('hudAccuracy').textContent = accuracy + '%';
+  byId('hudAttempt').textContent = attemptNumber;
+}
+
+function loadQuestion(){
+  locked = false;
+  clearFeedback();
+  clearMovement();
+  const q = currentQuestion();
+  applyFormation(q.formation, q.strength);
+  showFront(q.call);
+  highlightPlayer(q.player);
+  byId('callTitle').textContent = q.call + ' — ' + PLAYER_LABELS[q.player];
+  byId('questionKicker').textContent = q.call + ' • Strength: ' + q.strength;
+  byId('questionStem').textContent = q.title;
+  byId('questionCopy').textContent = q.detail;
+  byId('responsibilityBox').textContent = q.mode === 'gap'
+    ? 'Click the correct final responsibility on the board. This is from the defense’s perspective.'
+    : 'Choose the correct OKIE read reaction. Answers are shuffled.';
+  if(q.mode === 'choice') renderChoices(q.answers);
+  else byId('mcAnswers').classList.add('hidden');
+  updateHud();
+}
+
+function applyFormation(formation, strength){
+  const left = formation === 'leftTwoDetached';
+  byId('strongArea').className = 'strong-area ' + (left ? 'left' : 'right');
+  byId('strengthTag').textContent = 'Strength: ' + strength;
+  byId('wrL1').classList.toggle('hidden-token', !left);
+  byId('wrL2').classList.toggle('hidden-token', !left);
+  byId('wrR1').classList.toggle('hidden-token', left);
+  byId('wrR2').classList.toggle('hidden-token', left);
+}
+
+function showFront(call){
+  const rip = call.includes('RIP');
+  // OKIE alignment for this trainer:
+  // RIP = call side defensive right. LIZ = call side defensive left.
+  // Nose shades to the call. End is 5-tech to the call.
+  // Tackle is 4i away. Jack is 4x4 off the ball away.
+  byId('dlE').className = 'dl-token ' + (rip ? 'dl-right5' : 'dl-left5');
+  byId('dlE').textContent = 'E';
+  byId('dlN').className = 'dl-token ' + (rip ? 'dl-rightShade' : 'dl-leftShade');
+  byId('dlN').textContent = 'N';
+  byId('dlT').className = 'dl-token ' + (rip ? 'dl-left4i' : 'dl-right4i');
+  byId('dlT').textContent = 'T';
+  byId('lbS').className = 'lb-token ' + (rip ? 'sam-right' : 'sam-left');
+  byId('lbJ').className = 'lb-token ' + (rip ? 'jack-left' : 'jack-right');
+}
+
+function highlightPlayer(player){
+  ['dlE','dlN','dlT','lbS','lbJ'].forEach(id => byId(id).classList.remove('active'));
+  if(player === 'E') byId('dlE').classList.add('active');
+  if(player === 'N') byId('dlN').classList.add('active');
+  if(player === 'T') byId('dlT').classList.add('active');
+  if(player === 'S') byId('lbS').classList.add('active');
+  if(player === 'J') byId('lbJ').classList.add('active');
+}
+
+function selectGap(gap){
+  if(locked) return;
+  const q = currentQuestion();
+  if(q.mode !== 'gap') return;
+  totalAttempts += 1;
+  const zone = document.querySelector('.gap-zone[data-gap="'+gap+'"]');
+  if(gap === q.answer){
+    correctCount += 1;
+    locked = true;
+    if(zone) zone.classList.add('correct');
+    if(q.visual === 'spill') animateSpill(q);
+    else animateGapFit(q);
+    showFeedback('Correct — that is your job.', q.coaching, true);
+    updateHud();
+    setTimeout(nextQuestion, q.visual === 'spill' ? 6500 : 5600);
+  } else {
+    missCount += 1;
+    if(zone) {
+      zone.classList.add('wrong');
+      setTimeout(() => zone.classList.remove('wrong'), 650);
+    }
+    showFeedback('Not it.', 'OKIE rule: E and T are on the LOS and can spill. Sam and off-ball Jack box. Read the call, player, and final responsibility.', false);
+    updateHud();
+  }
+}
+
+function renderChoices(answers){
+  const grid = byId('mcAnswers');
+  grid.innerHTML = '';
+  grid.classList.remove('hidden');
+  shuffleArray(answers).forEach((answer,index) => {
+    const b = document.createElement('button');
+    b.className = 'answer-btn';
+    b.innerHTML = '<span class="choice-letter">'+String.fromCharCode(65+index)+'</span>'+answer.text;
+    b.onclick = () => chooseAnswer(b, answer);
+    grid.appendChild(b);
+  });
+}
+
+function chooseAnswer(button, answer){
+  if(locked) return;
+  const q = currentQuestion();
+  totalAttempts += 1;
+  if(answer.correct){
+    correctCount += 1;
+    locked = true;
+    button.classList.add('correct');
+    document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
+    if(q.visual === 'box') animateBox(q);
+    else if(q.visual === 'sitread') animateDownNoPuller(q);
+    else if(q.visual === 'contain') animateContainRush(q);
+    showFeedback('Correct — that is the reaction.', q.coaching, true);
+    updateHud();
+    setTimeout(nextQuestion, (q.visual === 'box' || q.visual === 'sitread' || q.visual === 'contain') ? 6200 : 5000);
+  } else {
+    missCount += 1;
+    button.classList.add('incorrect','disabled');
+    showFeedback('Not it.', 'General rule: only on-the-LOS personnel spill. Sam and off-ball Jack box. OKIE Jack is off the ball.', false);
+    updateHud();
+  }
+}
+
+function boardRect(){ return byId('gameBoard').getBoundingClientRect(); }
+
+function percentPoint(xPct,yPct){
+  const r = boardRect();
+  return { x: r.width * xPct / 100, y: r.height * yPct / 100 };
+}
+
+function tokenPoint(id){
+  const board = boardRect();
+  const el = byId(id).getBoundingClientRect();
+  return { x: el.left + el.width/2 - board.left, y: el.top + el.height/2 - board.top };
+}
+
+function playerPoint(player){
+  if(player === 'E') return tokenPoint('dlE');
+  if(player === 'T') return tokenPoint('dlT');
+  if(player === 'J') return tokenPoint('lbJ');
+  if(player === 'S') return tokenPoint('lbS');
+  return tokenPoint('dlN');
+}
+
+function drawSegment(start,end,color){
+  const board = byId('gameBoard');
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const len = Math.hypot(dx,dy);
+  const ang = Math.atan2(dy,dx) * 180 / Math.PI;
+  const line = document.createElement('div');
+  line.className = 'path-line path-' + color;
+  line.style.left = start.x + 'px';
+  line.style.top = start.y + 'px';
+  line.style.width = len + 'px';
+  line.style.transform = 'rotate(' + ang + 'deg)';
+  board.appendChild(line);
+}
+
+function drawArrowHead(point, previous, color){
+  const board = byId('gameBoard');
+  const dx = point.x - previous.x;
+  const dy = point.y - previous.y;
+  const ang = Math.atan2(dy,dx) * 180 / Math.PI;
+  const head = document.createElement('div');
+  head.className = 'path-head ' + color;
+  head.style.left = point.x + 'px';
+  head.style.top = point.y + 'px';
+  head.style.transform = 'rotate(' + ang + 'deg) translate(-50%,-50%)';
+  board.appendChild(head);
+}
+
+function drawPath(points,color){
+  for(let i=0;i<points.length-1;i++) drawSegment(points[i], points[i+1], color);
+  drawArrowHead(points[points.length-1], points[points.length-2], color);
+}
+
+function drawGhost(point){
+  const g = document.createElement('div');
+  g.className = 'ghost-token';
+  g.style.left = point.x + 'px';
+  g.style.top = point.y + 'px';
+  byId('gameBoard').appendChild(g);
+}
+
+function showPuller(point,label){
+  const p = byId('pullerToken');
+  p.classList.remove('hidden');
+  p.style.left = point.x + 'px';
+  p.style.top = point.y + 'px';
+  p.textContent = label || 'G';
+}
+
+function showLabel(id,text,xPct,yPct){
+  const label = byId(id);
+  label.classList.remove('hidden');
+  label.textContent = text;
+  label.style.left = xPct + '%';
+  label.style.top = yPct + '%';
+}
+
+
+function gapFitPoint(gap){
+  const map = {
+    LC: [24,52], LB: [36,52], LA: [45,52],
+    RA: [55,52], RB: [64,52], RC: [76,52]
+  };
+  const m = map[gap] || [50,52];
+  return percentPoint(m[0], m[1]);
+}
+
+function animateGapFit(q){
+  clearMovement();
+  const start = playerPoint(q.player);
+  const end = gapFitPoint(q.answer);
+  const midY = Math.min(start.y, end.y) - boardRect().height * 0.03;
+  const mid = { x: (start.x + end.x) / 2, y: midY };
+  drawGhost(start);
+  drawPath([start, mid, end], 'blue');
+  showLabel('movementLabel', PLAYER_LABELS[q.player] + ': FIT ' + q.answer, (end.x/boardRect().width)*100 - 6, (end.y/boardRect().height)*100 - 8);
+}
+
+function animateDownNoPuller(q){
+  clearMovement();
+  const start = playerPoint(q.player);
+  // Down with NO puller is not a spill path. The player squares, sits, and keys the QB read.
+  const sitPoint = { x: start.x, y: start.y - boardRect().height * 0.055 };
+  drawGhost(start);
+  drawPath([start, sitPoint], 'blue');
+  showLabel('movementLabel', PLAYER_LABELS[q.player] + ': SQUARE • SIT • KEY QB', (sitPoint.x/boardRect().width)*100 - 11, (sitPoint.y/boardRect().height)*100 - 8);
+}
+
+function animateContainRush(q){
+  clearMovement();
+  const rip = q.call.includes('RIP');
+  const start = playerPoint(q.player);
+
+  // Contain rush must go to the edge on the player's ALIGNMENT side.
+  // End is aligned to the call side. Tackle is aligned away from the call.
+  // Therefore Tackle does NOT cross the ball to the call-side edge.
+  let outsideX;
+  if(q.player === 'E') outsideX = rip ? 82 : 18;
+  else if(q.player === 'T') outsideX = rip ? 18 : 82;
+  else outsideX = start.x < boardRect().width / 2 ? 18 : 82;
+
+  const edge = percentPoint(outsideX, 50);
+  const upfield = percentPoint(outsideX, 36);
+  drawGhost(start);
+  drawPath([start, edge, upfield], 'blue');
+  showLabel('movementLabel', PLAYER_LABELS[q.player] + ': CONTAIN RUSH — ALIGNMENT SIDE', outsideX - 13, 29);
+}
+
+function animateSpill(q){
+  clearMovement();
+  const rip = q.call.includes('RIP');
+  const spiller = q.player;
+  const start = playerPoint(spiller);
+  let p1,p2,p3,p4,pullerStart,pullerMiddle,pullerKickout;
+
+  // Literal Game 10 logic, adapted to OKIE 4i:
+  // start at E/T on LOS side, cross toward offense, flatten behind OL, then vertical into same-side B.
+  if((spiller === 'E' && rip) || (spiller === 'T' && !rip)){
+    p1 = percentPoint(68,55);
+    p2 = percentPoint(63,50);
+    p3 = percentPoint(60,50);
+    p4 = percentPoint(60,36);
+    pullerStart = percentPoint(40,45);
+    pullerMiddle = percentPoint(52,48);
+    pullerKickout = percentPoint(68,52);
+  } else {
+    p1 = percentPoint(32,55);
+    p2 = percentPoint(37,50);
+    p3 = percentPoint(40,50);
+    p4 = percentPoint(40,36);
+    pullerStart = percentPoint(60,45);
+    pullerMiddle = percentPoint(48,48);
+    pullerKickout = percentPoint(32,52);
+  }
+
+  drawGhost(start);
+  drawPath([start,p1,p2,p3,p4], 'green');
+  showLabel('movementLabel','LOS spiller: spill + close B', (p3.x/boardRect().width)*100, (p3.y/boardRect().height)*100 - 8);
+
+  showPuller(pullerStart, 'G');
+  showLabel('pullerLabel','Puller path deeper', (pullerStart.x/boardRect().width)*100, (pullerStart.y/boardRect().height)*100 - 7);
+  drawPath([pullerStart,pullerMiddle,pullerKickout], 'orange');
+}
+
+function animateBox(q){
+  clearMovement();
+  const rip = q.call.includes('RIP');
+  const player = q.player;
+  const start = playerPoint(player);
+  let p1,p2,pullerStart,pullerMiddle,pullerKickout,holdPlayer,holdText;
+
+  // Whoever the puller is heading to is the player who boxes.
+  // In OKIE: Sam is off the ball to the call side; Jack is off the ball away from the call.
+  // Jack holds C away from the call when the puller is going to Sam because there is no 5-technique protecting him.
+  const playerIsOnDefensiveRight = (player === 'S' && rip) || (player === 'J' && !rip);
+
+  if(playerIsOnDefensiveRight){
+    p1 = percentPoint(78,55);
+    p2 = percentPoint(82,48);
+    pullerStart = percentPoint(40,45);
+    pullerMiddle = percentPoint(56,48);
+    pullerKickout = percentPoint(76,52);
+  } else {
+    p1 = percentPoint(22,55);
+    p2 = percentPoint(18,48);
+    pullerStart = percentPoint(60,45);
+    pullerMiddle = percentPoint(44,48);
+    pullerKickout = percentPoint(24,52);
+  }
+
+  drawGhost(start);
+  drawPath([start,p1,p2], 'blue');
+  showLabel('movementLabel', PLAYER_LABELS[player] + ': BOX puller', (p2.x/boardRect().width)*100, (p2.y/boardRect().height)*100 - 8);
+
+  if(player === 'S'){
+    holdPlayer = playerPoint('J');
+    holdText = 'Jack holds C';
+  } else if(player === 'J'){
+    holdPlayer = playerPoint('S');
+    holdText = 'Sam holds/inside-out support';
+  }
+
+  if(holdPlayer){
+    showLabel('pullerLabel', holdText, (holdPlayer.x/boardRect().width)*100 - 8, (holdPlayer.y/boardRect().height)*100 + 5);
+  }
+
+  showPuller(pullerStart, 'G');
+  drawPath([pullerStart,pullerMiddle,pullerKickout], 'orange');
+}
+
+function clearMovement(){
+  document.querySelectorAll('.path-line,.path-head,.ghost-token').forEach(el => el.remove());
+  byId('pullerToken').classList.add('hidden');
+  byId('movementLabel').classList.add('hidden');
+  byId('pullerLabel').classList.add('hidden');
+  document.querySelectorAll('.gap-zone').forEach(z => z.classList.remove('correct','wrong'));
+}
+
+function showFeedback(title,copy,isCorrect){
+  byId('feedbackTitle').textContent = title;
+  byId('feedbackCopy').textContent = copy;
+  byId('feedbackBox').classList.remove('hidden');
+  byId('feedbackBox').style.borderColor = isCorrect ? 'rgba(52,211,153,.6)' : 'rgba(251,113,133,.6)';
+}
+
+function clearFeedback(){
+  byId('feedbackBox').classList.add('hidden');
+  byId('mcAnswers').classList.add('hidden');
+}
+
+function nextQuestion(){
+  currentIndex += 1;
+  if(currentIndex >= QUESTIONS.length) finishGame();
+  else loadQuestion();
+}
+
+async function submitTicketLog(payload){
+  const status = byId('logStatus');
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PASTE_WEB_APP_URL_HERE'){
+    if(status) status.textContent = 'Sheet log skipped: paste your Apps Script Web App URL into APPS_SCRIPT_URL.';
+    return;
+  }
+  try{
+    await fetch(APPS_SCRIPT_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(status) status.textContent = 'Mastery sheet log sent.';
+  }catch(err){
+    if(status) status.textContent = 'Sheet log error: ' + err.message;
+  }
+}
+
+function finishGame(){
+  byId('gameScreen').classList.add('hidden');
+  byId('ticketScreen').classList.remove('hidden');
+  const end = new Date();
+  const elapsed = Math.round((end - startTime)/1000);
+  const acc = totalAttempts === 0 ? 100 : Math.round((correctCount/totalAttempts)*100);
+  const mastered = missCount === 0;
+  const result = mastered ? 'MASTERED — CLEAN RUN' : 'REPLAY REQUIRED';
+
+  byId('ticketMessage').textContent = mastered
+    ? 'Perfect run earned. Screenshot or print this ticket.'
+    : 'You finished, but this was not a perfect run. Restart and earn the ticket with zero misses.';
+
+  const items = [
+    ['Player', playerName],
+    ['Game', GAME_TITLE],
+    ['Date', end.toLocaleDateString()],
+    ['Start Time', startTime.toLocaleTimeString()],
+    ['End Time', end.toLocaleTimeString()],
+    ['Runtime', elapsed + ' seconds'],
+    ['Correct First-Time Answers', correctCount + ' / ' + QUESTIONS.length],
+    ['Misses', missCount],
+    ['Accuracy', acc + '%'],
+    ['Attempt', attemptNumber],
+    ['Result', result]
+  ];
+
+  byId('ticketGrid').innerHTML = items.map(i => '<div class="ticket-item"><span class="label">'+i[0]+'</span><span class="value">'+i[1]+'</span></div>').join('');
+
+  if(!mastered){
+    byId('logStatus').textContent = 'Not logged: mastery requires a clean run with zero misses.';
+    return;
+  }
+
+  submitTicketLog({
+    timestamp: new Date().toISOString(),
+    playerName: playerName,
+    gamePlayed: GAME_TITLE,
+    attemptNumber: attemptNumber,
+    date: end.toLocaleDateString(),
+    startTime: startTime.toLocaleTimeString(),
+    endTime: end.toLocaleTimeString(),
+    runtime: elapsed + ' seconds',
+    runtimeSeconds: elapsed,
+    correctFirstTry: correctCount,
+    totalQuestions: QUESTIONS.length,
+    percent: acc,
+    misses: missCount,
+    result: result
+  });
+}
 </script>
 </body>
 </html>
